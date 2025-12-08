@@ -1,6 +1,28 @@
 #include "engine.h"
+#include <string>
+#include "shader.h"
+#include <iostream>
 
-void TurtleOS::main_loop(Window& window){
+TurtleOS::TurtleOS():window(640, 480, "Turtle-OS"){
+
+}
+
+void TurtleOS::create_shaders(){
+    // Load shader sources from files
+    const std::string vert_src = load_shader_file("src/shaders/vertex.glsl");
+    const std::string frag_src = load_shader_file("src/shaders/fragment.glsl");
+
+    // Compile and link shader program
+    const GLuint shaderProgram = shader_create_program(vert_src, frag_src);
+    if (!shaderProgram) {
+        throw std::runtime_error("Failed to create shader program");
+    }
+
+    glUseProgram(shaderProgram);
+}
+
+void TurtleOS::run(){
+    create_shaders();
     // Main render loop
     while (!window.shouldClose()) {
         glClearColor(0.1f, 0.1f, 0.1f, 1.0f);

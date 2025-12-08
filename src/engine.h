@@ -10,8 +10,12 @@ constexpr std::array<float, 6> TRIANGLE_VERTICES = {
 };
 
 class TurtleOS{
-    public:
+public:
+    TurtleOS();
+    Window window;
 
-    void main_loop(Window& window);
-    private:
+    void run();
+
+private:
+    void create_shaders();
 };
