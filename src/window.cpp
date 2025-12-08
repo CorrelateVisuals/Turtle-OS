@@ -1,44 +1,54 @@
 #include "window.h"
-#include <stdio.h>
-#include <stdlib.h>
+#include <iostream>
 
-Window* window_create(int width, int height, const char* title) {
+Window::Window(int width, int height, std::string_view title)
+    : handle(nullptr)
+{
     if (!glfwInit()) {
-        fprintf(stderr, "Failed to initialize GLFW\n");
-        return NULL;
+        std::cerr << "Failed to initialize GLFW\n";
+        return;
     }
 
+    // Request an OpenGL ES 2.0 context
     glfwWindowHint(GLFW_CLIENT_API, GLFW_OPENGL_ES_API);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 2);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
 
-    Window* win = new Window;
-    win->width = width;
-    win->height = height;
-    win->title = title;
-    win->handle = glfwCreateWindow(width, height, title, NULL, NULL);
-    if (!win->handle) {
-        fprintf(stderr, "Failed to create GLFW window\n");
+    handle = glfwCreateWindow(width, height, title.data(), nullptr, nullptr);
+    if (!handle) {
+        std::cerr << "Failed to create GLFW window\n";
         glfwTerminate();
-        delete win;
-        return NULL;
+        return;
     }
 
-    glfwMakeContextCurrent(win->handle);
-    return win;
+    glfwMakeContextCurrent(handle);
 }
 
-void window_destroy(Window* win) {
-    if (!win) return;
-    glfwDestroyWindow(win->handle);
-    glfwTerminate();
-    free(win);
+Window::~Window()
+{
+    if (handle) {
+        glfwDestroyWindow(handle);
+        glfwTerminate();
+    }
 }
 
-void window_swap_buffers(Window* win) {
-    glfwSwapBuffers(win->handle);
+bool Window::shouldClose() const
+{
+    return glfwWindowShouldClose(handle);
 }
 
-int window_should_close(Window* win) {
-    return glfwWindowShouldClose(win->handle);
+void Window::swapBuffers()
+{
+    if (handle)
+        glfwSwapBuffers(handle);
+}
+
+void Window::pollEvents()
+{
+    glfwPollEvents();
+}
+
+GLFWwindow* Window::getHandle() const
+{
+    return handle;
 }

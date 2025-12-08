@@ -1,18 +1,19 @@
-#ifndef WINDOW_H
-#define WINDOW_H
-
+#pragma once
+#include <GLES2/gl2.h>
 #include <GLFW/glfw3.h>
+#include <string_view>
 
-typedef struct {
+class Window {
+public:
+    Window(int width, int height, std::string_view title);
+    ~Window();
+
+    bool shouldClose() const;
+    void swapBuffers();
+    void pollEvents();
+
+    GLFWwindow* getHandle() const;
+
+private:
     GLFWwindow* handle;
-    int width;
-    int height;
-    const char* title;
-} Window;
-
-Window* window_create(int width, int height, const char* title);
-void window_destroy(Window* win);
-void window_swap_buffers(Window* win);
-int window_should_close(Window* win);
-
-#endif
+};
