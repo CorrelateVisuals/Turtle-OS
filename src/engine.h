@@ -12,10 +12,10 @@ constexpr std::array<float, 6> TRIANGLE_VERTICES = {
      0.8f, -0.8f
 };
 
-class TurtleOS{
+class Engine{
 public:
-    TurtleOS();
-    ~TurtleOS() = default;
+    Engine();
+    ~Engine() = default;
     
     void run();
 

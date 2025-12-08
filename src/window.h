@@ -1,4 +1,5 @@
 #pragma once
+
 #include <GLES2/gl2.h>
 #include <GLFW/glfw3.h>
 #include <string_view>

@@ -3,11 +3,11 @@
 
 #include "engine.h"
 
-TurtleOS os;
+Engine TurtleOS;
 
 int main() {
     try {
-        os.run();
+        TurtleOS.run();
 
     } catch (const std::exception& e) {
         std::cerr << "Exception: " << e.what() << "\n";

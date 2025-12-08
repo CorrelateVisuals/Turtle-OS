@@ -4,11 +4,11 @@
 #include "engine.h"
 #include "shader.h"
 
-TurtleOS::TurtleOS():_window(520, 360, "Turtle-OS"){
+Engine::Engine():_window(520, 360, "Turtle-OS"){
 
 }
 
-void TurtleOS::create_shaders(){
+void Engine::create_shaders(){
     // Load shader sources from files
     const std::string vert_src = load_shader_file("src/shaders/vertex.glsl");
     const std::string frag_src = load_shader_file("src/shaders/fragment.glsl");
@@ -22,7 +22,7 @@ void TurtleOS::create_shaders(){
     glUseProgram(shaderProgram);
 }
 
-void TurtleOS::run(){
+void Engine::run(){
     create_shaders();
     // Main render loop
     while (!_window.shouldClose()) {
