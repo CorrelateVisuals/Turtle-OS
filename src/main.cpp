@@ -4,18 +4,14 @@
 #include <array>
 #include <iostream>
 #include <stdexcept>
+#include "engine.h"
 
-// Triangle vertices (can move to a file later)
-constexpr std::array<float, 6> TRIANGLE_VERTICES = {
-     0.0f,  0.8f,
-    -0.8f, -0.8f,
-     0.8f, -0.8f
-};
+TurtleOS os;
 
 int main() {
     try {
         // Create window (RAII)
-        Window window(640, 480, "Bright-OS");
+        Window window(640, 480, "Turtle-OS");
 
         // Load shader sources from files
         const std::string vert_src = load_shader_file("src/shaders/vertex.glsl");
@@ -30,20 +26,7 @@ int main() {
         glUseProgram(shaderProgram);
 
         // Main render loop
-        while (!window.shouldClose()) {
-            glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
-            glClear(GL_COLOR_BUFFER_BIT);
-
-            // Pass vertex positions to the shader
-            glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 0, TRIANGLE_VERTICES.data());
-            glEnableVertexAttribArray(0);
-
-            glDrawArrays(GL_TRIANGLES, 0, static_cast<GLsizei>(TRIANGLE_VERTICES.size() / 2));
-
-            // Swap buffers and poll events
-            window.swapBuffers();
-            window.pollEvents();
-        }
+        os.main_loop(window);
 
     } catch (const std::exception& e) {
         std::cerr << "Exception: " << e.what() << "\n";
