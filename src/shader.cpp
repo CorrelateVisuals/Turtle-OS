@@ -1,43 +1,43 @@
 #include "shader.h"
-#include <stdio.h>
-#include <stdlib.h>
+#include <fstream>
+#include <sstream>
+#include <iostream>
+#include <stdexcept>
 
-char* load_shader_file(const char* path) {
-    FILE* f = fopen(path, "r");
-    if (!f) {
-        fprintf(stderr, "Failed to open shader file: %s\n", path);
-        return NULL;
+std::string load_shader_file(const std::string& path) {
+    std::ifstream file(path);
+    if (!file.is_open()) {
+        throw std::runtime_error("Failed to open shader file: " + path);
     }
-    fseek(f, 0, SEEK_END);
-    long len = ftell(f);
-    rewind(f);
 
-    char* src = new char[len + 1];
-    fread(src, 1, len, f);
-    src[len] = '\0';
-    fclose(f);
-    return src;
+    std::ostringstream ss;
+    ss << file.rdbuf();
+    return ss.str();
 }
 
-GLuint shader_compile(const char* source, GLenum type) {
+GLuint shader_compile(const std::string& source, GLenum type) {
     GLuint shader = glCreateShader(type);
-    glShaderSource(shader, 1, &source, NULL);
+    const char* src = source.c_str();
+    glShaderSource(shader, 1, &src, nullptr);
     glCompileShader(shader);
 
     GLint status;
     glGetShaderiv(shader, GL_COMPILE_STATUS, &status);
     if (!status) {
         char buffer[512];
-        glGetShaderInfoLog(shader, 512, NULL, buffer);
-        fprintf(stderr, "Shader compile error: %s\n", buffer);
+        glGetShaderInfoLog(shader, 512, nullptr, buffer);
+        std::cerr << "Shader compile error: " << buffer << "\n";
         return 0;
     }
+
     return shader;
 }
 
-GLuint shader_create_program(const char* vertex_src, const char* fragment_src) {
+GLuint shader_create_program(const std::string& vertex_src, const std::string& fragment_src) {
     GLuint vs = shader_compile(vertex_src, GL_VERTEX_SHADER);
+    if (!vs) return 0;
     GLuint fs = shader_compile(fragment_src, GL_FRAGMENT_SHADER);
+    if (!fs) return 0;
 
     GLuint prog = glCreateProgram();
     glAttachShader(prog, vs);
@@ -49,10 +49,13 @@ GLuint shader_create_program(const char* vertex_src, const char* fragment_src) {
     glGetProgramiv(prog, GL_LINK_STATUS, &status);
     if (!status) {
         char buffer[512];
-        glGetProgramInfoLog(prog, 512, NULL, buffer);
-        fprintf(stderr, "Program link error: %s\n", buffer);
+        glGetProgramInfoLog(prog, 512, nullptr, buffer);
+        std::cerr << "Program link error: " << buffer << "\n";
         return 0;
     }
-    glUseProgram(prog);
+
+    glDeleteShader(vs);
+    glDeleteShader(fs);
+
     return prog;
 }
