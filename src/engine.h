@@ -15,7 +15,7 @@ constexpr std::array<float, 6> TRIANGLE_VERTICES = {
 class TurtleOS{
 public:
     TurtleOS();
-    ~TurtleOS(){};
+    ~TurtleOS() = default;
     
     void run();
 
