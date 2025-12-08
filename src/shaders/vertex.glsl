@@ -1,4 +1,7 @@
 attribute vec2 pos;
+uniform float scale;
+
 void main() {
-    gl_Position = vec4(pos, 0.0, 1.0);
+    vec2 scaled = pos * scale;
+    gl_Position = vec4(scaled, 0.0, 1.0);
 }

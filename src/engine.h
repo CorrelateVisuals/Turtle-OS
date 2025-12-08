@@ -21,5 +21,6 @@ public:
 
 private:
     Window _window;
+    GLint _scaleLocation;
     void create_shaders();
 };
