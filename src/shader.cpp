@@ -12,7 +12,7 @@ char* load_shader_file(const char* path) {
     long len = ftell(f);
     rewind(f);
 
-    char* src = malloc(len + 1);
+    char* src = new char[len + 1];
     fread(src, 1, len, f);
     src[len] = '\0';
     fclose(f);

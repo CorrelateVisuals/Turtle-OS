@@ -12,7 +12,7 @@ Window* window_create(int width, int height, const char* title) {
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 2);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
 
-    Window* win = malloc(sizeof(Window));
+    Window* win = new Window;
     win->width = width;
     win->height = height;
     win->title = title;
@@ -20,7 +20,7 @@ Window* window_create(int width, int height, const char* title) {
     if (!win->handle) {
         fprintf(stderr, "Failed to create GLFW window\n");
         glfwTerminate();
-        free(win);
+        delete win;
         return NULL;
     }
 

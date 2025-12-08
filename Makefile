@@ -1,14 +1,12 @@
-CC = gcc
-CFLAGS = -I./src -I./src/shaders -Wall
-LIBS = -lGLESv2 -lglfw
+CXX = g++
+CXXFLAGS = -std=c++17 -Wall -I./src -I./src/shaders
+LDFLAGS = -lGLESv2 -lglfw
 
-SRC = src/main.c src/window.c src/shader.c
+SRC = $(wildcard src/*.cpp)
 BIN = bin/app
 
-all: $(BIN)
-
 $(BIN): $(SRC)
-	$(CC) $(SRC) $(CFLAGS) -o $(BIN) $(LIBS)
+	$(CXX) $(SRC) -o $(BIN) $(CXXFLAGS) $(LDFLAGS)
 
 clean:
 	rm -f $(BIN)
