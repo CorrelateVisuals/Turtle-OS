@@ -15,7 +15,7 @@ constexpr std::array<float, 6> TRIANGLE_VERTICES = {
 int main() {
     try {
         // Create window (RAII)
-        Window window(640, 480, "Bright-OS Triangle Example");
+        Window window(640, 480, "Bright-OS");
 
         // Load shader sources from files
         const std::string vert_src = load_shader_file("src/shaders/vertex.glsl");
