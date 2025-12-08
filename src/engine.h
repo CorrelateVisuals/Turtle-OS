@@ -1,4 +1,7 @@
+#pragma once
+
 #include <GLES2/gl2.h>
+
 #include "window.h"
 #include "array"
 
@@ -12,10 +15,11 @@ constexpr std::array<float, 6> TRIANGLE_VERTICES = {
 class TurtleOS{
 public:
     TurtleOS();
-    Window window;
-
+    ~TurtleOS(){};
+    
     void run();
 
 private:
+    Window _window;
     void create_shaders();
 };

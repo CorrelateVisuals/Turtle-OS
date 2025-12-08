@@ -1,8 +1,9 @@
-#include "shader.h"
 #include <fstream>
 #include <sstream>
 #include <iostream>
 #include <stdexcept>
+
+#include "shader.h"
 
 std::string load_shader_file(const std::string& path) {
     std::ifstream file(path);

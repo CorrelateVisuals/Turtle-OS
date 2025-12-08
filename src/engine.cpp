@@ -1,9 +1,10 @@
-#include "engine.h"
 #include <string>
-#include "shader.h"
 #include <iostream>
 
-TurtleOS::TurtleOS():window(640, 480, "Turtle-OS"){
+#include "engine.h"
+#include "shader.h"
+
+TurtleOS::TurtleOS():_window(520, 360, "Turtle-OS"){
 
 }
 
@@ -24,7 +25,7 @@ void TurtleOS::create_shaders(){
 void TurtleOS::run(){
     create_shaders();
     // Main render loop
-    while (!window.shouldClose()) {
+    while (!_window.shouldClose()) {
         glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
 
@@ -35,7 +36,7 @@ void TurtleOS::run(){
         glDrawArrays(GL_TRIANGLES, 0, static_cast<GLsizei>(TRIANGLE_VERTICES.size() / 2));
 
         // Swap buffers and poll events
-        window.swapBuffers();
-        window.pollEvents();
+        _window.swapBuffers();
+        _window.pollEvents();
     }
 };

@@ -1,5 +1,6 @@
-#include "window.h"
 #include <iostream>
+
+#include "window.h"
 
 Window::Window(int width, int height, std::string_view title)
     : handle(nullptr)
