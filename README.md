@@ -1,4 +1,4 @@
-# right-OS OpenGL Setup
+# Turtle-OS OpenGL Setup
 
 ## Overview
 
