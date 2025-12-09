@@ -12,6 +12,7 @@ public:
     bool shouldClose() const;
     void swapBuffers();
     void pollEvents();
+    void setKeyCallback(GLFWkeyfun callback);
 
     GLFWwindow* getHandle() const;
 

@@ -3,6 +3,8 @@
 #include "stb_image.h"
 
 GLuint load_texture(const std::string& path) {
+    stbi_set_flip_vertically_on_load(true);
+    
     int width, height, channels;
     unsigned char* pixels = stbi_load(path.c_str(), &width, &height, &channels, 4);
 
@@ -10,7 +12,7 @@ GLuint load_texture(const std::string& path) {
         fprintf(stderr, "Failed to load image: %s\n", path.c_str());
         return 0;
     }
-
+    
     GLuint texture;
     glGenTextures(1, &texture);
     glBindTexture(GL_TEXTURE_2D, texture);

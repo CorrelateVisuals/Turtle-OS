@@ -53,3 +53,7 @@ GLFWwindow* Window::getHandle() const
 {
     return handle;
 }
+
+void Window::setKeyCallback(GLFWkeyfun callback) {
+    glfwSetKeyCallback(handle, callback);
+}

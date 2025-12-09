@@ -1,6 +1,7 @@
 #pragma once
 
 #include <GLES2/gl2.h>
+#include <vector>
 
 #include "window.h"
 #include "array"
@@ -27,6 +28,16 @@ public:
 
 private:
     Window _window;
+
     GLint _scaleLocation;
+
+    GLuint _current_texture{0};
+    std::vector<std::string> _textures;
+    int _texture_index{0};
+
+    void load_all_textures();
+    void select_texture(int index);
+    static void key_call_back(GLFWwindow* window, int key, int seconds, int action, int mods);
+
     void create_shaders();
 };
