@@ -30,6 +30,7 @@ private:
     Window _window;
 
     GLint _scaleLocation;
+    float _texture_scale = 5.0f;
 
     GLuint _current_texture{0};
     std::vector<std::string> _textures;

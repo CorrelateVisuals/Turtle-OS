@@ -42,7 +42,7 @@ void Engine::select_texture(int index) {
     _texture_index = (index + _textures.size()) % _textures.size();
 
     std::cout << "Switching to texture: " << _textures[_texture_index] << "\n";
-
+    _texture_scale = 5.0f;
     _current_texture = load_texture(_textures[_texture_index]);
     glBindTexture(GL_TEXTURE_2D, _current_texture);
 }
@@ -89,19 +89,18 @@ void Engine::run(){
     //load_texture("data/cat.jpg");
     glfwSetWindowUserPointer(_window.getHandle(), this);
 
-    float scale = 5.0f;
     // Main render loop
     while (!_window.shouldClose()) {
         glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
 
         glBindTexture(GL_TEXTURE_2D, _current_texture);
-        glUniform1f(_scaleLocation, scale);
+        glUniform1f(_scaleLocation, _texture_scale);
 
-        if (scale > 1.0f){
-            scale -= 0.01f;
+        if (_texture_scale > 1.0f){
+            _texture_scale -= 0.01f;
         } else {
-            scale = 1.0f;
+            _texture_scale = 1.0f;
         }
 
         // Pass vertex positions to the shader
