@@ -1,17 +1,81 @@
 #include <string>
 #include <iostream>
+#include <filesystem>
 
 #include "engine.h"
 #include "shader.h"
+#include "resources.h"
+//
+Engine::Engine():_window("Turtle-OS"){
+    load_all_textures();
 
-TurtleOS::TurtleOS():_window(520, 360, "Turtle-OS"){
+    if (_textures.empty()) {
+        std::cerr << "No textures found in data/ folder.\n";
+    } else {
+        select_texture(0);
+    }
+
+    _window.set_key_callback(key_call_back);
+}
+
+// ----------------------------------------------------
+//   Scan data/ directory and collect texture paths
+// ----------------------------------------------------
+void Engine::load_all_textures() {
+    _textures.clear();
+
+    for (const auto& entry : std::filesystem::directory_iterator("data")) {
+        if (entry.path().extension() == ".jpg") {
+            _textures.push_back(entry.path().string());
+        }
+    }
+
+    std::cout << "Loaded " << _textures.size() << " textures.\n";
+}
+
+// ----------------------------------------------------
+//   Load a texture by index
+// ----------------------------------------------------
+void Engine::select_texture(int index) {
+    if (_textures.empty()) return;
+
+    _texture_index = (index + _textures.size()) % _textures.size();
+
+    std::cout << "Switching to texture: " << _textures[_texture_index] << "\n";
+    _texture_start_scale = 5.0f;
+    _current_texture = load_texture(_textures[_texture_index]);
+    glBindTexture(GL_TEXTURE_2D, _current_texture);
+}
+
+// ----------------------------------------------------
+//   Key callback for left/right arrow cycling
+// ----------------------------------------------------
+void Engine::key_call_back(GLFWwindow* window, int key, int, int action, int) {
+    if (action != GLFW_PRESS) return;
+
+    // Retrieve Engine* pointer stored in GLFW window
+    Engine* engine = static_cast<Engine*>(glfwGetWindowUserPointer(window));
+
+    if (!engine) return;
+
+    if (key == GLFW_KEY_RIGHT) {
+        engine->select_texture(engine->_texture_index + 1);
+    }
+    else if (key == GLFW_KEY_LEFT) {
+        engine->select_texture(engine->_texture_index - 1);
+    }
+
+    if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS) {
+    glfwSetWindowShouldClose(window, true);
+}
 
 }
 
-void TurtleOS::create_shaders(){
+void Engine::create_shaders(){
     // Load shader sources from files
     const std::string vert_src = load_shader_file("src/shaders/vertex.glsl");
     const std::string frag_src = load_shader_file("src/shaders/fragment.glsl");
+
 
     // Compile and link shader program
     const GLuint shaderProgram = shader_create_program(vert_src, frag_src);
@@ -20,23 +84,47 @@ void TurtleOS::create_shaders(){
     }
 
     glUseProgram(shaderProgram);
+
+    _scale_location = glGetUniformLocation(shaderProgram, "scale");
+
 }
 
-void TurtleOS::run(){
+void Engine::run(){
     create_shaders();
+    //load_texture("data/cat.jpg");
+    glfwSetWindowUserPointer(_window.get_handle(), this);
+
     // Main render loop
-    while (!_window.shouldClose()) {
+    while (!_window.should_close()) {
         glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
+        // Update viewport each frame (important on Pinebook!)
+        int w, h;
+        glfwGetFramebufferSize(_window.get_handle(), &w, &h);
+        glViewport(0, 0, w, h);
+
+
+        glBindTexture(GL_TEXTURE_2D, _current_texture);
+        glUniform1f(_scale_location, _texture_start_scale);
+
+        if (_texture_start_scale > _texture_final_scale){
+            _texture_start_scale -= _zoom_speed;
+        } else {
+            _texture_start_scale = _texture_final_scale;
+        }
 
         // Pass vertex positions to the shader
-        glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 0, TRIANGLE_VERTICES.data());
-        glEnableVertexAttribArray(0);
+        glEnableVertexAttribArray(0); // pos
+        glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(float) * 4, RECT_VERTICES.data());
 
-        glDrawArrays(GL_TRIANGLES, 0, static_cast<GLsizei>(TRIANGLE_VERTICES.size() / 2));
+        glEnableVertexAttribArray(1); // uv
+        glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(float) * 4, RECT_VERTICES.data() + 2);
+
+        glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, INDICES.data());
+
 
         // Swap buffers and poll events
-        _window.swapBuffers();
-        _window.pollEvents();
+        _window.swap_buffers();
+        _window.poll_events();
     }
 };
