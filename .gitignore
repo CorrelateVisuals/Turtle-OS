@@ -3,6 +3,7 @@
 *.out
 *.exe
 app
+Turtle-OS
 triangle
 *.so
 
