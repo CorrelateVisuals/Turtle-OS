@@ -3,6 +3,7 @@
 
 #include "engine.h"
 #include "shader.h"
+#include "resources.h"
 
 Engine::Engine():_window(520, 360, "Turtle-OS"){
 
@@ -21,13 +22,15 @@ void Engine::create_shaders(){
     }
 
     glUseProgram(shaderProgram);
-    
+
     _scaleLocation = glGetUniformLocation(shaderProgram, "scale");
 
 }
 
 void Engine::run(){
     create_shaders();
+    load_texture("data/cat.jpg");
+
     float scale = 5.0f;
     // Main render loop
     while (!_window.shouldClose()) {
@@ -43,10 +46,14 @@ void Engine::run(){
         }
 
         // Pass vertex positions to the shader
-        glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 0, TRIANGLE_VERTICES.data());
-        glEnableVertexAttribArray(0);
+        glEnableVertexAttribArray(0); // pos
+        glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(float) * 4, RECT_VERTICES.data());
 
-        glDrawArrays(GL_TRIANGLES, 0, static_cast<GLsizei>(TRIANGLE_VERTICES.size() / 2));
+        glEnableVertexAttribArray(1); // uv
+        glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(float) * 4, RECT_VERTICES.data() + 2);
+
+        glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, INDICES.data());
+
 
         // Swap buffers and poll events
         _window.swapBuffers();
