@@ -3,7 +3,7 @@
 #include "window.h"
 
 Window::Window(int width, int height, std::string_view title)
-    : handle(nullptr)
+    : _handle(nullptr)
 {
     if (!glfwInit()) {
         std::cerr << "Failed to initialize GLFW\n";
@@ -15,45 +15,46 @@ Window::Window(int width, int height, std::string_view title)
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 2);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
 
-    handle = glfwCreateWindow(width, height, title.data(), nullptr, nullptr);
-    if (!handle) {
+    _handle = glfwCreateWindow(width, height, title.data(), nullptr, nullptr);
+    
+    if (!_handle) {
         std::cerr << "Failed to create GLFW window\n";
         glfwTerminate();
         return;
     }
 
-    glfwMakeContextCurrent(handle);
+    glfwMakeContextCurrent(_handle);
 }
 
 Window::~Window()
 {
-    if (handle) {
-        glfwDestroyWindow(handle);
+    if (_handle) {
+        glfwDestroyWindow(_handle);
         glfwTerminate();
     }
 }
 
-bool Window::shouldClose() const
+bool Window::should_close() const
 {
-    return glfwWindowShouldClose(handle);
+    return glfwWindowShouldClose(_handle);
 }
 
-void Window::swapBuffers()
+void Window::swap_buffers()
 {
-    if (handle)
-        glfwSwapBuffers(handle);
+    if (_handle)
+        glfwSwapBuffers(_handle);
 }
 
-void Window::pollEvents()
+void Window::poll_events()
 {
     glfwPollEvents();
 }
 
-GLFWwindow* Window::getHandle() const
+GLFWwindow* Window::get_handle() const
 {
-    return handle;
+    return _handle;
 }
 
-void Window::setKeyCallback(GLFWkeyfun callback) {
-    glfwSetKeyCallback(handle, callback);
+void Window::set_key_callback(GLFWkeyfun callback) {
+    glfwSetKeyCallback(_handle, callback);
 }

@@ -29,7 +29,7 @@ public:
 private:
     Window _window;
 
-    GLint _scaleLocation;
+    GLint _scale_location;
     float _texture_scale = 5.0f;
 
     GLuint _current_texture{0};

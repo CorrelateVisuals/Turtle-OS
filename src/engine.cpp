@@ -15,7 +15,7 @@ Engine::Engine():_window(520, 360, "Turtle-OS"){
         select_texture(0);
     }
 
-    _window.setKeyCallback(key_call_back);
+    _window.set_key_callback(key_call_back);
 }
 
 // ----------------------------------------------------
@@ -64,6 +64,11 @@ void Engine::key_call_back(GLFWwindow* window, int key, int, int action, int) {
     else if (key == GLFW_KEY_LEFT) {
         engine->select_texture(engine->_texture_index - 1);
     }
+
+    if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS) {
+    glfwSetWindowShouldClose(window, true);
+}
+
 }
 
 void Engine::create_shaders(){
@@ -80,22 +85,27 @@ void Engine::create_shaders(){
 
     glUseProgram(shaderProgram);
 
-    _scaleLocation = glGetUniformLocation(shaderProgram, "scale");
+    _scale_location = glGetUniformLocation(shaderProgram, "scale");
 
 }
 
 void Engine::run(){
     create_shaders();
     //load_texture("data/cat.jpg");
-    glfwSetWindowUserPointer(_window.getHandle(), this);
+    glfwSetWindowUserPointer(_window.get_handle(), this);
 
     // Main render loop
-    while (!_window.shouldClose()) {
+    while (!_window.should_close()) {
         glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
+        // Update viewport each frame (important on Pinebook!)
+        int w, h;
+        glfwGetFramebufferSize(_window.get_handle(), &w, &h);
+        glViewport(0, 0, w, h);
+
 
         glBindTexture(GL_TEXTURE_2D, _current_texture);
-        glUniform1f(_scaleLocation, _texture_scale);
+        glUniform1f(_scale_location, _texture_scale);
 
         if (_texture_scale > 1.0f){
             _texture_scale -= 0.01f;
@@ -114,7 +124,7 @@ void Engine::run(){
 
 
         // Swap buffers and poll events
-        _window.swapBuffers();
-        _window.pollEvents();
+        _window.swap_buffers();
+        _window.poll_events();
     }
 };

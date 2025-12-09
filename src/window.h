@@ -9,13 +9,13 @@ public:
     Window(int width, int height, std::string_view title);
     ~Window();
 
-    bool shouldClose() const;
-    void swapBuffers();
-    void pollEvents();
-    void setKeyCallback(GLFWkeyfun callback);
+    bool should_close() const;
+    void swap_buffers();
+    void poll_events();
+    void set_key_callback(GLFWkeyfun callback);
 
-    GLFWwindow* getHandle() const;
+    GLFWwindow* get_handle() const;
 
 private:
-    GLFWwindow* handle;
+    GLFWwindow* _handle;
 };
