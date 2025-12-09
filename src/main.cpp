@@ -7,15 +7,7 @@
 Engine TurtleOS;
 
 int main() {
-    ImageFinder finder;
-
-    finder.setRoot("data");  // optional, default is "data/"
-
-    auto images = finder.findAllImages();
-
-    for (const auto& path : images) {
-        std::cout << path << "\n";
-    }
+   
     try {
         TurtleOS.run();
 
