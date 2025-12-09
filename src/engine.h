@@ -31,8 +31,8 @@ private:
 
     GLint _scale_location;
     float _texture_start_scale = 5.0f;
-    float _texture_final_scale = 2.0f;
     float _zoom_speed = 0.02f;
+    float _texture_final_scale = 2.0f + _zoom_speed ;
 
     GLuint _current_texture{0};
     std::vector<std::string> _textures;
