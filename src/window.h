@@ -6,7 +6,7 @@
 
 class Window {
 public:
-    Window(int width, int height, std::string_view title);
+    Window(std::string_view title);
     ~Window();
 
     bool should_close() const;
@@ -17,5 +17,5 @@ public:
     GLFWwindow* get_handle() const;
 
 private:
-    GLFWwindow* _handle;
+    GLFWwindow* _handle = nullptr;
 };

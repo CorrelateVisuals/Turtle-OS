@@ -6,7 +6,7 @@
 #include "shader.h"
 #include "resources.h"
 
-Engine::Engine():_window(520, 360, "Turtle-OS"){
+Engine::Engine():_window("Turtle-OS"){
     load_all_textures();
 
     if (_textures.empty()) {
@@ -42,7 +42,7 @@ void Engine::select_texture(int index) {
     _texture_index = (index + _textures.size()) % _textures.size();
 
     std::cout << "Switching to texture: " << _textures[_texture_index] << "\n";
-    _texture_scale = 5.0f;
+    _texture_start_scale = 5.0f;
     _current_texture = load_texture(_textures[_texture_index]);
     glBindTexture(GL_TEXTURE_2D, _current_texture);
 }
@@ -105,12 +105,12 @@ void Engine::run(){
 
 
         glBindTexture(GL_TEXTURE_2D, _current_texture);
-        glUniform1f(_scale_location, _texture_scale);
+        glUniform1f(_scale_location, _texture_start_scale);
 
-        if (_texture_scale > 1.0f){
-            _texture_scale -= 0.01f;
+        if (_texture_start_scale > _texture_final_scale){
+            _texture_start_scale -= _zoom_speed;
         } else {
-            _texture_scale = 1.0f;
+            _texture_start_scale = _texture_final_scale;
         }
 
         // Pass vertex positions to the shader
