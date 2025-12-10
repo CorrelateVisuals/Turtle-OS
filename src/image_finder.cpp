@@ -1,6 +1,8 @@
 #include <algorithm>
 #include <cctype>
 #include <cstring>
+#include <random>
+#include <algorithm>
 
 #include "image_finder.h"
 
@@ -11,11 +13,11 @@ ImageFinder::ImageFinder()
 {
 }
 
-void ImageFinder::setRoot(const std::string& rootPath) {
-    root = rootPath;
+void ImageFinder::set_root(const std::string& root_path) {
+    root = root_path;
 }
 
-bool ImageFinder::isImageFile(const fs::path& p) const {
+bool ImageFinder::is_image_file(const fs::path& p) const {
     static const std::vector<std::string> extensions = {
         ".jpg", ".jpeg", ".png", ".bmp", ".gif", ".webp"
     };
@@ -30,7 +32,7 @@ bool ImageFinder::isImageFile(const fs::path& p) const {
     return false;
 }
 
-std::vector<std::string> ImageFinder::findAllImages() const {
+std::vector<std::string> ImageFinder::find_all_images() const {
     std::vector<std::string> result;
 
     for (const auto& entry : fs::recursive_directory_iterator(root)) {
@@ -38,7 +40,7 @@ std::vector<std::string> ImageFinder::findAllImages() const {
 
             // Scan only inside the images/ folder
             for (const auto& img : fs::directory_iterator(entry.path())) {
-                if (img.is_regular_file() && isImageFile(img.path())) {
+                if (img.is_regular_file() && is_image_file(img.path())) {
                     result.push_back(img.path().string());
                 }
             }
@@ -47,3 +49,9 @@ std::vector<std::string> ImageFinder::findAllImages() const {
 
     return result;
 }
+
+    void ImageFinder::randomize_order(std::vector<std::string>& vector){
+        std::random_device rd;
+        std::mt19937 gen(rd());
+        std::shuffle(vector.begin(), vector.end(), gen);
+    }

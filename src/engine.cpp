@@ -2,6 +2,7 @@
 #include <iostream>
 #include <filesystem>
 
+
 #include "engine.h"
 #include "shader.h"
 #include "resources.h"
@@ -9,8 +10,10 @@
 //
 Engine::Engine():_window("Turtle-OS"){
     ImageFinder finder;
-    //finder.setRoot("data");
-    _textures = finder.findAllImages();
+    //finder.set_root("data");
+    _textures = finder.find_all_images();
+    finder.randomize_order(_textures);
+    
     select_texture(_texture_index);
 
     _window.set_key_callback(key_call_back);
