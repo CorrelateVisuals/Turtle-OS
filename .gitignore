@@ -9,3 +9,6 @@ triangle
 
 # Ignore build directories
 build/
+
+# Ignore data contents
+

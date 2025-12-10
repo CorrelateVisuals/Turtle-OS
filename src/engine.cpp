@@ -9,7 +9,7 @@
 //
 Engine::Engine():_window("Turtle-OS"){
     ImageFinder finder;
-    finder.setRoot("data");
+    //finder.setRoot("data");
     _textures = finder.findAllImages();
     select_texture(_texture_index);
 
