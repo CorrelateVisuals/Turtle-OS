@@ -5,37 +5,17 @@
 #include "engine.h"
 #include "shader.h"
 #include "resources.h"
+#include "image_finder.h"
 //
 Engine::Engine():_window("Turtle-OS"){
-    load_all_textures();
-
-    if (_textures.empty()) {
-        std::cerr << "No textures found in data/ folder.\n";
-    } else {
-        select_texture(0);
-    }
+    ImageFinder finder;
+    finder.setRoot("data");
+    _textures = finder.findAllImages();
+    select_texture(_texture_index);
 
     _window.set_key_callback(key_call_back);
 }
 
-// ----------------------------------------------------
-//   Scan data/ directory and collect texture paths
-// ----------------------------------------------------
-void Engine::load_all_textures() {
-    _textures.clear();
-
-    for (const auto& entry : std::filesystem::directory_iterator("data")) {
-        if (entry.path().extension() == ".jpg") {
-            _textures.push_back(entry.path().string());
-        }
-    }
-
-    std::cout << "Loaded " << _textures.size() << " textures.\n";
-}
-
-// ----------------------------------------------------
-//   Load a texture by index
-// ----------------------------------------------------
 void Engine::select_texture(int index) {
     if (_textures.empty()) return;
 
@@ -47,9 +27,6 @@ void Engine::select_texture(int index) {
     glBindTexture(GL_TEXTURE_2D, _current_texture);
 }
 
-// ----------------------------------------------------
-//   Key callback for left/right arrow cycling
-// ----------------------------------------------------
 void Engine::key_call_back(GLFWwindow* window, int key, int, int action, int) {
     if (action != GLFW_PRESS) return;
 
