@@ -11,4 +11,6 @@ triangle
 build/
 
 # Ignore data contents
+data/*
+!data/.gitkeep
 
