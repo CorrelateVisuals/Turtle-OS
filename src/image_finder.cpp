@@ -3,6 +3,7 @@
 #include <cstring>
 #include <random>
 #include <algorithm>
+#include <iostream> 
 
 #include "image_finder.h"
 
@@ -11,9 +12,12 @@ namespace fs = std::filesystem;
 ImageFinder::ImageFinder()
     : root("data") // default starting folder
 {
+    std::cout << "Initializing ImageFinder: " << std::endl;
+
 }
 
 void ImageFinder::set_root(const std::string& root_path) {
+    std::cout << "Setting root path: " << root_path << std::endl;
     root = root_path;
 }
 
@@ -29,6 +33,7 @@ bool ImageFinder::is_image_file(const fs::path& p) const {
         if (strcasecmp(ext.c_str(), e.c_str()) == 0)
             return true;
     }
+    std::cout << "No images found" << std::endl;
     return false;
 }
 

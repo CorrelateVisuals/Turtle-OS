@@ -10,7 +10,7 @@
 //
 Engine::Engine():_window("Turtle-OS"){
     ImageFinder finder;
-    //finder.set_root("data");
+    finder.set_root("data");
     _textures = finder.find_all_images();
     finder.randomize_order(_textures);
     
@@ -25,7 +25,7 @@ void Engine::select_texture(int index) {
     _texture_index = (index + _textures.size()) % _textures.size();
 
     std::cout << "Switching to texture: " << _textures[_texture_index] << "\n";
-    _texture_start_scale = 5.0f;
+    _texture_start_scale = 15.0f;
     _current_texture = load_texture(_textures[_texture_index]);
     glBindTexture(GL_TEXTURE_2D, _current_texture);
 }
