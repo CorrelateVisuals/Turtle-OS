@@ -6,7 +6,13 @@ This project demonstrates a minimal OpenGL ES 2.0 application using GLFW on a Pi
 
 ## Dependencies (Manjaro)
 
-Install the required packages:
+### Install the required packages:
+
+sudo apt install libglfw3-dev
+
+sudo apt install libgles2-mesa-dev libegl1-mesa-dev mesa-common-dev
+
+### Install the required packages Pinebook-pro:
 
 sudo pacman -S --needed --noconfirm gcc g++ make pkgconf glfw-wayland libglvnd mesa
 
@@ -20,7 +26,7 @@ make
 
 2. Run the application:
 
-./bin/app
+./bin/Turtle-OS
 
 ## Project Structure
 
