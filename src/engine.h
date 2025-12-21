@@ -27,7 +27,6 @@ public:
 private:
   Window _window;
 
-  bool _zoom_on = true;
   TurtleBaseclass::ZoomEffect _zoom_effect{15.0f, 0.1f, 2.0f};
 
   GLuint _current_texture{0};

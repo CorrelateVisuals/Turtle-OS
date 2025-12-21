@@ -27,7 +27,7 @@ public:
     float _zoom_speed{0.0f};
     float _texture_final_scale{0.0f};
 
-    void run(bool is_on);
+    void run(bool is_on = true);
     void reset_start_scale()
     {
       std::cout << _texture_start_scale << _reset_start_scale << std::endl;
