@@ -17,6 +17,7 @@ public:
     ~Image() = default;
 
     class Texture {
+      public:
       Texture() = default;
       ~Texture() = default;
 
@@ -24,7 +25,6 @@ public:
       std::vector<std::string> _textures{};
       int _texture_index{0};
 
-      void load_all_textures();
       void select_texture(int index);
     };
 
