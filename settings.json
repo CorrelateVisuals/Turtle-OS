@@ -1,0 +1,15 @@
+{
+    // Use clang‑format for all C/C++ files
+    "[cpp]": {
+        "editor.defaultFormatter": "ms-vscode.cpptools"
+    },
+    "[c]": {
+        "editor.defaultFormatter": "ms-vscode.cpptools"
+    },
+
+    // Path to the clang‑format binary (usually /usr/bin/clang-format)
+    "C_Cpp.clang_format_path": "/usr/bin/clang-format",
+
+    // Enable automatic formatting on save (optional)
+    "editor.formatOnSave": true
+}

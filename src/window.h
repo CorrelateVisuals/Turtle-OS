@@ -6,16 +6,16 @@
 
 class Window {
 public:
-    Window(std::string_view title);
-    ~Window();
+  Window(std::string_view title);
+  ~Window();
 
-    bool should_close() const;
-    void swap_buffers();
-    void poll_events();
-    void set_key_callback(GLFWkeyfun callback);
+  bool should_close() const;
+  void swap_buffers();
+  void poll_events();
+  void set_key_callback(GLFWkeyfun callback);
 
-    GLFWwindow* get_handle() const;
+  GLFWwindow *get_handle() const;
 
 private:
-    GLFWwindow* _handle = nullptr;
+  GLFWwindow *_handle = nullptr;
 };

@@ -7,15 +7,13 @@
 Engine TurtleOS;
 
 int main() {
-   
-    try {
-        TurtleOS.run();
 
-    
+  try {
+    TurtleOS.run();
 
-    } catch (const std::exception& e) {
-        std::cerr << "Exception: " << e.what() << "\n";
-        return -1;
-    }
-    return 0;
+  } catch (const std::exception &e) {
+    std::cerr << "Exception: " << e.what() << "\n";
+    return -1;
+  }
+  return 0;
 }
