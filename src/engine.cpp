@@ -6,6 +6,7 @@
 #include "image_finder.h"
 #include "resources.h"
 #include "shader.h"
+#include "geometry.h"
 
 Engine::Engine() : _window("Turtle-OS") {
   ImageFinder finder;

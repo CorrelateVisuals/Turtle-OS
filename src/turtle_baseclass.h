@@ -2,40 +2,52 @@
 #include <GLES2/gl2.h>
 
 #include <iostream>
+#include <vector>
 
-class TurtleBaseclass
-{
+class TurtleBase {
 public:
-  TurtleBaseclass() = default;
-  ~TurtleBaseclass() = default;
+  TurtleBase() = default;
+  ~TurtleBase() = default;
 
-  void run() {};
+  void run(){};
 
-  class ZoomEffect
-  {
+  class Image {
   public:
-    ZoomEffect(float start, float speed, float final) : _reset_start_scale{start}, _texture_start_scale{start}, _zoom_speed(speed),
-                                                        _texture_final_scale(final + speed)
-    {
-      std::cout << "Initializing ZoomEffect." << std::endl;
-      getSettings();
+    Image() = default;
+    ~Image() = default;
+
+    class Texture {
+      Texture() = default;
+      ~Texture() = default;
+
+      GLuint _current_texture{0};
+      std::vector<std::string> _textures{};
+      int _texture_index{0};
+
+      void load_all_textures();
+      void select_texture(int index);
     };
 
-    GLint _scale_location{0};
-    float _reset_start_scale{0.0f};
-    float _texture_start_scale{0.0f};
-    float _zoom_speed{0.0f};
-    float _texture_final_scale{0.0f};
+    class Zoom {
+    public:
+      Zoom(float start, float speed, float final);
+      ~Zoom() = default;
 
-    void run(bool is_on = true);
-    void reset_start_scale()
-    {
-      std::cout << _texture_start_scale << _reset_start_scale << std::endl;
-      _texture_start_scale = _reset_start_scale;
+      GLint _scale_location{0};
+      float _reset_start_scale{0.0f};
+      float _texture_start_scale{0.0f};
+      float _zoom_speed{0.0f};
+      float _texture_final_scale{0.0f};
+
+      void run(bool is_on = true);
+      void reset_start_scale() {
+        std::cout << _texture_start_scale << _reset_start_scale << std::endl;
+        _texture_start_scale = _reset_start_scale;
+      };
+
+    private:
+      void getSettings();
     };
-
-  private:
-    void getSettings();
   };
 
 protected:
