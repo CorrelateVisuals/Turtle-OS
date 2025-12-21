@@ -2,12 +2,11 @@
 #include <iostream>
 #include <filesystem>
 
-
 #include "engine.h"
 #include "shader.h"
 #include "resources.h"
 #include "image_finder.h"
-//
+
 Engine::Engine():_window("Turtle-OS"){
     ImageFinder finder;
     finder.set_root("data");
@@ -108,3 +107,6 @@ void Engine::run(){
         _window.poll_events();
     }
 };
+
+
+
