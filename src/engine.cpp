@@ -7,7 +7,7 @@
 #include "resources.h"
 #include "image_finder.h"
 
-Engine::Engine():_window("Turtle-OS"){
+Engine::Engine():_window("Turtle-OS"){    
     ImageFinder finder;
     finder.set_root("data");
     _textures = finder.find_all_images();
@@ -16,6 +16,7 @@ Engine::Engine():_window("Turtle-OS"){
     select_texture(_texture_index);
 
     _window.set_key_callback(key_call_back);
+
 }
 
 void Engine::select_texture(int index) {
@@ -107,6 +108,4 @@ void Engine::run(){
         _window.poll_events();
     }
 };
-
-
 

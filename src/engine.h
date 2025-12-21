@@ -3,8 +3,9 @@
 #include <GLES2/gl2.h>
 #include <vector>
 
+
 #include "window.h"
-#include "array"
+#include "turtle_baseclass.h"
 
 // x, y,   u, v
 constexpr std::array<float, 16> RECT_VERTICES = {
@@ -28,6 +29,8 @@ public:
 
 private:
     Window _window;
+
+    TurtleBaseclass::ZoomEffect _zoomEffect{15.0f, 0.1f, 2.0f};
 
     GLint _scale_location;
     float _texture_start_scale = 15.0f;
