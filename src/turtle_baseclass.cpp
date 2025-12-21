@@ -3,7 +3,6 @@
 void TurtleBaseclass::ZoomEffect::run(bool is_on) {
 
   if (is_on) {
-    std::cout << is_on << std::endl;
     if (_texture_start_scale > _texture_final_scale) {
       _texture_start_scale -= _zoom_speed;
     } else {

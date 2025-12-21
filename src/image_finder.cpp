@@ -48,7 +48,7 @@ std::vector<std::string> ImageFinder::find_all_images() const {
       }
     }
   }
-
+  std::cout << "Number of images found: " << result.size() << std::endl;
   return result;
 }
 
