@@ -27,15 +27,18 @@ void TurtleBase::Image::Zoom::getSettings() {
             << std::endl;
 };
 
-void TurtleBase::Image::Texture::select_texture(int index) {
-  if (_textures.empty())
+void TurtleBase::Image::Texture::select_texture(int index, Zoom& effect) {
+  if (_images.empty())
     return;
 
-  _texture_index = (index + _textures.size()) % _textures.size();
+  _texture_index = (index + _images.size()) % _images.size();
 
-  std::cout << "Switching to texture: " << _textures[_texture_index] << "\n";
-  _zoom_effect.reset_start_scale();
-  //_zoom_effect._texture_start_scale = 15.0f;
-  _current_texture = load_texture(_textures[_texture_index]);
+  std::cout << "Switching to texture: " << _images[_texture_index] << "\n";
+  
+  effect.reset_start_scale();
+
+  _current_texture = load_texture(_images[_texture_index]);
   glBindTexture(GL_TEXTURE_2D, _current_texture);
+
+  return;
 }

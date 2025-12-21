@@ -16,16 +16,18 @@ public:
     Image() = default;
     ~Image() = default;
 
+    class Zoom;
+
     class Texture {
-      public:
+    public:
       Texture() = default;
       ~Texture() = default;
 
       GLuint _current_texture{0};
-      std::vector<std::string> _textures{};
+      std::vector<std::string> _images{};
       int _texture_index{0};
 
-      void select_texture(int index);
+      void select_texture(int index, Zoom &effect);
     };
 
     class Zoom {
