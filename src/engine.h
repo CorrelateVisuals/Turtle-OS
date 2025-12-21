@@ -20,12 +20,6 @@ private:
   TurtleBase::Image::Zoom _zoom_effect{15.0f, 0.1f, 2.0f};
   TurtleBase::Image::Texture _texture{};
 
-  // GLuint _current_texture{0};
-  // std::vector<std::string> _textures;
-  // int _texture_index{0};
-
-  //void select_texture(int index);
-
   static void key_call_back(GLFWwindow *window, int key, int seconds,
                             int action, int mods);
 

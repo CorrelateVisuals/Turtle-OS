@@ -31,14 +31,14 @@ void TurtleBase::Image::Texture::select_texture(int index, Zoom& effect) {
   if (_images.empty())
     return;
 
-  _texture_index = (index + _images.size()) % _images.size();
+  _image_index = (index + _images.size()) % _images.size();
 
-  std::cout << "Switching to texture: " << _images[_texture_index] << "\n";
+  std::cout << "Switching to texture: " << _images[_image_index] << "\n";
   
   effect.reset_start_scale();
 
-  _current_texture = load_texture(_images[_texture_index]);
-  glBindTexture(GL_TEXTURE_2D, _current_texture);
+  _current_image = load_texture(_images[_image_index]);
+  glBindTexture(GL_TEXTURE_2D, _current_image);
 
   return;
 }

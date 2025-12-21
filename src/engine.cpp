@@ -12,25 +12,13 @@ Engine::Engine() : _window("Turtle-OS") {
   ImageFinder finder;
   finder.set_root("data");
   _texture._images = finder.find_all_images();
+
   finder.randomize_order(_texture._images);
 
-  _texture.select_texture(_texture._texture_index, _zoom_effect);
+  _texture.select_texture(_texture._image_index, _zoom_effect);
 
   _window.set_key_callback(key_call_back);
 }
-
-// void Engine::select_texture(int index) {
-//   if (_texture._images.empty())
-//     return;
-
-//   _texture_index = (index + _textures.size()) % _textures.size();
-
-//   std::cout << "Switching to texture: " << _textures[_texture_index] << "\n";
-//   _zoom_effect.reset_start_scale();
-//   //_zoom_effect._texture_start_scale = 15.0f;
-//   _current_texture = load_texture(_textures[_texture_index]);
-//   glBindTexture(GL_TEXTURE_2D, _current_texture);
-// }
 
 void Engine::key_call_back(GLFWwindow *window, int key, int, int action, int) {
   if (action != GLFW_PRESS)
@@ -43,9 +31,9 @@ void Engine::key_call_back(GLFWwindow *window, int key, int, int action, int) {
     return;
 
   if (key == GLFW_KEY_RIGHT) {
-    engine->_texture.select_texture(engine->_texture._texture_index + 1, engine->_zoom_effect);
+    engine->_texture.select_texture(engine->_texture._image_index + 1, engine->_zoom_effect);
   } else if (key == GLFW_KEY_LEFT) {
-    engine->_texture.select_texture(engine->_texture._texture_index - 1, engine->_zoom_effect);
+    engine->_texture.select_texture(engine->_texture._image_index - 1, engine->_zoom_effect);
   }
 
   if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS) {
@@ -84,7 +72,7 @@ void Engine::run() {
     glfwGetFramebufferSize(_window.get_handle(), &w, &h);
     glViewport(0, 0, w, h);
 
-    glBindTexture(GL_TEXTURE_2D, _texture._current_texture);
+    glBindTexture(GL_TEXTURE_2D, _texture._current_image);
     glUniform1f(_zoom_effect._scale_location,
                 _zoom_effect._texture_start_scale);
 

@@ -23,9 +23,9 @@ public:
       Texture() = default;
       ~Texture() = default;
 
-      GLuint _current_texture{0};
+      GLuint _current_image{0};
       std::vector<std::string> _images{};
-      int _texture_index{0};
+      int _image_index{0};
 
       void select_texture(int index, Zoom &effect);
     };
