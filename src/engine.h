@@ -30,12 +30,7 @@ public:
 private:
     Window _window;
 
-    TurtleBaseclass::ZoomEffect _zoomEffect{15.0f, 0.1f, 2.0f};
-
-    GLint _scale_location;
-    float _texture_start_scale = 15.0f;
-    float _zoom_speed = 0.1f;
-    float _texture_final_scale = 2.0f + _zoom_speed ;
+    TurtleBaseclass::ZoomEffect _zoom_effect{15.0f, 0.1f, 2.0f};
 
     GLuint _current_texture{0};
     std::vector<std::string> _textures;

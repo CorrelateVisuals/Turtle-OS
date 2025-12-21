@@ -25,7 +25,7 @@ void Engine::select_texture(int index) {
     _texture_index = (index + _textures.size()) % _textures.size();
 
     std::cout << "Switching to texture: " << _textures[_texture_index] << "\n";
-    _texture_start_scale = 15.0f;
+    _zoom_effect._texture_start_scale = 15.0f;
     _current_texture = load_texture(_textures[_texture_index]);
     glBindTexture(GL_TEXTURE_2D, _current_texture);
 }
@@ -65,7 +65,7 @@ void Engine::create_shaders(){
 
     glUseProgram(shaderProgram);
 
-    _scale_location = glGetUniformLocation(shaderProgram, "scale");
+    _zoom_effect._scale_location = glGetUniformLocation(shaderProgram, "scale");
 
 }
 
@@ -85,13 +85,9 @@ void Engine::run(){
 
 
         glBindTexture(GL_TEXTURE_2D, _current_texture);
-        glUniform1f(_scale_location, _texture_start_scale);
+        glUniform1f(_zoom_effect._scale_location, _zoom_effect._texture_start_scale);
 
-        if (_texture_start_scale > _texture_final_scale){
-            _texture_start_scale -= _zoom_speed;
-        } else {
-            _texture_start_scale = _texture_final_scale;
-        }
+        _zoom_effect.run();
 
         // Pass vertex positions to the shader
         glEnableVertexAttribArray(0); // pos
