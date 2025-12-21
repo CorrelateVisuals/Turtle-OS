@@ -25,7 +25,8 @@ void Engine::select_texture(int index) {
   _texture_index = (index + _textures.size()) % _textures.size();
 
   std::cout << "Switching to texture: " << _textures[_texture_index] << "\n";
-  _zoom_effect._texture_start_scale = 15.0f;
+  _zoom_effect.reset_start_scale();
+  //_zoom_effect._texture_start_scale = 15.0f;
   _current_texture = load_texture(_textures[_texture_index]);
   glBindTexture(GL_TEXTURE_2D, _current_texture);
 }
@@ -68,6 +69,7 @@ void Engine::create_shaders() {
 }
 
 void Engine::run() {
+
   create_shaders();
   // load_texture("data/cat.jpg");
   glfwSetWindowUserPointer(_window.get_handle(), this);
@@ -85,7 +87,7 @@ void Engine::run() {
     glUniform1f(_zoom_effect._scale_location,
                 _zoom_effect._texture_start_scale);
 
-    _zoom_effect.run(true);
+    _zoom_effect.run(_zoom_on);
 
     // Pass vertex positions to the shader
     glEnableVertexAttribArray(0); // pos
