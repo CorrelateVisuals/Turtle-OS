@@ -1,10 +1,12 @@
 #include "turtle_baseclass.h"
 
-void TurtleBaseclass::ZoomEffect::run() {
-  if (_texture_start_scale > _texture_final_scale) {
-    _texture_start_scale -= _zoom_speed;
-  } else {
-    _texture_start_scale = _texture_final_scale;
+void TurtleBaseclass::ZoomEffect::run(bool is_on) {
+  if (is_on) {
+    if (_texture_start_scale > _texture_final_scale) {
+      _texture_start_scale -= _zoom_speed;
+    } else {
+      _texture_start_scale = _texture_final_scale;
+    }
   }
 };
 

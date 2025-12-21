@@ -85,7 +85,7 @@ void Engine::run() {
     glUniform1f(_zoom_effect._scale_location,
                 _zoom_effect._texture_start_scale);
 
-    _zoom_effect.run();
+    _zoom_effect.run(true);
 
     // Pass vertex positions to the shader
     glEnableVertexAttribArray(0); // pos

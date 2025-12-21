@@ -2,6 +2,7 @@
 
 #include <GLES2/gl2.h>
 #include <vector>
+#include <array>
 
 #include "turtle_baseclass.h"
 #include "window.h"

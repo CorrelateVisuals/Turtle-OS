@@ -24,7 +24,7 @@ public:
     float _zoom_speed{0.0f};
     float _texture_final_scale{0.0f};
 
-    void run();
+    void run(bool is_on);
 
   private:
     void getSettings();
