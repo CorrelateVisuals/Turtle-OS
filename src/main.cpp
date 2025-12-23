@@ -9,7 +9,7 @@ Engine TurtleOS;
 int process_arguments(int arg_count, char **argv) {
   for (int i = 1; i < arg_count; ++i) {
     std::string argument = argv[i];
-    if (argument == "--turtle"){
+    if (argument == "turtle"){
       std::cout << "turtle found!" << std::endl;
       return arg_count;
       }
