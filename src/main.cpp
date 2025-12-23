@@ -6,7 +6,19 @@
 
 Engine TurtleOS;
 
-int main() {
+int process_arguments(int arg_count, char **argv) {
+  for (int i = 1; i < arg_count; ++i) {
+    std::string argument = argv[i];
+    if (argument == "turtle")
+      std::cout << "turtle found!" << std::endl;
+      return arg_count;
+  }
+  return arg_count;
+};
+
+int main(int argc, char *argv[]) {
+
+  process_arguments(argc, argv);
 
   try {
     TurtleOS.run();
