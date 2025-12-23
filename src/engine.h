@@ -7,9 +7,9 @@
 #include "turtle_baseclass.h"
 #include "window.h"
 
-class Engine {
+class Engine : public TurtleBase {
 public:
-  Engine();
+  Engine(int argc, char* argv[]);
   ~Engine() = default;
 
   void run();

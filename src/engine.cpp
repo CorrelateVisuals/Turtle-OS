@@ -8,7 +8,7 @@
 #include "shader.h"
 #include "geometry.h"
 
-Engine::Engine() : _window("Turtle-OS") {
+Engine::Engine(int argc, char* argv[]) : TurtleBase(argc, argv), _window("Turtle-OS") {
   ImageFinder finder;
   finder.set_root("data");
   _texture._images = finder.find_all_images();

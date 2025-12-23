@@ -6,7 +6,7 @@
 
 class TurtleBase {
 public:
-  TurtleBase() = default;
+  TurtleBase(int argc, char *argv[]);
   ~TurtleBase() = default;
 
   void run(){};

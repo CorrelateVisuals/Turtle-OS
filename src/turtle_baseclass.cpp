@@ -1,6 +1,17 @@
 #include "turtle_baseclass.h"
 #include "resources.h"
 
+TurtleBase::TurtleBase(int argc, char *argv[]) {
+  for (int i = 1; i < argc; ++i) {
+    std::string argument = argv[i];
+    if (argument == "turtle") {
+      std::cout << "TurtleBase found!\n" << std::endl;
+      return;
+    }
+  }
+  return;
+};
+
 TurtleBase::Image::Zoom::Zoom(float start, float speed, float final)
     : _reset_start_scale{start}, _texture_start_scale{start},
       _zoom_speed(speed), _texture_final_scale(final + speed) {
@@ -27,14 +38,14 @@ void TurtleBase::Image::Zoom::getSettings() {
             << std::endl;
 };
 
-void TurtleBase::Image::Texture::select_texture(int index, Zoom& effect) {
+void TurtleBase::Image::Texture::select_texture(int index, Zoom &effect) {
   if (_images.empty())
     return;
 
   _image_index = (index + _images.size()) % _images.size();
 
   std::cout << "Switching to texture: " << _images[_image_index] << "\n";
-  
+
   effect.reset_start_scale();
 
   _current_image = load_texture(_images[_image_index]);
