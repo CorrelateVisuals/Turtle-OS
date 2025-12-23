@@ -7,3 +7,5 @@
 GLuint shader_compile(const std::string &source, GLenum type);
 GLuint shader_create_program(const std::string &vertex_src,
                              const std::string &fragment_src);
+
+void create_shaders(GLint& scale_location);
