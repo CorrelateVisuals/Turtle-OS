@@ -11,11 +11,6 @@ public:
 
   void run(){};
 
-  class Shaders {
-  public:
-    static void create_shaders(GLint &scale_location);
-  };
-
   class Image {
   public:
     Image() = default;

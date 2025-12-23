@@ -23,4 +23,5 @@ private:
   static void key_call_back(GLFWwindow *window, int key, int seconds,
                             int action, int mods);
 
+  void create_shaders();
 };
