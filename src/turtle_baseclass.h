@@ -11,7 +11,13 @@ public:
 
   void run(){};
 
-  class Image {
+  class Composition {
+  public:
+    std::array<float, 3> _position{0.0f, 0.0f, 0.0f};
+    std::array<float, 3> _rotation{0.0f, 0.0f, 0.0f};
+  };
+
+  class Image : public Composition {
   public:
     Image() = default;
     ~Image() = default;
