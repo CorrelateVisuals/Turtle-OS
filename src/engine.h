@@ -22,8 +22,8 @@ private:
   };
 
 private:
-  Window _window;
-  Composition _composition;
+  Window _win;
+  Composition _comp;
 
   static void key_call_back(GLFWwindow *window, int key, int seconds,
                             int action, int mods);

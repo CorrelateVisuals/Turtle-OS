@@ -4,6 +4,7 @@
 #include <iostream>
 #include <vector>
 #include <array>
+#include <geometry.h>
 
 class TurtleBase {
 public:
@@ -25,7 +26,7 @@ public:
 
     class Zoom;
 
-    class Texture {
+    class Texture : public Rectangle{
     public:
       Texture() = default;
       ~Texture() = default;
