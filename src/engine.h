@@ -62,37 +62,3 @@ public:
 private:
   void getSettings();
 };
-
-class Shape {
-public:
-  Shape(int shape);
-  ~Shape() = default;
-};
-
-class Image : public Shape {
-public:
-  Image(int shape, std::string texture) : Shape(shape) {}
-  Texture _media;
-
-private:
-  void zoom(){};
-  void switch_source(){};
-};
-
-Image _image;
-_image.zoom();
-
-class Media {
-public:
-  Media(std::string source);
-};
-
-class Image : public Media {
-  Image(std::string source) : Media(source) {}
-  Shape _shape{0};
-};
-
-Image _img;
-
-enum shapes = {rect, circle, cube};
-Image()
