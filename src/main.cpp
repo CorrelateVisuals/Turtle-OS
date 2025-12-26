@@ -13,7 +13,7 @@ int main(int argc, char *argv[]) {
   Geometry::Shape s{};
    Geometry::Shape s1{2, 0.5f, {1.0f, 1.0f, 1.0f}, {1.0f, 1.0f, 1.0f}, "new"};
   
-  Geometry::Texture t1;
+  Image::Texture t1;
 
 
   Engine turtle_os(argc, argv);

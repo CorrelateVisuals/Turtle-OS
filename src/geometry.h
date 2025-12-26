@@ -1,6 +1,10 @@
 #pragma once
 
+#include <GLES2/gl2.h>
+
 #include <array>
+#include <string>
+#include <iostream>
 
 class Rectangle
 {
@@ -45,8 +49,7 @@ public:
 
 struct Geometry
 {
-  private:
-  std::array<float, 3> tb_vec3{};
+private:
 
 public:
   class Vertex
@@ -54,11 +57,7 @@ public:
   public:
     Vertex(std::array<float, 3> pos = {0.0f, 0.0f, 0.0f},
            std::array<float, 3> rot = {0.0f, 0.0f, 0.0f},
-           std::string name = "Vertex Default")
-        : _position(pos), _rotation(rot), _name(name)
-    {
-      print_config();
-    };
+           std::string name = "Vertex Default");
     virtual ~Vertex() = default;
 
     std::array<float, 3> get_position() { return _position; };
@@ -107,8 +106,14 @@ public:
                 << std::endl;
     };
   };
+};
 
-  class Texture : public Shape
+class Image{
+  public:
+
+  class Zoom;
+
+  class Texture : public Geometry::Shape
   {
   public:
     Texture() : Shape(0, 1.0f, {0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f}, "Texture Default"), _current_image(0), _images(), _image_index(0) { print_config(); };
@@ -118,13 +123,14 @@ public:
     std::array<std::string, 1000> _images;
     int _image_index;
 
+    void select_texture(int index, Image::Zoom &effect);
+    GLuint load_texture(const std::string &path);
+
   private:
     void print_config()
     {
       std::cout << "Texture initialized: " << _current_image << ", " << _image_index << " size of " << _images.size() << std::endl
                 << std::endl;
     };
-    /// void select_texture(int index, TurtleBase::Image::Zoom &effect);
-    // GLuint load_texture(const std::string &path);
   };
 };
