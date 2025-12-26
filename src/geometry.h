@@ -60,6 +60,7 @@ public:
 
     std::array<float, 3> get_position() { return _position; };
     std::array<float, 3> get_rotation() { return _rotation; };
+    std::string get_name() { return _name; };
 
   private:
     std::array<float, 3> _position;
@@ -81,13 +82,9 @@ public:
   class Shape : public Vertex
   {
   public:
-    Shape(std::array<float, 3> pos = {0.0f, 0.0f, 0.0f},
+    Shape(int shape = 0, float scale = 1.0f, std::array<float, 3> pos = {0.0f, 0.0f, 0.0f},
           std::array<float, 3> rot = {0.0f, 0.0f, 0.0f},
-          std::string name = "Shape Default", int shape = 0, float scale = 1.0f) : Vertex(pos, rot, name), _scale(scale), _shape(shape)
-    {
-      print_config();
-    };
-    Shape(int shape = 0, float scale = 1.0f) : Vertex({0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f}, "Shape Default"), _scale(scale), _shape(shape)
+          std::string name = "Shape Default") : Vertex(pos, rot, name), _scale(scale), _shape(shape)
     {
       print_config();
     };
@@ -108,15 +105,15 @@ public:
     };
   };
 
-  class Texture //: public Shape
+  class Texture : public Shape
   {
   public:
-    Texture() { print_config(); };
+    Texture() : Shape(0, 1.0f, {0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f}, "Texture Default"), _current_image(0), _images(), _image_index(0) { print_config(); };
     ~Texture() = default;
 
-    GLuint _current_image{0};
-    std::array<std::string, 1000> _images{};
-    int _image_index{0};
+    GLuint _current_image;
+    std::array<std::string, 1000> _images;
+    int _image_index;
 
   private:
     void print_config()
