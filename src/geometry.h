@@ -1,3 +1,5 @@
+#pragma once
+
 #include <array>
 
 class Rectangle {
@@ -12,9 +14,33 @@ public:
   std::array<unsigned int, 6> _indices = {0, 1, 2, 2, 3, 0};
 };
 
-#include <array>
-#include <iostream>
-#include <string>
+// #include <array>
+// #include <iostream>
+// #include <string>
+
+// enum class Geo : unsigned int {
+//   Rectangle = 0,
+// };
+
+// struct GeometryData {
+//     std::array<float, 16> vertices;   // 4 vertices × (x,y,u,v)
+//     std::array<unsigned int, 6> indices;
+// };
+
+// inline GeometryData getGeometry(Geo g) {
+//   switch (g) {
+//   case Geo::Rectangle: {
+//     return GeometryData{                           // clang-format off
+//                 { -0.5f,  0.5f, 0.0f, 1.0f,   // Top‑left
+//                   -0.5f, -0.5f, 0.0f, 0.0f,   // Bottom‑left
+//                    0.5f, -0.5f, 1.0f, 0.0f,   // Bottom‑right
+//                    0.5f,  0.5f, 1.0f, 1.0f } // Top‑right
+//                                                    // clang-format on
+//                         ,
+//                         {0, 1, 2, 2, 3, 0}};
+//   };
+//   };
+// };
 
 struct Test {
   class Vertex {

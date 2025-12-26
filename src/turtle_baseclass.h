@@ -1,10 +1,13 @@
-// make all functions virtual (override)
+#pragma once
+
 #include <GLES2/gl2.h>
 
+#include <array>
 #include <iostream>
 #include <vector>
-#include <array>
+
 #include <geometry.h>
+
 
 class TurtleBase {
 public:
@@ -26,7 +29,7 @@ public:
 
     class Zoom;
 
-    class Texture : public Rectangle{
+    class Texture : public Rectangle {
     public:
       Texture() = default;
       ~Texture() = default;
@@ -35,7 +38,8 @@ public:
       std::vector<std::string> _images{};
       int _image_index{0};
 
-      void select_texture(int index, Zoom &effect);
+      void select_texture(int index, TurtleBase::Image::Zoom &effect);
+      GLuint load_texture(const std::string &path);
     };
 
     class Zoom {
@@ -59,6 +63,7 @@ public:
       void getSettings();
     };
   };
+  
 
 protected:
 private:

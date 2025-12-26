@@ -29,36 +29,3 @@ private:
                             int action, int mods);
 };
 
-struct Texture {
-public:
-  GLuint _current_image{0};
-  std::vector<std::string> _images{};
-  int _image_index{0};
-
-  void select_texture(int index, Zoom &effect);
-};
-
-class Effect {
-public:
-};
-
-class Zoom : public Effect {
-public:
-  Zoom(float start, float speed, float final);
-  ~Zoom() = default;
-
-  GLint _scale_location{0};
-  float _reset_start_scale{0.0f};
-  float _texture_start_scale{0.0f};
-  float _zoom_speed{0.0f};
-  float _texture_final_scale{0.0f};
-
-  void run(bool is_on = true);
-  void reset_start_scale() {
-    std::cout << _texture_start_scale << _reset_start_scale << std::endl;
-    _texture_start_scale = _reset_start_scale;
-  };
-
-private:
-  void getSettings();
-};
