@@ -5,6 +5,7 @@
 #include <array>
 #include <string>
 #include <iostream>
+#include <vector>
 
 class Rectangle
 {
@@ -82,6 +83,15 @@ public:
     float get_scale() { return _scale; };
     int get_shape() { return _shape; };
 
+    std::array<float, 16> _vertices = {
+        -0.5f, 0.5f, 0.0f, 1.0f,  // Top-left
+        -0.5f, -0.5f, 0.0f, 0.0f, // Bottom-left
+        0.5f, -0.5f, 1.0f, 0.0f,  // Bottom-right
+        0.5f, 0.5f, 1.0f, 1.0f    // Top-right
+    };
+
+    std::array<unsigned int, 6> _indices = {0, 1, 2, 2, 3, 0};
+
   private:
     float _scale;
     int _shape;
@@ -90,7 +100,7 @@ public:
   };
 };
 
-class Image
+class Img
 {
 public:
   class Zoom;
@@ -102,10 +112,10 @@ public:
     ~Texture() = default;
 
     GLuint _current_image;
-    std::array<std::string, 1000> _images;
+    std::vector<std::string> _images;
     int _image_index;
 
-    void select_texture(int index, Image::Zoom &effect);
+    void select_texture(int index);
     GLuint load_texture(const std::string &path);
 
   private:

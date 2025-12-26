@@ -4,7 +4,10 @@
 #include <array>
 #include <vector>
 
+#include "geometry.h"
+
 #include "turtle_baseclass.h"
+
 #include "window.h"
 
 class Engine : public TurtleBase {
@@ -18,8 +21,11 @@ private:
   class Composition : public TurtleBase::Composition {
   public:
     TurtleBase::Image::Zoom _zoom_effect{15.0f, 0.1f, 2.0f};
-    TurtleBase::Image::Texture _texture{};
+    //TurtleBase::Image::Texture _texture{};
+    Img::Texture _new_texture;    
   };
+
+  
 
 private:
   Window _win;

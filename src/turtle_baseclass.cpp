@@ -1,5 +1,5 @@
-#define STB_IMAGE_IMPLEMENTATION
-#include "stb_image.h"
+// #define STB_IMAGE_IMPLEMENTATION
+// #include "stb_image.h"
 
 #include "engine.h"
 #include "turtle_baseclass.h"
@@ -54,54 +54,52 @@ void TurtleBase::Image::Zoom::getSettings()
             << std::endl;
 };
 
-GLuint TurtleBase::Image::Texture::load_texture(const std::string &path)
-{
-  stbi_set_flip_vertically_on_load(true);
+// GLuint TurtleBase::Image::Texture::load_texture(const std::string &path)
+// {
+//   stbi_set_flip_vertically_on_load(true);
 
-  int width, height, channels;
-  unsigned char *pixels =
-      stbi_load(path.c_str(), &width, &height, &channels, 4);
+//   int width, height, channels;
+//   unsigned char *pixels =
+//       stbi_load(path.c_str(), &width, &height, &channels, 4);
 
-  if (!pixels)
-  {
-    fprintf(stderr, "Failed to load image: %s\n", path.c_str());
-    return 0;
-  }
+//   if (!pixels)
+//   {
+//     fprintf(stderr, "Failed to load image: %s\n", path.c_str());
+//     return 0;
+//   }
 
-  GLuint texture;
-  glGenTextures(1, &texture);
-  glBindTexture(GL_TEXTURE_2D, texture);
+//   GLuint texture;
+//   glGenTextures(1, &texture);
+//   glBindTexture(GL_TEXTURE_2D, texture);
 
-  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA,
-               GL_UNSIGNED_BYTE, pixels);
+//   glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA,
+//                GL_UNSIGNED_BYTE, pixels);
 
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+//   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+//   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
-  stbi_image_free(pixels);
-  return texture;
-};
+//   stbi_image_free(pixels);
+//   return texture;
+// };
 
-void Image::Texture::print_config()
-{
-  std::cout << "Texture initialized: " << _current_image << ", " << _image_index << " size of " << _images.size() << std::endl
-            << std::endl;
-}
+// void Image::Texture::print_config()
+// {
+//   std::cout << "Texture initialized: " << _current_image << ", " << _image_index << " size of " << _images.size() << std::endl
+//             << std::endl;
+// }
 
-void TurtleBase::Image::Texture::select_texture(
-    int index, TurtleBase::Image::Zoom &effect)
-{
-  if (_images.empty())
-    return;
+// void TurtleBase::Image::Texture::select_texture(
+//     int index)
+// {
+//   if (_images.empty())
+//     return;
 
-  _image_index = (index + _images.size()) % _images.size();
+//   _image_index = (index + _images.size()) % _images.size();
 
-  std::cout << "Switching to texture: " << _images[_image_index] << "\n";
+//   std::cout << "Switching to texture: " << _images[_image_index] << "\n";
 
-  effect.reset_start_scale();
+//   _current_image = load_texture(_images[_image_index]);
+//   glBindTexture(GL_TEXTURE_2D, _current_image);
 
-  _current_image = load_texture(_images[_image_index]);
-  glBindTexture(GL_TEXTURE_2D, _current_image);
-
-  return;
-}
+//   return;
+// }
