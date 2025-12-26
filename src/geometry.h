@@ -2,13 +2,14 @@
 
 #include <array>
 
-class Rectangle {
+class Rectangle
+{
 public:
   std::array<float, 16> _vertices = {
-      -0.5f, 0.5f,  0.0f, 1.0f, // Top-left
+      -0.5f, 0.5f, 0.0f, 1.0f,  // Top-left
       -0.5f, -0.5f, 0.0f, 0.0f, // Bottom-left
-      0.5f,  -0.5f, 1.0f, 0.0f, // Bottom-right
-      0.5f,  0.5f,  1.0f, 1.0f  // Top-right
+      0.5f, -0.5f, 1.0f, 0.0f,  // Bottom-right
+      0.5f, 0.5f, 1.0f, 1.0f    // Top-right
   };
 
   std::array<unsigned int, 6> _indices = {0, 1, 2, 2, 3, 0};
@@ -42,11 +43,15 @@ public:
 //   };
 // };
 
-struct Test {
-  class Vertex {
+struct Geometry
+{
+public:
+  class Vertex
+  {
   public:
     Vertex(std::array<float, 3> pos, std::array<float, 3> rot)
-        : _position(pos), _rotation(rot) {
+        : _position(pos), _rotation(rot)
+    {
       print_config();
     };
     Vertex() { print_config(); };
@@ -58,19 +63,23 @@ struct Test {
   private:
     std::array<float, 3> _position{0.0f};
     std::array<float, 3> _rotation{0.0f};
-    void print_config() {
+    void print_config()
+    {
 
-      std::cout << "Vertex created at: " << std::endl
-                << "x: " << _position[0] << "y: " << _position[1]
-                << "z: " << _position[2] << std::endl
-                << "x: " << _rotation[0] << "y: " << _rotation[1]
-                << "z: " << _rotation[2] << std::endl;
+      std::cout << "Vertex created at position and rotation: " << std::endl
+                << "x: " << _position[0] << " y: " << _position[1]
+                << " z: " << _position[2] << std::endl
+                << "x: " << _rotation[0] << " y: " << _rotation[1]
+                << " z: " << _rotation[2] << std::endl
+                << std::endl;
     };
   };
 
-  class Shape : public Vertex {
+  class Shape : public Vertex
+  {
   public:
-    Shape(int shape = 0, float scale = 1.0f) : _scale(scale), _shape(shape) {
+    Shape(int shape = 0, float scale = 1.0f) : _scale(scale), _shape(shape)
+    {
       print_config();
     };
 
@@ -83,15 +92,30 @@ struct Test {
     float _scale{1.0f};
     int _shape{0};
 
-    void print_config() {
-      std::cout << "Shape: " << _shape << " size of " << _scale << std::endl;
+    void print_config()
+    {
+      std::cout << "Shape number type: " << _shape << " size of " << _scale << std::endl
+                << std::endl;
     };
   };
 
-  class Texture : public Shape {
+  class Texture : public Shape
+  {
   public:
-    Texture(std::string i) : _image(i){};
-    std::string _image;
-    std::array<std::string, 100> _images;
+    Texture() {print_config();};
+    ~Texture() = default;
+
+    GLuint _current_image{0};
+    std::array<std::string, 1000> _images{};
+    int _image_index{0};
+
+  private:
+    void print_config()
+    {
+      std::cout << "Texture initialized: " << _current_image << ", " << _image_index << " size of " << _images.size() << std::endl
+                << std::endl;
+    };
+    /// void select_texture(int index, TurtleBase::Image::Zoom &effect);
+    // GLuint load_texture(const std::string &path);
   };
 };

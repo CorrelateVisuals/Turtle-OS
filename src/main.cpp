@@ -2,10 +2,14 @@
 #include <stdexcept>
 
 #include "engine.h"
-#include "image_finder.h"
+#include "geometry.h"
 
 int main(int argc, char *argv[]) {
   
+  Geometry::Vertex vert;
+  Geometry::Shape shape;
+  Geometry::Texture tex;
+
   Engine turtle_os(argc, argv);
 
   try {
