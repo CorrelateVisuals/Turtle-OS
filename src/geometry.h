@@ -50,7 +50,6 @@ public:
 struct Geometry
 {
 private:
-
 public:
   class Vertex
   {
@@ -69,16 +68,7 @@ public:
     std::array<float, 3> _rotation;
     std::string _name;
 
-    void print_config()
-    {
-
-      std::cout << _name << " created at position and rotation: " << std::endl
-                << "    " << "x: " << _position[0] << " y: " << _position[1]
-                << " z: " << _position[2] << std::endl
-                << "    " << "x: " << _rotation[0] << " y: " << _rotation[1]
-                << " z: " << _rotation[2] << std::endl
-                << std::endl;
-    };
+    void print_config();
   };
 
   class Shape : public Vertex
@@ -86,11 +76,7 @@ public:
   public:
     Shape(int shape = 0, float scale = 1.0f, std::array<float, 3> pos = {0.0f, 0.0f, 0.0f},
           std::array<float, 3> rot = {0.0f, 0.0f, 0.0f},
-          std::string name = "Shape Default") : Vertex(pos, rot, name), _scale(scale), _shape(shape)
-    {
-      print_config();
-    };
-
+          std::string name = "Shape Default");
     ~Shape() = default;
 
     float get_scale() { return _scale; };
@@ -100,17 +86,13 @@ public:
     float _scale;
     int _shape;
 
-    void print_config()
-    {
-      std::cout << "Shape number type: " << _shape << " size of " << _scale << std::endl
-                << std::endl;
-    };
+    void print_config();
   };
 };
 
-class Image{
-  public:
-
+class Image
+{
+public:
   class Zoom;
 
   class Texture : public Geometry::Shape
@@ -127,10 +109,6 @@ class Image{
     GLuint load_texture(const std::string &path);
 
   private:
-    void print_config()
-    {
-      std::cout << "Texture initialized: " << _current_image << ", " << _image_index << " size of " << _images.size() << std::endl
-                << std::endl;
-    };
+    void print_config();
   };
 };

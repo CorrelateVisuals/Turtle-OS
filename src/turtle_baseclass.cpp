@@ -3,13 +3,18 @@
 
 #include "engine.h"
 #include "turtle_baseclass.h"
-//#include "resources.h"
+#include "geometry.h"
+// #include "resources.h"
 
-TurtleBase::TurtleBase(int argc, char *argv[]) {
-  for (int i = 1; i < argc; ++i) {
+TurtleBase::TurtleBase(int argc, char *argv[])
+{
+  for (int i = 1; i < argc; ++i)
+  {
     std::string argument = argv[i];
-    if (argument == "turtle") {
-      std::cout << "TurtleBase found!\n" << std::endl;
+    if (argument == "turtle")
+    {
+      std::cout << "TurtleBase found!\n"
+                << std::endl;
       return;
     }
   }
@@ -18,23 +23,30 @@ TurtleBase::TurtleBase(int argc, char *argv[]) {
 
 TurtleBase::Image::Zoom::Zoom(float start, float speed, float final)
     : _reset_start_scale{start}, _texture_start_scale{start},
-      _zoom_speed(speed), _texture_final_scale(final + speed) {
+      _zoom_speed(speed), _texture_final_scale(final + speed)
+{
   std::cout << "Initializing Zoom." << std::endl;
   getSettings();
 };
 
-void TurtleBase::Image::Zoom::run(bool is_on) {
+void TurtleBase::Image::Zoom::run(bool is_on)
+{
 
-  if (is_on) {
-    if (_texture_start_scale > _texture_final_scale) {
+  if (is_on)
+  {
+    if (_texture_start_scale > _texture_final_scale)
+    {
       _texture_start_scale -= _zoom_speed;
-    } else {
+    }
+    else
+    {
       _texture_start_scale = _texture_final_scale;
     }
   }
 };
 
-void TurtleBase::Image::Zoom::getSettings() {
+void TurtleBase::Image::Zoom::getSettings()
+{
   std::cout << "Zoom _scale_location: " << _scale_location
             << ",  _texture_start_scale: " << _texture_start_scale
             << ", _zoom_speed: " << _zoom_speed
@@ -42,14 +54,16 @@ void TurtleBase::Image::Zoom::getSettings() {
             << std::endl;
 };
 
-GLuint TurtleBase::Image::Texture::load_texture(const std::string &path) {
+GLuint TurtleBase::Image::Texture::load_texture(const std::string &path)
+{
   stbi_set_flip_vertically_on_load(true);
 
   int width, height, channels;
   unsigned char *pixels =
       stbi_load(path.c_str(), &width, &height, &channels, 4);
 
-  if (!pixels) {
+  if (!pixels)
+  {
     fprintf(stderr, "Failed to load image: %s\n", path.c_str());
     return 0;
   }
@@ -68,8 +82,15 @@ GLuint TurtleBase::Image::Texture::load_texture(const std::string &path) {
   return texture;
 };
 
+void Image::Texture::print_config()
+{
+  std::cout << "Texture initialized: " << _current_image << ", " << _image_index << " size of " << _images.size() << std::endl
+            << std::endl;
+}
+
 void TurtleBase::Image::Texture::select_texture(
-    int index, TurtleBase::Image::Zoom &effect) {
+    int index, TurtleBase::Image::Zoom &effect)
+{
   if (_images.empty())
     return;
 
