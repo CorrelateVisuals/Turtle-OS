@@ -3,25 +3,13 @@
 #include <string>
 
 #include "engine.h"
-#include "image_finder.h"
 #include "resources.h"
 #include "shader.h"
 
 Engine::Engine(int argc, char *argv[])
     : TurtleBase(argc, argv), _win("Turtle-OS")
 {
-  ImageFinder finder;
-  finder.set_root("data");
-  //_comp._texture._images = finder.find_all_images();
-  _comp._new_texture._images = finder.find_all_images();
-
-  // finder.randomize_order(_comp._texture._images);
-  finder.randomize_order(_comp._new_texture._images);
-
-  //  _comp._new_texture.select_texture(_comp._new_texture._image_index);
-  _comp._new_texture.select_texture(_comp._new_texture._image_index);
   _comp._zoom_effect.reset_start_scale();
-
   _win.set_key_callback(key_call_back);
 }
 
@@ -40,14 +28,14 @@ void Engine::key_call_back(GLFWwindow *window, int key, int, int action, int)
   {
     // engine->_comp._texture.select_texture(
     // engine->_comp._texture._image_index + 1);
-    engine->_comp._new_texture.select_texture(
-        engine->_comp._new_texture._image_index + 1);
+    engine->_comp._tex1.select_texture(
+        engine->_comp._tex1._image_index + 1);
     engine->_comp._zoom_effect.reset_start_scale();
   }
   else if (key == GLFW_KEY_LEFT)
   {
-    engine->_comp._new_texture.select_texture(
-        engine->_comp._new_texture._image_index - 1);
+    engine->_comp._tex1.select_texture(
+        engine->_comp._tex1._image_index - 1);
 
        
     //     engine->_comp._texture.select_texture(
@@ -79,7 +67,7 @@ void Engine::run()
     glfwGetFramebufferSize(_win.get_handle(), &w, &h);
     glViewport(0, 0, w, h);
 
-    glBindTexture(GL_TEXTURE_2D, _comp._new_texture._current_image);
+    glBindTexture(GL_TEXTURE_2D, _comp._tex1._current_image);
     glUniform1f(_comp._zoom_effect._scale_location,
                 _comp._zoom_effect._texture_start_scale);
     //                 glBindTexture(GL_TEXTURE_2D, _comp._texture._current_image);
@@ -91,15 +79,15 @@ void Engine::run()
     // Pass vertex positions to the shader
     glEnableVertexAttribArray(0); // pos
     glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(float) * 4,
-                          _comp._new_texture._vertices.data());
+                          _comp._tex1._vertices.data());
     //     glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(float) * 4,
     // _comp._texture._vertices.data());
 
     glEnableVertexAttribArray(1); // uv
     glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(float) * 4,
-                          _comp._new_texture._vertices.data() + 2);
+                          _comp._tex1._vertices.data() + 2);
 
-    glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, _comp._new_texture._indices.data());
+    glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, _comp._tex1._indices.data());
     //     glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(float) * 4,
     //                       _comp._texture._vertices.data() + 2);
 

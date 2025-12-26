@@ -29,19 +29,6 @@ public:
 
     class Zoom;
 
-    // class Texture : public Rectangle {
-    // public:
-    //   Texture() = default;
-    //   ~Texture() = default;
-
-    //   GLuint _current_image{0};
-    //   std::vector<std::string> _images{};
-    //   int _image_index{0};
-
-    //   // void select_texture(int index);
-    //   // GLuint load_texture(const std::string &path);
-    // };
-
     class Zoom {
     public:
       Zoom(float start, float speed, float final);
