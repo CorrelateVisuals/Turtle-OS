@@ -49,27 +49,30 @@ public:
   class Vertex
   {
   public:
-    Vertex(std::array<float, 3> pos, std::array<float, 3> rot)
-        : _position(pos), _rotation(rot)
+    Vertex(std::array<float, 3> pos = {0.0f, 0.0f, 0.0f},
+           std::array<float, 3> rot = {0.0f, 0.0f, 0.0f},
+           std::string name = "Default")
+        : _position(pos), _rotation(rot), _name(name)
     {
       print_config();
     };
-    Vertex() { print_config(); };
-    ~Vertex() = default;
+    virtual ~Vertex() = default;
 
     std::array<float, 3> get_position() { return _position; };
     std::array<float, 3> get_rotation() { return _rotation; };
 
   private:
-    std::array<float, 3> _position{0.0f};
-    std::array<float, 3> _rotation{0.0f};
+    std::array<float, 3> _position;
+    std::array<float, 3> _rotation;
+    std::string _name;
+
     void print_config()
     {
 
-      std::cout << "Vertex created at position and rotation: " << std::endl
-                << "x: " << _position[0] << " y: " << _position[1]
+      std::cout << "Vertex " << _name << " created at position and rotation: " << std::endl
+                << "    " << "x: " << _position[0] << " y: " << _position[1]
                 << " z: " << _position[2] << std::endl
-                << "x: " << _rotation[0] << " y: " << _rotation[1]
+                << "    " << "x: " << _rotation[0] << " y: " << _rotation[1]
                 << " z: " << _rotation[2] << std::endl
                 << std::endl;
     };
@@ -102,7 +105,7 @@ public:
   class Texture : public Shape
   {
   public:
-    Texture() {print_config();};
+    Texture() { print_config(); };
     ~Texture() = default;
 
     GLuint _current_image{0};
