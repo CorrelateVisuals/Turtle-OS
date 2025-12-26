@@ -45,6 +45,9 @@ public:
 
 struct Geometry
 {
+  private:
+  std::array<float, 3> tb_vec3{};
+
 public:
   class Vertex
   {
@@ -95,8 +98,8 @@ public:
     int get_shape() { return _shape; };
 
   private:
-    float _scale{1.0f};
-    int _shape{0};
+    float _scale;
+    int _shape;
 
     void print_config()
     {

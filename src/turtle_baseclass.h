@@ -55,7 +55,7 @@ public:
 
       void run(bool is_on = true);
       void reset_start_scale() {
-        std::cout << _texture_start_scale << _reset_start_scale << std::endl;
+        //std::cout << _texture_start_scale << _reset_start_scale << std::endl;
         _texture_start_scale = _reset_start_scale;
       };
 
