@@ -5,10 +5,14 @@
 #include "geometry.h"
 
 int main(int argc, char *argv[]) {
-  std::string name1 = "new1";
+  
   Geometry::Vertex tex1;
-  Geometry::Vertex tex2{"1"};
-  Geometry::Vertex tex3{{1.0f, 1.0f, 1.0f}, name1};
+
+  Geometry::Vertex tex3{{1.0f, 1.0f, 1.0f}, {1.0f, 1.0f, 1.0f}};
+
+  Geometry::Shape s{{1.0f, 1.0f, 1.0f}, {1.0f, 1.0f, 1.0f}};
+   Geometry::Shape s1{{1.0f, 1.0f, 1.0f}, {1.0f, 1.0f, 1.0f}, "new", 2, 3.0f};
+  
 
 
   Engine turtle_os(argc, argv);

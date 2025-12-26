@@ -51,7 +51,7 @@ public:
   public:
     Vertex(std::array<float, 3> pos = {0.0f, 0.0f, 0.0f},
            std::array<float, 3> rot = {0.0f, 0.0f, 0.0f},
-           std::string name = "Default")
+           std::string name = "Vertex Default")
         : _position(pos), _rotation(rot), _name(name)
     {
       print_config();
@@ -69,7 +69,7 @@ public:
     void print_config()
     {
 
-      std::cout << "Vertex " << _name << " created at position and rotation: " << std::endl
+      std::cout << _name << " created at position and rotation: " << std::endl
                 << "    " << "x: " << _position[0] << " y: " << _position[1]
                 << " z: " << _position[2] << std::endl
                 << "    " << "x: " << _rotation[0] << " y: " << _rotation[1]
@@ -81,7 +81,13 @@ public:
   class Shape : public Vertex
   {
   public:
-    Shape(int shape = 0, float scale = 1.0f) : _scale(scale), _shape(shape)
+    Shape(std::array<float, 3> pos = {0.0f, 0.0f, 0.0f},
+          std::array<float, 3> rot = {0.0f, 0.0f, 0.0f},
+          std::string name = "Shape Default", int shape = 0, float scale = 1.0f) : Vertex(pos, rot, name), _scale(scale), _shape(shape)
+    {
+      print_config();
+    };
+    Shape(int shape = 0, float scale = 1.0f) : Vertex({0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f}, "Shape Default"), _scale(scale), _shape(shape)
     {
       print_config();
     };
@@ -102,7 +108,7 @@ public:
     };
   };
 
-  class Texture : public Shape
+  class Texture //: public Shape
   {
   public:
     Texture() { print_config(); };
