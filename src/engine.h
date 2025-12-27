@@ -17,6 +17,7 @@ public:
 
 private:
   Window _win;
+  
   class MainCanvas : public TB::Image::Texture {
   public:
     MainCanvas() : _zoom(15.0f, 0.1f, 2.0f) { _zoom.reset_start_scale(); };

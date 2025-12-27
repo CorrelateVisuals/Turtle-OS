@@ -8,7 +8,6 @@
 
 Engine::Engine(int argc, char *argv[])
     : TurtleBase1(argc, argv), _win("Turtle-OS") {
-  _tex1._zoom.reset_start_scale();
   _win.set_key_callback(key_call_back);
 }
 
