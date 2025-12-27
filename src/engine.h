@@ -18,19 +18,9 @@ public:
   void run();
 
 private:
-  class Composition : public TurtleBase::Composition {
-  public:
-    TurtleBase::Image::Zoom _zoom_effect{15.0f, 0.1f, 2.0f};
-    Img::Texture _tex1;    
-  };
-
-  
-
-private:
   Window _win;
-  Composition _comp;
+  Img::Texture _tex1;
 
   static void key_call_back(GLFWwindow *window, int key, int seconds,
                             int action, int mods);
 };
-

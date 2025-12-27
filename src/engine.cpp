@@ -8,7 +8,7 @@
 
 Engine::Engine(int argc, char *argv[])
     : TurtleBase(argc, argv), _win("Turtle-OS") {
-  //_comp._zoom_effect.reset_start_scale();
+  //_zoom_effect.reset_start_scale();
   _win.set_key_callback(key_call_back);
 }
 
@@ -24,10 +24,10 @@ void Engine::key_call_back(GLFWwindow *window, int key, int, int action, int) {
 
   if (key == GLFW_KEY_RIGHT) {
 
-    engine->_comp._tex1.select_texture(engine->_comp._tex1._image_index + 1);
+    engine->_tex1.select_texture(engine->_tex1._image_index + 1);
 
   } else if (key == GLFW_KEY_LEFT) {
-    engine->_comp._tex1.select_texture(engine->_comp._tex1._image_index - 1);
+    engine->_tex1.select_texture(engine->_tex1._image_index - 1);
   }
 
   if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS) {
@@ -37,7 +37,7 @@ void Engine::key_call_back(GLFWwindow *window, int key, int, int action, int) {
 
 void Engine::run() {
 
-  create_shaders(_comp._tex1._zoom._scale_location);
+  create_shaders(_tex1._zoom._scale_location);
 
   // load_texture("data/cat.jpg");
   glfwSetWindowUserPointer(_win.get_handle(), this);
@@ -51,23 +51,23 @@ void Engine::run() {
     glfwGetFramebufferSize(_win.get_handle(), &w, &h);
     glViewport(0, 0, w, h);
 
-    glBindTexture(GL_TEXTURE_2D, _comp._tex1._current_image);
-    glUniform1f(_comp._tex1._zoom._scale_location,
-                _comp._tex1._zoom._texture_start_scale);
+    glBindTexture(GL_TEXTURE_2D, _tex1._current_image);
+    glUniform1f(_tex1._zoom._scale_location,
+                _tex1._zoom._texture_start_scale);
 
-    _comp._tex1._zoom.run();
+    _tex1._zoom.run();
 
     // Pass vertex positions to the shader
     glEnableVertexAttribArray(0); // pos
     glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(float) * 4,
-                          _comp._tex1._vertices.data());
+                          _tex1._vertices.data());
 
     glEnableVertexAttribArray(1); // uv
     glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(float) * 4,
-                          _comp._tex1._vertices.data() + 2);
+                          _tex1._vertices.data() + 2);
 
     glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT,
-                   _comp._tex1._indices.data());
+                   _tex1._indices.data());
 
     // Swap buffers and poll events
     _win.swap_buffers();
