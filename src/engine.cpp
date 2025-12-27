@@ -31,7 +31,6 @@ void Engine::key_call_back(GLFWwindow *window, int key, int, int action, int)
   else if (key == GLFW_KEY_LEFT)
   {
     engine->_tex1.select_texture(engine->_tex1._image_index - 1);
-
     engine->_tex1._zoom.reset_start_scale();
   }
 

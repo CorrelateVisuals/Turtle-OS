@@ -88,18 +88,7 @@ public:
   public:
     class Texture : public Geometry::Shape {
     public:
-      Texture()
-          : Shape(0, 1.0f, {0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f},
-                  "Texture Default"),
-            _current_image(0), _images(), _image_index(0) {
-        ImageFinder finder;
-        finder.set_root("data");
-        _images = finder.find_all_images();
-        finder.randomize_order(_images);
-        select_texture(_image_index);
-
-        print_config();
-      };
+      Texture(const std::string& folder);
       ~Texture() = default;
 
       GLuint _current_image;
@@ -107,10 +96,11 @@ public:
       int _image_index;
 
       void select_texture(int index);
-      GLuint load_texture(const std::string &path);
 
     private:
-      void print_config();
+    GLuint load_texture(const std::string &path);
+    void send_to_GPU_GLSL(GLuint& tex, unsigned char* pixels, const int width, const int height);
+    void print_config();
     };
   };
 
