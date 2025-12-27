@@ -18,9 +18,10 @@ private:
   {
   public:
     MainCanvas() : _zoom(15.0f, 0.1f, 2.0f) { _zoom.reset_start_scale(); };
-
     Effects::ScaleVertices _zoom;
-  } _tex1;
+  };
+
+  MainCanvas _tex1;
 
   static void key_call_back(GLFWwindow *window, int key, int seconds,
                             int action, int mods);

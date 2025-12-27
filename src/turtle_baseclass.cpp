@@ -61,12 +61,9 @@ void TurtleBase::Image::Texture::select_texture(int index) {
     return;
 
   _image_index = (index + _images.size()) % _images.size();
-
   std::cout << "Switching to texture: " << _images[_image_index] << "\n";
-
   _current_image = load_texture(_images[_image_index]);
-  glBindTexture(GL_TEXTURE_2D, _current_image);
-
+  
   return;
 }
 
@@ -93,6 +90,8 @@ GLuint TurtleBase::Image::Texture::load_texture(const std::string &path) {
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
   stbi_image_free(pixels);
+
+  glBindTexture(GL_TEXTURE_2D, _current_image);
   return texture;
 }
 
