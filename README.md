@@ -17,26 +17,27 @@ Note: Use glfw-wayland for Wayland sessions. Do not mix with glfw-x11.
 ## Build & Run
 
 1. Compile the project:
-
+```
 make
+```
 
 2. Run the application:
-
+```
 ./bin/Turtle-OS
+```
 
 ## Project Structure
 
 ```
 ├── src/
-│   ├── main.cpp       # Entry point
-│   ├── window.h/cpp   # Window class (RAII)
-│   ├── shader.h/cpp   # Shader utilities
+│   ├── main.cpp                  # Entry point
+│   ├── turtle_baseclass.h/.cpp   # Turtle Base
 │   └── shaders/
 │       ├── vertex.glsl
 │       └── fragment.glsl
 ├── bin/               # Compiled binaries
-├── data/              # Assets (optional)
-├── log/               # Log files (optional)
+├── data/              # Assets, fill with images you want to use
+├── log/               # Log files
 └── Makefile           # Build instructions
 ```
 
