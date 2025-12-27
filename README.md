@@ -26,7 +26,7 @@ make
 
 ## Project Structure
 
-'''
+```
 ├── src/
 │   ├── main.cpp       # Entry point
 │   ├── window.h/cpp   # Window class (RAII)
@@ -38,7 +38,7 @@ make
 ├── data/              # Assets (optional)
 ├── log/               # Log files (optional)
 └── Makefile           # Build instructions
-'''
+```
 
 ## Notes
 
