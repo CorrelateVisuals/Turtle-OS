@@ -7,14 +7,12 @@
 #include "shader.h"
 
 Engine::Engine(int argc, char *argv[])
-    : TurtleBase(argc, argv), _win("Turtle-OS")
-{
-  _comp._zoom_effect.reset_start_scale();
+    : TurtleBase(argc, argv), _win("Turtle-OS") {
+  //_comp._zoom_effect.reset_start_scale();
   _win.set_key_callback(key_call_back);
 }
 
-void Engine::key_call_back(GLFWwindow *window, int key, int, int action, int)
-{
+void Engine::key_call_back(GLFWwindow *window, int key, int, int action, int) {
   if (action != GLFW_PRESS)
     return;
 
@@ -24,42 +22,28 @@ void Engine::key_call_back(GLFWwindow *window, int key, int, int action, int)
   if (!engine)
     return;
 
-  if (key == GLFW_KEY_RIGHT)
-  {
-    // engine->_comp._texture.select_texture(
-    // engine->_comp._texture._image_index + 1);
-    engine->_comp._tex1.select_texture(
-        engine->_comp._tex1._image_index + 1);
-    engine->_comp._zoom_effect.reset_start_scale();
-  }
-  else if (key == GLFW_KEY_LEFT)
-  {
-    engine->_comp._tex1.select_texture(
-        engine->_comp._tex1._image_index - 1);
+  if (key == GLFW_KEY_RIGHT) {
 
-       
-    //     engine->_comp._texture.select_texture(
-    // engine->_comp._texture._image_index - 1);
-    engine->_comp._zoom_effect.reset_start_scale();
+    engine->_comp._tex1.select_texture(engine->_comp._tex1._image_index + 1);
+
+  } else if (key == GLFW_KEY_LEFT) {
+    engine->_comp._tex1.select_texture(engine->_comp._tex1._image_index - 1);
   }
 
-  if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
-  {
+  if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS) {
     glfwSetWindowShouldClose(window, true);
   }
 }
 
-void Engine::run()
-{
+void Engine::run() {
 
-  create_shaders(_comp._zoom_effect._scale_location);
+  create_shaders(_comp._tex1._zoom._scale_location);
 
   // load_texture("data/cat.jpg");
   glfwSetWindowUserPointer(_win.get_handle(), this);
 
   // Main render loop
-  while (!_win.should_close())
-  {
+  while (!_win.should_close()) {
     glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT);
     // Update viewport each frame (important on Pinebook!)
@@ -68,30 +52,22 @@ void Engine::run()
     glViewport(0, 0, w, h);
 
     glBindTexture(GL_TEXTURE_2D, _comp._tex1._current_image);
-    glUniform1f(_comp._zoom_effect._scale_location,
-                _comp._zoom_effect._texture_start_scale);
-    //                 glBindTexture(GL_TEXTURE_2D, _comp._texture._current_image);
-    // glUniform1f(_comp._zoom_effect._scale_location,
-    //             _comp._zoom_effect._texture_start_scale);
+    glUniform1f(_comp._tex1._zoom._scale_location,
+                _comp._tex1._zoom._texture_start_scale);
 
-    _comp._zoom_effect.run();
+    _comp._tex1._zoom.run();
 
     // Pass vertex positions to the shader
     glEnableVertexAttribArray(0); // pos
     glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(float) * 4,
                           _comp._tex1._vertices.data());
-    //     glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(float) * 4,
-    // _comp._texture._vertices.data());
 
     glEnableVertexAttribArray(1); // uv
     glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(float) * 4,
                           _comp._tex1._vertices.data() + 2);
 
-    glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, _comp._tex1._indices.data());
-    //     glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(float) * 4,
-    //                       _comp._texture._vertices.data() + 2);
-
-    // glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, _comp._texture._indices.data());
+    glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT,
+                   _comp._tex1._indices.data());
 
     // Swap buffers and poll events
     _win.swap_buffers();

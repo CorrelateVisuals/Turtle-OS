@@ -3,18 +3,37 @@
 #include <GLES2/gl2.h>
 
 #include <array>
-#include <string>
 #include <iostream>
+#include <string>
 #include <vector>
 
 #include "image_finder.h"
 
-struct Geometry
-{
-private:
+class Effects {
 public:
-  class Vertex
-  {
+  class ScaleVertices {
+  public:
+    ScaleVertices(float start, float speed, float final);
+    ~ScaleVertices() = default;
+
+    GLint _scale_location{0};
+    float _reset_start_scale{0.0f};
+    float _texture_start_scale{0.0f};
+    float _zoom_speed{0.0f};
+    float _texture_final_scale{0.0f};
+
+    void run(bool is_on = true);
+    void reset_start_scale();
+
+  private:
+    void getSettings();
+  };
+};
+
+class Geometry {
+
+public:
+  class Vertex {
   public:
     Vertex(std::array<float, 3> pos = {0.0f, 0.0f, 0.0f},
            std::array<float, 3> rot = {0.0f, 0.0f, 0.0f},
@@ -33,10 +52,10 @@ public:
     void print_config();
   };
 
-  class Shape : public Vertex
-  {
+  class Shape : public Vertex {
   public:
-    Shape(int shape = 0, float scale = 1.0f, std::array<float, 3> pos = {0.0f, 0.0f, 0.0f},
+    Shape(int shape = 0, float scale = 1.0f,
+          std::array<float, 3> pos = {0.0f, 0.0f, 0.0f},
           std::array<float, 3> rot = {0.0f, 0.0f, 0.0f},
           std::string name = "Shape Default");
     ~Shape() = default;
@@ -45,10 +64,10 @@ public:
     int get_shape() { return _shape; };
 
     std::array<float, 16> _vertices = {
-        -0.5f, 0.5f, 0.0f, 1.0f,  // Top-left
+        -0.5f, 0.5f,  0.0f, 1.0f, // Top-left
         -0.5f, -0.5f, 0.0f, 0.0f, // Bottom-left
-        0.5f, -0.5f, 1.0f, 0.0f,  // Bottom-right
-        0.5f, 0.5f, 1.0f, 1.0f    // Top-right
+        0.5f,  -0.5f, 1.0f, 0.0f, // Bottom-right
+        0.5f,  0.5f,  1.0f, 1.0f  // Top-right
     };
 
     std::array<unsigned int, 6> _indices = {0, 1, 2, 2, 3, 0};
@@ -61,21 +80,22 @@ public:
   };
 };
 
-class Img
-{
+class Img {
 public:
-  class Zoom;
-
-  class Texture : public Geometry::Shape
-  {
+  class Texture : public Geometry::Shape {
   public:
-    Texture() : Shape(0, 1.0f, {0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f}, "Texture Default"), _current_image(0), _images(), _image_index(0)
-    {
+    Texture()
+        : Shape(0, 1.0f, {0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f},
+                "Texture Default"),
+          _current_image(0), _images(), _image_index(0),
+          _zoom(15.0f, 0.1f, 2.0f) {
       ImageFinder finder;
       finder.set_root("data");
       _images = finder.find_all_images();
       finder.randomize_order(_images);
       select_texture(_image_index);
+
+      _zoom.reset_start_scale();
 
       print_config();
     };
@@ -84,6 +104,8 @@ public:
     GLuint _current_image;
     std::vector<std::string> _images;
     int _image_index;
+
+    Effects::ScaleVertices _zoom;
 
     void select_texture(int index);
     GLuint load_texture(const std::string &path);
