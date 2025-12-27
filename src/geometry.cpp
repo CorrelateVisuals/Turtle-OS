@@ -3,13 +3,13 @@
 
 #include "geometry.h"
 
-Geometry::Vertex::Vertex(std::array<float, 3> pos, std::array<float, 3> rot,
-                         std::string name)
+TB::Geometry::Vertex::Vertex(std::array<float, 3> pos, std::array<float, 3> rot,
+                             std::string name)
     : _position(pos), _rotation(rot), _name(name) {
   print_config();
 }
 
-void Geometry::Vertex::print_config() {
+void TB::Geometry::Vertex::print_config() {
   std::cout << _name << " created at position and rotation: " << std::endl
             << "    "
             << "x: " << _position[0] << " y: " << _position[1]
@@ -20,25 +20,25 @@ void Geometry::Vertex::print_config() {
             << std::endl;
 }
 
-Geometry::Shape::Shape(int shape, float scale, std::array<float, 3> pos,
-                       std::array<float, 3> rot, std::string name)
+TB::Geometry::Shape::Shape(int shape, float scale, std::array<float, 3> pos,
+                           std::array<float, 3> rot, std::string name)
     : Vertex(pos, rot, name), _scale(scale), _shape(shape) {
   print_config();
 }
 
-void Geometry::Shape::print_config() {
+void TB::Geometry::Shape::print_config() {
   std::cout << "Shape number type: " << _shape << " size of " << _scale
             << std::endl
             << std::endl;
 }
 
-void Img::Texture::print_config() {
+void TB::Image::Texture::print_config() {
   std::cout << "Texture size: " << _images.size() << " , index " << _image_index
             << _current_image << std::endl
             << std::endl;
 }
 
-void Img::Texture::select_texture(int index) {
+void TB::Image::Texture::select_texture(int index) {
   if (_images.empty())
     return;
 
@@ -46,15 +46,13 @@ void Img::Texture::select_texture(int index) {
 
   std::cout << "Switching to texture: " << _images[_image_index] << "\n";
 
-  _zoom.reset_start_scale();
-
   _current_image = load_texture(_images[_image_index]);
   glBindTexture(GL_TEXTURE_2D, _current_image);
 
   return;
 }
 
-GLuint Img::Texture::load_texture(const std::string &path) {
+GLuint TB::Image::Texture::load_texture(const std::string &path) {
   stbi_set_flip_vertically_on_load(true);
 
   int width, height, channels;
@@ -80,14 +78,14 @@ GLuint Img::Texture::load_texture(const std::string &path) {
   return texture;
 }
 
-Effects::ScaleVertices::ScaleVertices(float start, float speed, float final)
+TB::Effects::ScaleVertices::ScaleVertices(float start, float speed, float final)
     : _reset_start_scale{start}, _texture_start_scale{start},
       _zoom_speed(speed), _texture_final_scale(final + speed) {
   std::cout << "Initializing Zoom." << std::endl;
   getSettings();
 }
 
-void Effects::ScaleVertices::run(bool is_on) {
+void TB::Effects::ScaleVertices::run(bool is_on) {
   if (is_on) {
     if (_texture_start_scale > _texture_final_scale) {
       _texture_start_scale -= _zoom_speed;
@@ -97,12 +95,12 @@ void Effects::ScaleVertices::run(bool is_on) {
   }
 }
 
-void Effects::ScaleVertices::reset_start_scale() {
+void TB::Effects::ScaleVertices::reset_start_scale() {
   // std::cout << _texture_start_scale << _reset_start_scale << std::endl;
   _texture_start_scale = _reset_start_scale;
 }
 
-void Effects::ScaleVertices::getSettings() {
+void TB::Effects::ScaleVertices::getSettings() {
   std::cout << "Zoom _scale_location: " << _scale_location
             << ",  _texture_start_scale: " << _texture_start_scale
             << ", _zoom_speed: " << _zoom_speed

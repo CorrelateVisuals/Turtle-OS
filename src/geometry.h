@@ -9,108 +9,105 @@
 
 #include "image_finder.h"
 
-class Effects {
+class TB {
 public:
-  class ScaleVertices {
+  class Effects {
   public:
-    ScaleVertices(float start, float speed, float final);
-    ~ScaleVertices() = default;
+    class ScaleVertices {
+    public:
+      ScaleVertices(float start, float speed, float final);
+      ~ScaleVertices() = default;
 
-    GLint _scale_location{0};
-    float _reset_start_scale{0.0f};
-    float _texture_start_scale{0.0f};
-    float _zoom_speed{0.0f};
-    float _texture_final_scale{0.0f};
+      GLint _scale_location{0};
+      float _reset_start_scale{0.0f};
+      float _texture_start_scale{0.0f};
+      float _zoom_speed{0.0f};
+      float _texture_final_scale{0.0f};
 
-    void run(bool is_on = true);
-    void reset_start_scale();
+      void run(bool is_on = true);
+      void reset_start_scale();
 
-  private:
-    void getSettings();
-  };
-};
-
-class Geometry {
-
-public:
-  class Vertex {
-  public:
-    Vertex(std::array<float, 3> pos = {0.0f, 0.0f, 0.0f},
-           std::array<float, 3> rot = {0.0f, 0.0f, 0.0f},
-           std::string name = "Vertex Default");
-    virtual ~Vertex() = default;
-
-    std::array<float, 3> get_position() { return _position; };
-    std::array<float, 3> get_rotation() { return _rotation; };
-    std::string get_name() { return _name; };
-
-  private:
-    std::array<float, 3> _position;
-    std::array<float, 3> _rotation;
-    std::string _name;
-
-    void print_config();
+    private:
+      void getSettings();
+    };
   };
 
-  class Shape : public Vertex {
+  class Geometry {
   public:
-    Shape(int shape = 0, float scale = 1.0f,
-          std::array<float, 3> pos = {0.0f, 0.0f, 0.0f},
-          std::array<float, 3> rot = {0.0f, 0.0f, 0.0f},
-          std::string name = "Shape Default");
-    ~Shape() = default;
+    class Vertex {
+    public:
+      Vertex(std::array<float, 3> pos = {0.0f, 0.0f, 0.0f},
+             std::array<float, 3> rot = {0.0f, 0.0f, 0.0f},
+             std::string name = "Vertex Default");
+      virtual ~Vertex() = default;
 
-    float get_scale() { return _scale; };
-    int get_shape() { return _shape; };
+      std::array<float, 3> get_position() { return _position; };
+      std::array<float, 3> get_rotation() { return _rotation; };
+      std::string get_name() { return _name; };
 
-    std::array<float, 16> _vertices = {
-        -0.5f, 0.5f,  0.0f, 1.0f, // Top-left
-        -0.5f, -0.5f, 0.0f, 0.0f, // Bottom-left
-        0.5f,  -0.5f, 1.0f, 0.0f, // Bottom-right
-        0.5f,  0.5f,  1.0f, 1.0f  // Top-right
+    private:
+      std::array<float, 3> _position;
+      std::array<float, 3> _rotation;
+      std::string _name;
+
+      void print_config();
     };
 
-    std::array<unsigned int, 6> _indices = {0, 1, 2, 2, 3, 0};
+    class Shape : public Vertex {
+    public:
+      Shape(int shape = 0, float scale = 1.0f,
+            std::array<float, 3> pos = {0.0f, 0.0f, 0.0f},
+            std::array<float, 3> rot = {0.0f, 0.0f, 0.0f},
+            std::string name = "Shape Default");
+      ~Shape() = default;
 
-  private:
-    float _scale;
-    int _shape;
+      float get_scale() { return _scale; };
+      int get_shape() { return _shape; };
 
-    void print_config();
-  };
-};
+      std::array<float, 16> _vertices = {
+          -0.5f, 0.5f,  0.0f, 1.0f, // Top-left
+          -0.5f, -0.5f, 0.0f, 0.0f, // Bottom-left
+          0.5f,  -0.5f, 1.0f, 0.0f, // Bottom-right
+          0.5f,  0.5f,  1.0f, 1.0f  // Top-right
+      };
 
-class Img {
-public:
-  class Texture : public Geometry::Shape {
-  public:
-    Texture()
-        : Shape(0, 1.0f, {0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f},
-                "Texture Default"),
-          _current_image(0), _images(), _image_index(0),
-          _zoom(15.0f, 0.1f, 2.0f) {
-      ImageFinder finder;
-      finder.set_root("data");
-      _images = finder.find_all_images();
-      finder.randomize_order(_images);
-      select_texture(_image_index);
+      std::array<unsigned int, 6> _indices = {0, 1, 2, 2, 3, 0};
 
-      _zoom.reset_start_scale();
+    private:
+      float _scale;
+      int _shape;
 
-      print_config();
+      void print_config();
     };
-    ~Texture() = default;
+  };
 
-    GLuint _current_image;
-    std::vector<std::string> _images;
-    int _image_index;
+  class Image {
+  public:
+    class Texture : public Geometry::Shape {
+    public:
+      Texture()
+          : Shape(0, 1.0f, {0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f},
+                  "Texture Default"),
+            _current_image(0), _images(), _image_index(0) {
+        ImageFinder finder;
+        finder.set_root("data");
+        _images = finder.find_all_images();
+        finder.randomize_order(_images);
+        select_texture(_image_index);
 
-    Effects::ScaleVertices _zoom;
+        print_config();
+      };
+      ~Texture() = default;
 
-    void select_texture(int index);
-    GLuint load_texture(const std::string &path);
+      GLuint _current_image;
+      std::vector<std::string> _images;
+      int _image_index;
 
-  private:
-    void print_config();
+      void select_texture(int index);
+      GLuint load_texture(const std::string &path);
+
+    private:
+      void print_config();
+    };
   };
 };

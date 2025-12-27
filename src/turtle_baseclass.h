@@ -9,10 +9,10 @@
 #include <geometry.h>
 
 
-class TurtleBase {
+class TurtleBase1 {
 public:
-  TurtleBase(int argc, char *argv[]);
-  ~TurtleBase() = default;
+  TurtleBase1(int argc, char *argv[]);
+  ~TurtleBase1() = default;
 
   void run(){};
 

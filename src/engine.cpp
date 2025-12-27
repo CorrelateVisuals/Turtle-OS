@@ -7,8 +7,8 @@
 #include "shader.h"
 
 Engine::Engine(int argc, char *argv[])
-    : TurtleBase(argc, argv), _win("Turtle-OS") {
-  //_zoom_effect.reset_start_scale();
+    : TurtleBase1(argc, argv), _win("Turtle-OS") {
+  _tex1._zoom.reset_start_scale();
   _win.set_key_callback(key_call_back);
 }
 
@@ -25,9 +25,11 @@ void Engine::key_call_back(GLFWwindow *window, int key, int, int action, int) {
   if (key == GLFW_KEY_RIGHT) {
 
     engine->_tex1.select_texture(engine->_tex1._image_index + 1);
+    engine->_tex1._zoom.reset_start_scale();
 
   } else if (key == GLFW_KEY_LEFT) {
     engine->_tex1.select_texture(engine->_tex1._image_index - 1);
+    engine->_tex1._zoom.reset_start_scale();
   }
 
   if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS) {
