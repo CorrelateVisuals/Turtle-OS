@@ -21,7 +21,7 @@ public:
 
 private:
   Window _win;
-  MainCanvas _tex1;
+  MainCanvas _main;
 
   static void key_call_back(GLFWwindow *window, int key, int seconds,
                             int action, int mods);
