@@ -10,7 +10,7 @@ private:
   {
   public:
     MainCanvas() : Texture("data"), _zoom(15.0f, 0.1f, 2.0f) {};
-    Effects::ScaleVertices _zoom;
+    ScaleVertices _zoom;
   };
 
 public:

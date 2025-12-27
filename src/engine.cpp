@@ -51,7 +51,7 @@ void Engine::render_loop_GLSL()
   glViewport(0, 0, w, h);
 
   glBindTexture(GL_TEXTURE_2D, _main._current_image);
-  glUniform1f(_main._zoom._scale_location,
+  glUniform1f(_main._zoom._shader_location,
               _main._zoom._texture_start_scale);
 
   // Pass vertex positions to the shader
@@ -70,7 +70,7 @@ void Engine::render_loop_GLSL()
 
 void Engine::run()
 {
-  create_shaders(_main._zoom._scale_location);
+  create_shaders(_main._zoom._shader_location);
   glfwSetWindowUserPointer(_win.get_handle(), this);
 
   // Main render loop

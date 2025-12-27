@@ -12,27 +12,31 @@ public:
   TurtleBase(int argc, char *argv[]);
   ~TurtleBase() = default;
 
-  //void run(){};
+  // void run(){};
 
-   class Effects {
+  class Effects {
   public:
-    class ScaleVertices {
-    public:
-      ScaleVertices(float start, float speed, float final);
-      ~ScaleVertices() = default;
+  Effects(GLint loc = 0) : _shader_location(loc){};
+  ~Effects() = default;
 
-      GLint _scale_location{0};
-      float _reset_start_scale{0.0f};
-      float _texture_start_scale{0.0f};
-      float _zoom_speed{0.0f};
-      float _texture_final_scale{0.0f};
+  GLint _shader_location;
+  };
 
-      void run(bool is_on = true);
-      void reset_start_scale();
+  class ScaleVertices : public Effects {
+  public:
+    ScaleVertices(float start, float speed, float final);
+    ~ScaleVertices() = default;
 
-    private:
-      void getSettings();
-    };
+    float _reset_start_scale{0.0f};
+    float _texture_start_scale{0.0f};
+    float _zoom_speed{0.0f};
+    float _texture_final_scale{0.0f};
+
+    void run(bool is_on = true);
+    void reset_start_scale();
+
+  private:
+    void getSettings();
   };
 
   class Geometry {
@@ -88,7 +92,7 @@ public:
   public:
     class Texture : public Geometry::Shape {
     public:
-      Texture(const std::string& folder);
+      Texture(const std::string &folder);
       ~Texture() = default;
 
       GLuint _current_image;
@@ -98,14 +102,13 @@ public:
       void select_texture(int index);
 
     private:
-    GLuint load_texture(const std::string &path);
-    void send_to_GPU_GLSL(GLuint& tex, unsigned char* pixels, const int width, const int height);
-    void print_config();
+      GLuint load_texture(const std::string &path);
+      void send_to_GPU_GLSL(GLuint &tex, unsigned char *pixels, const int width,
+                            const int height);
+      void print_config();
     };
   };
 
 protected:
-
-
 private:
 };

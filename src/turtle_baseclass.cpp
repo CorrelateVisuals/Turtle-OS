@@ -123,7 +123,7 @@ void TurtleBase::Image::Texture::send_to_GPU_GLSL(GLuint &tex, unsigned char *pi
   return;
 }
 
-TurtleBase::Effects::ScaleVertices::ScaleVertices(float start, float speed, float final)
+TurtleBase::ScaleVertices::ScaleVertices(float start, float speed, float final)
     : _reset_start_scale{start}, _texture_start_scale{start},
       _zoom_speed(speed), _texture_final_scale(final + speed)
 {
@@ -131,7 +131,7 @@ TurtleBase::Effects::ScaleVertices::ScaleVertices(float start, float speed, floa
   getSettings();
 }
 
-void TurtleBase::Effects::ScaleVertices::run(bool is_on)
+void TurtleBase::ScaleVertices::run(bool is_on)
 {
   if (is_on)
   {
@@ -146,15 +146,15 @@ void TurtleBase::Effects::ScaleVertices::run(bool is_on)
   }
 }
 
-void TurtleBase::Effects::ScaleVertices::reset_start_scale()
+void TurtleBase::ScaleVertices::reset_start_scale()
 {
   // std::cout << _texture_start_scale << _reset_start_scale << std::endl;
   _texture_start_scale = _reset_start_scale;
 }
 
-void TurtleBase::Effects::ScaleVertices::getSettings()
+void TurtleBase::ScaleVertices::getSettings()
 {
-  std::cout << "Zoom _scale_location: " << _scale_location
+  std::cout << "Zoom _scale_location: " << _shader_location
             << ",  _texture_start_scale: " << _texture_start_scale
             << ", _zoom_speed: " << _zoom_speed
             << ", _texture_final_scale:" << _texture_final_scale << std::endl
