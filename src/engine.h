@@ -1,13 +1,18 @@
 #pragma once
 
-#include <GLES2/gl2.h>
-#include <array>
-#include <vector>
-
 #include "turtle_baseclass.h"
 #include "window.h"
 
-class Engine : public TurtleBase {
+class Engine : TurtleBase
+{
+private:
+  class MainCanvas : public Image::Texture
+  {
+  public:
+    MainCanvas() : Texture("data"), _zoom(15.0f, 0.1f, 2.0f) { _zoom.reset_start_scale(); };
+    Effects::ScaleVertices _zoom;
+  };
+
 public:
   Engine(int argc, char *argv[]);
   ~Engine() = default;
@@ -15,16 +20,11 @@ public:
   void run();
 
 private:
-  class Composition : public TurtleBase::Composition {
-  public:
-    TurtleBase::Image::Zoom _zoom_effect{15.0f, 0.1f, 2.0f};
-    TurtleBase::Image::Texture _texture{};
-  };
-
-private:
   Window _win;
-  Composition _comp;
+  MainCanvas _tex1;
 
   static void key_call_back(GLFWwindow *window, int key, int seconds,
                             int action, int mods);
+  
+  void render_loop_GLSL();
 };

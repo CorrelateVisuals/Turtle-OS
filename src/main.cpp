@@ -2,7 +2,6 @@
 #include <stdexcept>
 
 #include "engine.h"
-#include "image_finder.h"
 
 int main(int argc, char *argv[]) {
   

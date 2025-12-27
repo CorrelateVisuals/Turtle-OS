@@ -41,9 +41,9 @@ std::vector<std::string> ImageFinder::find_all_images() const {
     if (entry.is_directory() && entry.path().filename() == "images") {
 
       // Scan only inside the images/ folder
-      for (const auto &img : fs::directory_iterator(entry.path())) {
-        if (img.is_regular_file() && is_image_file(img.path())) {
-          result.push_back(img.path().string());
+      for (const auto &Image : fs::directory_iterator(entry.path())) {
+        if (Image.is_regular_file() && is_image_file(Image.path())) {
+          result.push_back(Image.path().string());
         }
       }
     }
