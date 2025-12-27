@@ -3,15 +3,16 @@
 
 #include "engine.h"
 
-Engine TurtleOS;
+int main(int argc, char *argv[]) {
+  
+  Engine turtle_os(argc, argv);
 
-int main() {
-    try {
-        TurtleOS.run();
+  try {
+    turtle_os.run();
 
-    } catch (const std::exception& e) {
-        std::cerr << "Exception: " << e.what() << "\n";
-        return -1;
-    }
-    return 0;
+  } catch (const std::exception &e) {
+    std::cerr << "Exception: " << e.what() << "\n";
+    return -1;
+  }
+  return 0;
 }

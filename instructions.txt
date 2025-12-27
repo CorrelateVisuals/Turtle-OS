@@ -1,0 +1,2 @@
+getopt voor argument gebruik
+fish terminal

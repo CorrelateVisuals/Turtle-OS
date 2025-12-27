@@ -1,130 +1,87 @@
-#include <string>
-#include <iostream>
 #include <filesystem>
+#include <iostream>
+#include <string>
 
 #include "engine.h"
 #include "shader.h"
-#include "resources.h"
-//
-Engine::Engine():_window("Turtle-OS"){
-    load_all_textures();
 
-    if (_textures.empty()) {
-        std::cerr << "No textures found in data/ folder.\n";
-    } else {
-        select_texture(0);
-    }
-
-    _window.set_key_callback(key_call_back);
+Engine::Engine(int argc, char *argv[])
+    : TurtleBase(argc, argv), _win("Turtle-OS")
+{
+  _win.set_key_callback(key_call_back);
 }
 
-// ----------------------------------------------------
-//   Scan data/ directory and collect texture paths
-// ----------------------------------------------------
-void Engine::load_all_textures() {
-    _textures.clear();
+void Engine::key_call_back(GLFWwindow *window, int key, int, int action, int)
+{
+  if (action != GLFW_PRESS)
+    return;
 
-    for (const auto& entry : std::filesystem::directory_iterator("data")) {
-        if (entry.path().extension() == ".jpg") {
-            _textures.push_back(entry.path().string());
-        }
-    }
+  // Retrieve Engine* pointer stored in GLFW window
+  Engine *engine = static_cast<Engine *>(glfwGetWindowUserPointer(window));
 
-    std::cout << "Loaded " << _textures.size() << " textures.\n";
-}
+  if (!engine)
+    return;
 
-// ----------------------------------------------------
-//   Load a texture by index
-// ----------------------------------------------------
-void Engine::select_texture(int index) {
-    if (_textures.empty()) return;
+  if (key == GLFW_KEY_RIGHT)
+  {
 
-    _texture_index = (index + _textures.size()) % _textures.size();
+    engine->_tex1.select_texture(engine->_tex1._image_index + 1);
+    engine->_tex1._zoom.reset_start_scale();
+  }
+  else if (key == GLFW_KEY_LEFT)
+  {
+    engine->_tex1.select_texture(engine->_tex1._image_index - 1);
+    engine->_tex1._zoom.reset_start_scale();
+  }
 
-    std::cout << "Switching to texture: " << _textures[_texture_index] << "\n";
-    _texture_start_scale = 5.0f;
-    _current_texture = load_texture(_textures[_texture_index]);
-    glBindTexture(GL_TEXTURE_2D, _current_texture);
-}
-
-// ----------------------------------------------------
-//   Key callback for left/right arrow cycling
-// ----------------------------------------------------
-void Engine::key_call_back(GLFWwindow* window, int key, int, int action, int) {
-    if (action != GLFW_PRESS) return;
-
-    // Retrieve Engine* pointer stored in GLFW window
-    Engine* engine = static_cast<Engine*>(glfwGetWindowUserPointer(window));
-
-    if (!engine) return;
-
-    if (key == GLFW_KEY_RIGHT) {
-        engine->select_texture(engine->_texture_index + 1);
-    }
-    else if (key == GLFW_KEY_LEFT) {
-        engine->select_texture(engine->_texture_index - 1);
-    }
-
-    if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS) {
+  if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
+  {
     glfwSetWindowShouldClose(window, true);
+  }
+  return;
 }
 
+void Engine::render_loop_GLSL()
+{
+  glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
+  glClear(GL_COLOR_BUFFER_BIT);
+  // Update viewport each frame (important on Pinebook!)
+  int w, h;
+  glfwGetFramebufferSize(_win.get_handle(), &w, &h);
+  glViewport(0, 0, w, h);
+
+  glBindTexture(GL_TEXTURE_2D, _tex1._current_image);
+  glUniform1f(_tex1._zoom._scale_location,
+              _tex1._zoom._texture_start_scale);
+
+  // Pass vertex positions to the shader
+  glEnableVertexAttribArray(0); // pos
+  glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(float) * 4,
+                        _tex1._vertices.data());
+
+  glEnableVertexAttribArray(1); // uv
+  glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(float) * 4,
+                        _tex1._vertices.data() + 2);
+
+  glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT,
+                 _tex1._indices.data());
+  return;
 }
 
-void Engine::create_shaders(){
-    // Load shader sources from files
-    const std::string vert_src = load_shader_file("src/shaders/vertex.glsl");
-    const std::string frag_src = load_shader_file("src/shaders/fragment.glsl");
+void Engine::run()
+{
+  create_shaders(_tex1._zoom._scale_location);
+  glfwSetWindowUserPointer(_win.get_handle(), this);
 
+  // Main render loop
+  while (!_win.should_close())
+  {
 
-    // Compile and link shader program
-    const GLuint shaderProgram = shader_create_program(vert_src, frag_src);
-    if (!shaderProgram) {
-        throw std::runtime_error("Failed to create shader program");
-    }
+    render_loop_GLSL();
+    _tex1._zoom.run();
 
-    glUseProgram(shaderProgram);
-
-    _scale_location = glGetUniformLocation(shaderProgram, "scale");
-
-}
-
-void Engine::run(){
-    create_shaders();
-    //load_texture("data/cat.jpg");
-    glfwSetWindowUserPointer(_window.get_handle(), this);
-
-    // Main render loop
-    while (!_window.should_close()) {
-        glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
-        glClear(GL_COLOR_BUFFER_BIT);
-        // Update viewport each frame (important on Pinebook!)
-        int w, h;
-        glfwGetFramebufferSize(_window.get_handle(), &w, &h);
-        glViewport(0, 0, w, h);
-
-
-        glBindTexture(GL_TEXTURE_2D, _current_texture);
-        glUniform1f(_scale_location, _texture_start_scale);
-
-        if (_texture_start_scale > _texture_final_scale){
-            _texture_start_scale -= _zoom_speed;
-        } else {
-            _texture_start_scale = _texture_final_scale;
-        }
-
-        // Pass vertex positions to the shader
-        glEnableVertexAttribArray(0); // pos
-        glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(float) * 4, RECT_VERTICES.data());
-
-        glEnableVertexAttribArray(1); // uv
-        glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(float) * 4, RECT_VERTICES.data() + 2);
-
-        glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, INDICES.data());
-
-
-        // Swap buffers and poll events
-        _window.swap_buffers();
-        _window.poll_events();
-    }
+    // Swap buffers and poll events
+    _win.swap_buffers();
+    _win.poll_events();
+  }
 };

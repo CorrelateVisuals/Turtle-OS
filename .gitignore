@@ -3,8 +3,15 @@
 *.out
 *.exe
 app
+Turtle-OS
 triangle
 *.so
 
 # Ignore build directories
 build/
+
+# Ignore data contents
+data/*
+!data/.gitkeep
+
+baseclass_concept.txt

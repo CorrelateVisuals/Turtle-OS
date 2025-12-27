@@ -1,0 +1,59 @@
+#include <algorithm>
+#include <cctype>
+#include <cstring>
+#include <iostream>
+#include <random>
+
+#include "image_finder.h"
+
+namespace fs = std::filesystem;
+
+ImageFinder::ImageFinder()
+    : root("data") // default starting folder
+{
+  std::cout << "Initializing ImageFinder: " << std::endl;
+}
+
+void ImageFinder::set_root(const std::string &root_path) {
+  std::cout << "Setting root path: " << root_path << std::endl;
+  root = root_path;
+}
+
+bool ImageFinder::is_image_file(const fs::path &p) const {
+  static const std::vector<std::string> extensions = {".jpg", ".jpeg", ".png",
+                                                      ".bmp", ".gif",  ".webp"};
+
+  std::string ext = p.extension().string();
+
+  // Case-insensitive compare
+  for (const auto &e : extensions) {
+    if (strcasecmp(ext.c_str(), e.c_str()) == 0)
+      return true;
+  }
+  std::cout << "No images found" << std::endl;
+  return false;
+}
+
+std::vector<std::string> ImageFinder::find_all_images() const {
+  std::vector<std::string> result;
+
+  for (const auto &entry : fs::recursive_directory_iterator(root)) {
+    if (entry.is_directory() && entry.path().filename() == "images") {
+
+      // Scan only inside the images/ folder
+      for (const auto &Image : fs::directory_iterator(entry.path())) {
+        if (Image.is_regular_file() && is_image_file(Image.path())) {
+          result.push_back(Image.path().string());
+        }
+      }
+    }
+  }
+  std::cout << "Number of images found: " << result.size() << std::endl;
+  return result;
+}
+
+void ImageFinder::randomize_order(std::vector<std::string> &vector) {
+  std::random_device rd;
+  std::mt19937 gen(rd());
+  std::shuffle(vector.begin(), vector.end(), gen);
+}
