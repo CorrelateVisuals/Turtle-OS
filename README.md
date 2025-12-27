@@ -35,10 +35,10 @@ make
 │   └── shaders/
 │       ├── vertex.glsl
 │       └── fragment.glsl
-├── bin/               # Compiled binaries
-├── data/              # Assets, fill with images you want to use
-├── log/               # Log files
-└── Makefile           # Build instructions
+├── bin/                          # Compiled binaries
+├── data/                         # Assets, fill with images you want to use
+├── log/                          # Log files
+└── Makefile                      # Build instructions
 ```
 
 ## Notes
