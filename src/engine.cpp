@@ -3,11 +3,10 @@
 #include <string>
 
 #include "engine.h"
-#include "resources.h"
 #include "shader.h"
 
 Engine::Engine(int argc, char *argv[])
-    : TurtleBase1(argc, argv), _win("Turtle-OS") {
+    : TurtleBase(argc, argv), _win("Turtle-OS") {
   _win.set_key_callback(key_call_back);
 }
 
