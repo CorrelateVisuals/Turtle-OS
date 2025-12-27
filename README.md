@@ -3,15 +3,15 @@
 ## Overview
 
 ### Install the required packages (PoP!-OS):
-
+```
 sudo apt install libglfw3-dev
-
 sudo apt install libgles2-mesa-dev libegl1-mesa-dev mesa-common-dev
+```
 
 ### Install the required packages Pinebook-pro (Manjaro):
-
+```
 sudo pacman -S --needed --noconfirm gcc g++ make pkgconf glfw-wayland libglvnd mesa
-
+```
 Note: Use glfw-wayland for Wayland sessions. Do not mix with glfw-x11.
 
 ## Build & Run
