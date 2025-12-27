@@ -2,17 +2,13 @@
 
 ## Overview
 
-This project demonstrates a minimal OpenGL ES 2.0 application using GLFW on a Pinebook Pro (Manjaro Linux). It renders a simple triangle with modern C++17 code and RAII-safe window management.
-
-## Dependencies (Manjaro)
-
-### Install the required packages:
+### Install the required packages (PoP!-OS):
 
 sudo apt install libglfw3-dev
 
 sudo apt install libgles2-mesa-dev libegl1-mesa-dev mesa-common-dev
 
-### Install the required packages Pinebook-pro:
+### Install the required packages Pinebook-pro (Manjaro):
 
 sudo pacman -S --needed --noconfirm gcc g++ make pkgconf glfw-wayland libglvnd mesa
 
@@ -30,7 +26,7 @@ make
 
 ## Project Structure
 
-.
+'''
 ├── src/
 │   ├── main.cpp       # Entry point
 │   ├── window.h/cpp   # Window class (RAII)
@@ -42,6 +38,7 @@ make
 ├── data/              # Assets (optional)
 ├── log/               # Log files (optional)
 └── Makefile           # Build instructions
+'''
 
 ## Notes
 
