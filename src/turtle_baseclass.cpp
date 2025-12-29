@@ -4,6 +4,7 @@
 #include <string>
 #include <iostream>
 
+#include "backend_GLSL.h"
 #include "turtle_baseclass.h"
 
 TurtleBase::TurtleBase(int argc, char *argv[])
@@ -102,26 +103,28 @@ GLuint TurtleBase::Image::Texture::load_texture(const std::string &path)
   }
 
   GLuint texture;
-  send_to_GPU_GLSL(texture, pixels, width, height);
+  GLSL::texture_to_gpu(texture, _current_image, pixels, width, height);
+  
+  // send_to_GPU_GLSL(texture, pixels, width, height);
   stbi_image_free(pixels);
 
   return texture;
 }
 
-void TurtleBase::Image::Texture::send_to_GPU_GLSL(GLuint &tex, unsigned char *pixels, const int width, const int height)
-{
-  glGenTextures(1, &tex);
-  glBindTexture(GL_TEXTURE_2D, tex);
+// void TurtleBase::Image::Texture::send_to_GPU_GLSL(GLuint &tex, unsigned char *pixels, const int width, const int height)
+// {
+//   glGenTextures(1, &tex);
+//   glBindTexture(GL_TEXTURE_2D, tex);
 
-  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA,
-               GL_UNSIGNED_BYTE, pixels);
+//   glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA,
+//                GL_UNSIGNED_BYTE, pixels);
 
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+//   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+//   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
-  glBindTexture(GL_TEXTURE_2D, _current_image);
-  return;
-}
+//   glBindTexture(GL_TEXTURE_2D, _current_image);
+//   return;
+// }
 
 TurtleBase::ScaleVertices::ScaleVertices(float start, float speed, float final)
     : _reset_start_scale{start}, _texture_start_scale{start},

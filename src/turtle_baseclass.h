@@ -103,8 +103,8 @@ public:
 
     private:
       GLuint load_texture(const std::string &path);
-      void send_to_GPU_GLSL(GLuint &tex, unsigned char *pixels, const int width,
-                            const int height);
+      // void send_to_GPU_GLSL(GLuint &tex, unsigned char *pixels, const int width,
+      //                       const int height);
       void print_config();
     };
   };
