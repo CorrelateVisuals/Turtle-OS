@@ -9,7 +9,7 @@ void GLSL::render_loop(GLFWwindow *win, TurtleBase::Image::Texture &tex, TurtleB
     glfwGetFramebufferSize(win, &w, &h);
     glViewport(0, 0, w, h);
 
-    glBindTexture(GL_TEXTURE_2D, tex._current_image);
+    //glBindTexture(GL_TEXTURE_2D, tex._current_image);
     glUniform1f(zoom._shader_location,
                 zoom._texture_start_scale);
 
@@ -30,15 +30,13 @@ void GLSL::render_loop(GLFWwindow *win, TurtleBase::Image::Texture &tex, TurtleB
 void GLSL::texture_to_gpu(GLuint &tex, unsigned char *pixels, const int width, const int height)
 {
     glGenTextures(1, &tex);
+
     glBindTexture(GL_TEXTURE_2D, tex);
 
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA,
                  GL_UNSIGNED_BYTE, pixels);
 
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
-    glBindTexture(GL_TEXTURE_2D, tex);
 
     return;
 }
