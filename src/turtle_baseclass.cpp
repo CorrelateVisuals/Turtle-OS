@@ -83,12 +83,12 @@ void TurtleBase::Image::Texture::select_texture(int index)
 
   _image_index = (index + _images.size()) % _images.size();
   std::cout << "Switching to texture: " << _images[_image_index] << "\n";
-  _current_image = load_texture(_images[_image_index]);
+  load_texture(_images[_image_index]);
 
   return;
 }
 
-GLuint TurtleBase::Image::Texture::load_texture(const std::string &path)
+void TurtleBase::Image::Texture::load_texture(const std::string &path)
 {
   stbi_set_flip_vertically_on_load(true);
 
@@ -99,32 +99,15 @@ GLuint TurtleBase::Image::Texture::load_texture(const std::string &path)
   if (!pixels)
   {
     fprintf(stderr, "Failed to load image: %s\n", path.c_str());
-    return 0;
+    return;
   }
 
-  GLuint texture;
-  GLSL::texture_to_gpu(texture, _current_image, pixels, width, height);
+  GLSL::texture_to_gpu(_current_image, pixels, width, height);
   
-  // send_to_GPU_GLSL(texture, pixels, width, height);
   stbi_image_free(pixels);
 
-  return texture;
+  return;
 }
-
-// void TurtleBase::Image::Texture::send_to_GPU_GLSL(GLuint &tex, unsigned char *pixels, const int width, const int height)
-// {
-//   glGenTextures(1, &tex);
-//   glBindTexture(GL_TEXTURE_2D, tex);
-
-//   glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA,
-//                GL_UNSIGNED_BYTE, pixels);
-
-//   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-//   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
-//   glBindTexture(GL_TEXTURE_2D, _current_image);
-//   return;
-// }
 
 TurtleBase::ScaleVertices::ScaleVertices(float start, float speed, float final)
     : _reset_start_scale{start}, _texture_start_scale{start},

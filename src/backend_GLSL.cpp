@@ -27,7 +27,7 @@ void GLSL::render_loop(GLFWwindow *win, TurtleBase::Image::Texture &tex, TurtleB
     return;
 }
 
-void GLSL::texture_to_gpu(GLuint &tex, GLuint &cur_image, unsigned char *pixels, const int width, const int height)
+void GLSL::texture_to_gpu(GLuint &tex, unsigned char *pixels, const int width, const int height)
 {
     glGenTextures(1, &tex);
     glBindTexture(GL_TEXTURE_2D, tex);
@@ -38,6 +38,7 @@ void GLSL::texture_to_gpu(GLuint &tex, GLuint &cur_image, unsigned char *pixels,
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
-    glBindTexture(GL_TEXTURE_2D, cur_image); //_current_image or tex?
+    glBindTexture(GL_TEXTURE_2D, tex);
+
     return;
 }

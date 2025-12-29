@@ -12,8 +12,6 @@ public:
   TurtleBase(int argc, char *argv[]);
   ~TurtleBase() = default;
 
-  // void run(){};
-
   class Effects {
   public:
   Effects(GLint loc = 0) : _shader_location(loc){};
@@ -102,9 +100,7 @@ public:
       void select_texture(int index);
 
     private:
-      GLuint load_texture(const std::string &path);
-      // void send_to_GPU_GLSL(GLuint &tex, unsigned char *pixels, const int width,
-      //                       const int height);
+      void load_texture(const std::string &path);
       void print_config();
     };
   };

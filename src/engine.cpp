@@ -48,9 +48,7 @@ void Engine::run()
 {
   while (!_win.should_close())
   {
-
     GLSL::render_loop(_win.get_handle(), _main, _main._zoom);
-    
     _main._zoom.run();
 
     // Swap buffers and poll events
