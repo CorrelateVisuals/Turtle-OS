@@ -10,6 +10,8 @@ Engine::Engine(int argc, char *argv[])
     : TurtleBase(argc, argv), _win("Turtle-OS")
 {
   _win.set_key_callback(key_call_back);
+  create_shaders(_main._zoom._shader_location);
+  glfwSetWindowUserPointer(_win.get_handle(), this);
 }
 
 void Engine::key_call_back(GLFWwindow *window, int key, int, int action, int)
@@ -42,43 +44,13 @@ void Engine::key_call_back(GLFWwindow *window, int key, int, int action, int)
   return;
 }
 
-// void Engine::render_loop_GLSL()
-// {
-//   glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
-//   glClear(GL_COLOR_BUFFER_BIT);
-//   // Update viewport each frame (important on Pinebook!)
-//   int w, h;
-//   glfwGetFramebufferSize(_win.get_handle(), &w, &h);
-//   glViewport(0, 0, w, h);
-
-//   glBindTexture(GL_TEXTURE_2D, _main._current_image);
-//   glUniform1f(_main._zoom._shader_location,
-//               _main._zoom._texture_start_scale);
-
-//   // Pass vertex positions to the shader
-//   glEnableVertexAttribArray(0); // pos
-//   glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(float) * 4,
-//                         _main._vertices.data());
-
-//   glEnableVertexAttribArray(1); // uv
-//   glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(float) * 4,
-//                         _main._vertices.data() + 2);
-
-//   glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT,
-//                  _main._indices.data());
-//   return;
-// }
-
 void Engine::run()
 {
-  create_shaders(_main._zoom._shader_location);
-  glfwSetWindowUserPointer(_win.get_handle(), this);
-
-  // Main render loop
   while (!_win.should_close())
   {
 
     GLSL::render_loop(_win.get_handle(), _main, _main._zoom);
+    
     _main._zoom.run();
 
     // Swap buffers and poll events
