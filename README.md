@@ -20,6 +20,10 @@ Note: Use glfw-wayland for Wayland sessions. Do not mix with glfw-x11.
 ```
 make
 ```
+Compile and clean previous build:
+```
+make clean && make
+```
 
 2. Run the application:
 ```
