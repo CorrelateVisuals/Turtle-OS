@@ -7,10 +7,10 @@
 class Engine : TurtleBase
 {
 private:
-  class MainCanvas : public Image::Texture
+  class MainCanvas : public Image::TextureArray
   {
   public:
-    MainCanvas() : Texture("data"), _zoom(15.0f, 0.1f, 2.0f) {};
+    MainCanvas() : TextureArray("data"), _zoom(15.0f, 0.1f, 2.0f) {};
     ScaleVertices _zoom;
   };
 

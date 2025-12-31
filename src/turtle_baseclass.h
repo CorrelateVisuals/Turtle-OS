@@ -88,10 +88,10 @@ public:
 
   class Image {
   public:
-    class Texture : public Geometry::Shape {
+    class TextureArray : public Geometry::Shape {
     public:
-      Texture(const std::string &folder);
-      ~Texture() = default;
+      TextureArray(const std::string &folder);
+      ~TextureArray() = default;
 
       GLuint _current_image;
       std::vector<std::string> _images;

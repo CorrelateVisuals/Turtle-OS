@@ -55,16 +55,16 @@ void TurtleBase::Geometry::Shape::print_config()
             << std::endl;
 }
 
-void TurtleBase::Image::Texture::print_config()
+void TurtleBase::Image::TextureArray::print_config()
 {
-  std::cout << "Texture size: " << _images.size() << " , index " << _image_index
+  std::cout << "TextureArray size: " << _images.size() << " , index " << _image_index
             << _current_image << std::endl
             << std::endl;
 }
 
-TurtleBase::Image::Texture::Texture(const std::string &folder)
+TurtleBase::Image::TextureArray::TextureArray(const std::string &folder)
     : Shape(0, 1.0f, {0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f},
-            "Texture Default"),
+            "TextureArray Default"),
       _current_image(0), _images(), _image_index(0)
 {
   ImageFinder finder;
@@ -76,7 +76,7 @@ TurtleBase::Image::Texture::Texture(const std::string &folder)
   print_config();
 }
 
-void TurtleBase::Image::Texture::select_texture(int index)
+void TurtleBase::Image::TextureArray::select_texture(int index)
 {
   if (_images.empty())
     return;
@@ -88,7 +88,7 @@ void TurtleBase::Image::Texture::select_texture(int index)
   return;
 }
 
-void TurtleBase::Image::Texture::load_texture(const std::string &path)
+void TurtleBase::Image::TextureArray::load_texture(const std::string &path)
 {
   stbi_set_flip_vertically_on_load(true);
 
