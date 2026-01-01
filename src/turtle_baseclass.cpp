@@ -65,11 +65,11 @@ void TurtleBase::Image::TextureArray::print_config()
 TurtleBase::Image::TextureArray::TextureArray(const std::string &folder)
     : Shape(0, 1.0f, {0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f},
             "TextureArray Default"),
-      _current_image(0), _images(), _image_index(0)
+      _current_image(0), _images(), _image_index(1)
 {
   ImageFinder finder;
   finder.set_root(folder);
-  _images = finder.find_all_images();
+  finder.find_all_images(_images);
   finder.randomize_order(_images);
   select_texture(_image_index);
 
@@ -79,10 +79,12 @@ TurtleBase::Image::TextureArray::TextureArray(const std::string &folder)
 void TurtleBase::Image::TextureArray::select_texture(int index)
 {
   if (_images.empty())
+  {
     return;
+  }
 
   _image_index = (index + _images.size()) % _images.size();
-  std::cout << "Switching to texture: " << _images[_image_index] << "\n";
+  std::cout << "Switching to texture: " << _images[_image_index] << " at index: " << index << " and image index: " << _image_index << "\n";
   load_texture(_images[_image_index]);
 
   return;
@@ -103,7 +105,7 @@ void TurtleBase::Image::TextureArray::load_texture(const std::string &path)
   }
 
   GLSL::texture_to_gpu(_current_image, pixels, width, height);
-  
+
   stbi_image_free(pixels);
 
   return;

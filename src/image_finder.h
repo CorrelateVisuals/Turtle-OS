@@ -4,7 +4,10 @@
 #include <string>
 #include <vector>
 
-class ImageFinder {
+constexpr int TEXTURE_ARRAY_SIZE = 1000;
+
+class ImageFinder
+{
 public:
   ImageFinder();
 
@@ -12,9 +15,9 @@ public:
   void set_root(const std::string &root_path);
 
   // Perform recursive scan and return all image paths
-  std::vector<std::string> find_all_images() const;
+  void find_all_images(std::array<std::string, TEXTURE_ARRAY_SIZE> &texture_array);
 
-  void randomize_order(std::vector<std::string> &vector);
+  void randomize_order(std::array<std::string, TEXTURE_ARRAY_SIZE> &array);
 
 private:
   std::string root;

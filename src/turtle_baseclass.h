@@ -7,6 +7,7 @@
 
 #include "image_finder.h"
 
+
 class TurtleBase {
 public:
   TurtleBase(int argc, char *argv[]);
@@ -94,7 +95,7 @@ public:
       ~TextureArray() = default;
 
       GLuint _current_image;
-      std::vector<std::string> _images;
+      std::array<std::string, TEXTURE_ARRAY_SIZE> _images;
       int _image_index;
 
       void select_texture(int index);
