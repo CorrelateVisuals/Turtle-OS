@@ -72,7 +72,7 @@ void ImageFinder::find_all_images(std::array<std::string, TEXTURE_ARRAY_SIZE> &t
 }
 
 template <size_t SIZE>
-size_t get_filled_count(const std::array<std::string, SIZE> &array)
+size_t ImageFinder::get_filled_count(const std::array<std::string, SIZE> &array)
 {
   size_t count = 0;
   for (const auto &item : array)

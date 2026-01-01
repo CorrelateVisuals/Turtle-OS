@@ -23,4 +23,7 @@ private:
   std::string root;
 
   bool is_image_file(const std::filesystem::path &p) const;
+
+  template <size_t SIZE>
+  size_t get_filled_count(const std::array<std::string, SIZE> &array);
 };

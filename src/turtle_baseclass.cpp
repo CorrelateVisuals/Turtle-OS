@@ -65,7 +65,7 @@ void TurtleBase::Image::TextureArray::print_config()
 TurtleBase::Image::TextureArray::TextureArray(const std::string &folder)
     : Shape(0, 1.0f, {0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f},
             "TextureArray Default"),
-      _current_image(0), _images(), _image_index(1)
+      _current_image(0), _images(), _image_index(0)
 {
   ImageFinder finder;
   finder.set_root(folder);
