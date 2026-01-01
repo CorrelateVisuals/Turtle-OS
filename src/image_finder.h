@@ -11,6 +11,10 @@ class ImageFinder
 public:
   ImageFinder();
 
+
+  template <size_t SIZE>
+   size_t get_filled_count(const std::array<std::string, SIZE> &array);
+
   // Set root directory to scan (default: "data")
   void set_root(const std::string &root_path);
 
@@ -24,6 +28,4 @@ private:
 
   bool is_image_file(const std::filesystem::path &p) const;
 
-  template <size_t SIZE>
-  size_t get_filled_count(const std::array<std::string, SIZE> &array);
 };
