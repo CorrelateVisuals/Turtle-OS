@@ -3,7 +3,6 @@
 #include <GLES2/gl2.h>
 
 #include <array>
-#include <vector>
 
 #include "image_finder.h"
 
