@@ -25,10 +25,10 @@ public:
     ScaleVertices(float start, float speed, float final);
     ~ScaleVertices() = default;
 
-    float _reset_start_scale;
-    float _texture_start_scale;
+    float _start_scale;
+    float _scale;
     float _zoom_speed;
-    float _texture_final_scale;
+    float _final_scale;
 
     void run(bool is_on = true);
     void reset_start_scale();

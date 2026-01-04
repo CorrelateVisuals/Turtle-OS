@@ -4,7 +4,7 @@ void GLSL::render_loop(GLFWwindow *win, TurtleBase::Image::TextureArray &tex, Tu
 {
     glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT);
-    
+
     // Update viewport each frame (important on Pinebook!)
     int w, h;
     glfwGetFramebufferSize(win, &w, &h);
@@ -12,7 +12,7 @@ void GLSL::render_loop(GLFWwindow *win, TurtleBase::Image::TextureArray &tex, Tu
 
     glBindTexture(GL_TEXTURE_2D, tex._current_image);
     glUniform1f(zoom._shader_location,
-                zoom._texture_start_scale);
+                zoom._scale);
 
     // Pass vertex positions to the shader
     glEnableVertexAttribArray(0); // pos
