@@ -2,46 +2,48 @@
 
 ## Overview
 
-This project demonstrates a minimal OpenGL ES 2.0 application using GLFW on a Pinebook Pro (Manjaro Linux). It renders a simple triangle with modern C++17 code and RAII-safe window management.
-
-## Dependencies (Manjaro)
-
-### Install the required packages:
-
+### Install the required packages (PoP!-OS):
+```
 sudo apt install libglfw3-dev
-
 sudo apt install libgles2-mesa-dev libegl1-mesa-dev mesa-common-dev
+```
 
-### Install the required packages Pinebook-pro:
-
+### Install the required packages Pinebook-pro (Manjaro):
+```
 sudo pacman -S --needed --noconfirm gcc g++ make pkgconf glfw-wayland libglvnd mesa
-
+```
 Note: Use glfw-wayland for Wayland sessions. Do not mix with glfw-x11.
 
 ## Build & Run
 
 1. Compile the project:
-
+```
 make
+```
+Compile and clean previous build:
+```
+make clean && make
+```
 
 2. Run the application:
-
+```
 ./bin/Turtle-OS
+```
 
 ## Project Structure
 
-.
+```
 ├── src/
-│   ├── main.cpp       # Entry point
-│   ├── window.h/cpp   # Window class (RAII)
-│   ├── shader.h/cpp   # Shader utilities
+│   ├── main.cpp                  # Entry point
+│   ├── turtle_baseclass.h/.cpp   # Turtle Base
 │   └── shaders/
 │       ├── vertex.glsl
 │       └── fragment.glsl
-├── bin/               # Compiled binaries
-├── data/              # Assets (optional)
-├── log/               # Log files (optional)
-└── Makefile           # Build instructions
+├── bin/                          # Compiled binaries
+├── data/                         # Assets, fill with images you want to use
+├── log/                          # Log files
+└── Makefile                      # Build instructions
+```
 
 ## Notes
 

@@ -3,41 +3,54 @@
 #include <GLES2/gl2.h>
 
 #include <array>
-#include <vector>
 
 #include "image_finder.h"
 
-class TurtleBase {
+class TurtleBase
+{
 public:
   TurtleBase(int argc, char *argv[]);
   ~TurtleBase() = default;
 
-  //void run(){};
-
-   class Effects {
+  class Uniform
+  {
   public:
-    class ScaleVertices {
-    public:
-      ScaleVertices(float start, float speed, float final);
-      ~ScaleVertices() = default;
+    Uniform(GLint l = 0, float v = 0.0f) : _shader_location(l), _value(v) {};
+    ~Uniform() = default;
 
-      GLint _scale_location{0};
-      float _reset_start_scale{0.0f};
-      float _texture_start_scale{0.0f};
-      float _zoom_speed{0.0f};
-      float _texture_final_scale{0.0f};
+    float get_uniform_value() { return _value; };
+    void set_uniform_value(float v) { _value = v; };
 
-      void run(bool is_on = true);
-      void reset_start_scale();
+    GLint _shader_location;
 
-    private:
-      void getSettings();
-    };
+  private:
+    float _value;
   };
 
-  class Geometry {
+  class ScaleVertices : public Uniform
+  {
   public:
-    class Vertex {
+    ScaleVertices(float start, float speed, float final, float ease);
+    ~ScaleVertices() = default;
+
+    float _start_scale;
+    float _scale;
+    float _zoom_speed;
+    float _final_scale;
+    float _ease_factor;
+
+    void run(bool is_on = true);
+    void reset_start_scale();
+
+  private:
+    void getSettings();
+  };
+
+  class Geometry
+  {
+  public:
+    class Vertex
+    {
     public:
       Vertex(std::array<float, 3> pos = {0.0f, 0.0f, 0.0f},
              std::array<float, 3> rot = {0.0f, 0.0f, 0.0f},
@@ -56,7 +69,8 @@ public:
       void print_config();
     };
 
-    class Shape : public Vertex {
+    class Shape : public Vertex
+    {
     public:
       Shape(int shape = 0, float scale = 1.0f,
             std::array<float, 3> pos = {0.0f, 0.0f, 0.0f},
@@ -68,10 +82,10 @@ public:
       int get_shape() { return _shape; };
 
       std::array<float, 16> _vertices = {
-          -0.5f, 0.5f,  0.0f, 1.0f, // Top-left
+          -0.5f, 0.5f, 0.0f, 1.0f,  // Top-left
           -0.5f, -0.5f, 0.0f, 0.0f, // Bottom-left
-          0.5f,  -0.5f, 1.0f, 0.0f, // Bottom-right
-          0.5f,  0.5f,  1.0f, 1.0f  // Top-right
+          0.5f, -0.5f, 1.0f, 0.0f,  // Bottom-right
+          0.5f, 0.5f, 1.0f, 1.0f    // Top-right
       };
 
       std::array<unsigned int, 6> _indices = {0, 1, 2, 2, 3, 0};
@@ -84,28 +98,27 @@ public:
     };
   };
 
-  class Image {
+  class Image
+  {
   public:
-    class Texture : public Geometry::Shape {
+    class TextureArray : public Geometry::Shape
+    {
     public:
-      Texture(const std::string& folder);
-      ~Texture() = default;
+      TextureArray(const std::string &folder);
+      ~TextureArray() = default;
 
       GLuint _current_image;
-      std::vector<std::string> _images;
+      std::array<std::string, TEXTURE_ARRAY_SIZE> _images;
       int _image_index;
 
       void select_texture(int index);
 
     private:
-    GLuint load_texture(const std::string &path);
-    void send_to_GPU_GLSL(GLuint& tex, unsigned char* pixels, const int width, const int height);
-    void print_config();
+      void load_texture(const std::string &path);
+      void print_config();
     };
   };
 
 protected:
-
-
 private:
 };

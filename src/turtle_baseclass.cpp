@@ -4,7 +4,9 @@
 #include <string>
 #include <iostream>
 
-#include "turtle_baseclass.h"
+#include "backend_GLSL.h"
+// #include "turtle_baseclass.h"
+#include "image_finder.h"
 
 TurtleBase::TurtleBase(int argc, char *argv[])
 {
@@ -54,40 +56,50 @@ void TurtleBase::Geometry::Shape::print_config()
             << std::endl;
 }
 
-void TurtleBase::Image::Texture::print_config()
+void TurtleBase::Image::TextureArray::print_config()
 {
-  std::cout << "Texture size: " << _images.size() << " , index " << _image_index
+  std::cout << "TextureArray size: " << _images.size() << " , index " << _image_index
             << _current_image << std::endl
             << std::endl;
 }
 
-TurtleBase::Image::Texture::Texture(const std::string &folder)
+TurtleBase::Image::TextureArray::TextureArray(const std::string &folder)
     : Shape(0, 1.0f, {0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f},
-            "Texture Default"),
+            "TextureArray Default"),
       _current_image(0), _images(), _image_index(0)
 {
   ImageFinder finder;
   finder.set_root(folder);
-  _images = finder.find_all_images();
+  finder.find_all_images(_images);
   finder.randomize_order(_images);
   select_texture(_image_index);
 
   print_config();
 }
 
-void TurtleBase::Image::Texture::select_texture(int index)
+void TurtleBase::Image::TextureArray::select_texture(int index)
 {
   if (_images.empty())
+  {
     return;
+  }
 
   _image_index = (index + _images.size()) % _images.size();
-  std::cout << "Switching to texture: " << _images[_image_index] << "\n";
-  _current_image = load_texture(_images[_image_index]);
+
+  // ImageFinder imgfindr;
+  // size_t filled_count = imgfindr.get_filled_count(_images);
+
+  // std::cout << _image_index << "" << (index + _images.size()) % _images.size() << '\n';
+  // std::cout << _image_index << "" << (index + filled_count) % filled_count << '\n';
+  // std::cout << _image_index << "" << (index + _images.size()) % filled_count << '\n';
+
+  std::cout << "Switching to texture: " << _images[_image_index] << " at index: " << index << " and image index: " << _image_index << "\n";
+  load_texture(_images[_image_index]);
 
   return;
 }
 
-GLuint TurtleBase::Image::Texture::load_texture(const std::string &path)
+void TurtleBase::Image::TextureArray::load_texture(const std::string &path)
 {
   stbi_set_flip_vertically_on_load(true);
 
@@ -98,65 +110,52 @@ GLuint TurtleBase::Image::Texture::load_texture(const std::string &path)
   if (!pixels)
   {
     fprintf(stderr, "Failed to load image: %s\n", path.c_str());
-    return 0;
+    return;
   }
 
-  GLuint texture;
-  send_to_GPU_GLSL(texture, pixels, width, height);
+  GLSL::texture_to_gpu(_current_image, pixels, width, height);
+
   stbi_image_free(pixels);
 
-  return texture;
-}
-
-void TurtleBase::Image::Texture::send_to_GPU_GLSL(GLuint &tex, unsigned char *pixels, const int width, const int height)
-{
-  glGenTextures(1, &tex);
-  glBindTexture(GL_TEXTURE_2D, tex);
-
-  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA,
-               GL_UNSIGNED_BYTE, pixels);
-
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
-  glBindTexture(GL_TEXTURE_2D, _current_image);
   return;
 }
 
-TurtleBase::Effects::ScaleVertices::ScaleVertices(float start, float speed, float final)
-    : _reset_start_scale{start}, _texture_start_scale{start},
-      _zoom_speed(speed), _texture_final_scale(final + speed)
+TurtleBase::ScaleVertices::ScaleVertices(float start, float speed, float final, float ease)
+    : Uniform(0, start), _start_scale{start}, _scale(start), _zoom_speed(speed), _final_scale(final + speed), _ease_factor(ease)
 {
   std::cout << "Initializing Zoom." << std::endl;
+  set_uniform_value(_scale);
   getSettings();
 }
 
-void TurtleBase::Effects::ScaleVertices::run(bool is_on)
+void TurtleBase::ScaleVertices::run(bool is_on)
 {
   if (is_on)
   {
-    if (_texture_start_scale > _texture_final_scale)
+    if (_scale > _final_scale)
     {
-      _texture_start_scale -= _zoom_speed;
+      _scale -= _zoom_speed * (_scale - _final_scale) * _ease_factor; // Adjust the factor as needed
     }
     else
     {
-      _texture_start_scale = _texture_final_scale;
+      _scale = _final_scale;
     }
+
+    set_uniform_value(_scale);
   }
 }
 
-void TurtleBase::Effects::ScaleVertices::reset_start_scale()
+void TurtleBase::ScaleVertices::reset_start_scale()
 {
-  // std::cout << _texture_start_scale << _reset_start_scale << std::endl;
-  _texture_start_scale = _reset_start_scale;
+  _scale = _start_scale;
+  set_uniform_value(_start_scale);
 }
 
-void TurtleBase::Effects::ScaleVertices::getSettings()
+void TurtleBase::ScaleVertices::getSettings()
 {
-  std::cout << "Zoom _scale_location: " << _scale_location
-            << ",  _texture_start_scale: " << _texture_start_scale
+  std::cout << "Zoom _scale_location: " << _shader_location
+            << ",  _scale: " << get_uniform_value()
             << ", _zoom_speed: " << _zoom_speed
-            << ", _texture_final_scale:" << _texture_final_scale << std::endl
+            << ", _final_scale:" << _final_scale << std::endl
             << std::endl;
 }

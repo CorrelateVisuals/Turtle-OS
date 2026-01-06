@@ -2,9 +2,7 @@
 *.o
 *.out
 *.exe
-app
 Turtle-OS
-triangle
 *.so
 
 # Ignore build directories
@@ -14,4 +12,4 @@ build/
 data/*
 !data/.gitkeep
 
-baseclass_concept.txt
+instructions.txt
