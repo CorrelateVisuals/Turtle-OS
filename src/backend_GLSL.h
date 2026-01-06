@@ -8,8 +8,8 @@
 class GLSL
 {
 public:
-    void static render_loop(GLFWwindow *win, TurtleBase::Image::TextureArray &tex, TurtleBase::ScaleVertices &zoom);
-    void static texture_to_gpu(GLuint &tex, unsigned char *pixels, const int width,
+    void static render_loop(GLFWwindow *win, TurtleBase::Image::TextureArray &textures, TurtleBase::Uniform &uniform);
+    void static texture_to_gpu(GLuint &textures, unsigned char *pixels, const int width,
                                const int height);
 
 private:

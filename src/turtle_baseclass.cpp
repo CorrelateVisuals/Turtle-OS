@@ -5,7 +5,7 @@
 #include <iostream>
 
 #include "backend_GLSL.h"
-//#include "turtle_baseclass.h"
+// #include "turtle_baseclass.h"
 #include "image_finder.h"
 
 TurtleBase::TurtleBase(int argc, char *argv[])
@@ -84,7 +84,7 @@ void TurtleBase::Image::TextureArray::select_texture(int index)
     return;
   }
 
-  _image_index = (index + _images.size()) % _images.size(); 
+  _image_index = (index + _images.size()) % _images.size();
 
   // ImageFinder imgfindr;
   // size_t filled_count = imgfindr.get_filled_count(_images);
@@ -92,7 +92,7 @@ void TurtleBase::Image::TextureArray::select_texture(int index)
   // std::cout << _image_index << "" << (index + _images.size()) % _images.size() << '\n';
   // std::cout << _image_index << "" << (index + filled_count) % filled_count << '\n';
   // std::cout << _image_index << "" << (index + _images.size()) % filled_count << '\n';
-  
+
   std::cout << "Switching to texture: " << _images[_image_index] << " at index: " << index << " and image index: " << _image_index << "\n";
   load_texture(_images[_image_index]);
 
@@ -121,8 +121,7 @@ void TurtleBase::Image::TextureArray::load_texture(const std::string &path)
 }
 
 TurtleBase::ScaleVertices::ScaleVertices(float start, float speed, float final)
-    : _start_scale{start}, _scale{start},
-      _zoom_speed(speed), _final_scale(final + speed)
+    : _start_scale{start}, _zoom_speed(speed), _final_scale(final + speed)
 {
   std::cout << "Initializing Zoom." << std::endl;
   getSettings();
@@ -132,27 +131,31 @@ void TurtleBase::ScaleVertices::run(bool is_on)
 {
   if (is_on)
   {
-    if (_scale > _final_scale)
+    float scale = get_value();
+
+    if (scale > _final_scale)
     {
-      _scale -= _zoom_speed;
+      scale -= _zoom_speed;
     }
     else
     {
-      _scale = _final_scale;
+      scale = _final_scale;
     }
+
+    set_value(scale);
   }
 }
 
 void TurtleBase::ScaleVertices::reset_start_scale()
 {
   // std::cout << _scale << _start_scale << std::endl;
-  _scale = _start_scale;
+  set_value(_start_scale);
 }
 
 void TurtleBase::ScaleVertices::getSettings()
 {
   std::cout << "Zoom _scale_location: " << _shader_location
-            << ",  _scale: " << _scale
+            << ",  _scale: " << get_value()
             << ", _zoom_speed: " << _zoom_speed
             << ", _final_scale:" << _final_scale << std::endl
             << std::endl;
