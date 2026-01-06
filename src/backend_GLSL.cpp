@@ -14,7 +14,7 @@ void GLSL::render_loop(GLFWwindow *win, TurtleBase::Image::TextureArray &texture
 
     // Send uniform
     glUniform1f(uniform._shader_location,
-                uniform.get_value());
+                uniform.get_uniform_value());
 
     // Pass vertex positions to the shader
     glEnableVertexAttribArray(0); // pos

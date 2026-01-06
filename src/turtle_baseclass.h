@@ -18,8 +18,8 @@ public:
     Uniform(GLint l = 0, float v = 0.0f) : _shader_location(l), _value(v) {};
     ~Uniform() = default;
 
-    float get_value() { return _value; };
-    void set_value(float v) { _value = v; };
+    float get_uniform_value() { return _value; };
+    void set_uniform_value(float v) { _value = v; };
 
     GLint _shader_location;
 
@@ -34,7 +34,7 @@ public:
     ~ScaleVertices() = default;
 
     float _start_scale;
-    // loat _scale;
+    float _scale;
     float _zoom_speed;
     float _final_scale;
 

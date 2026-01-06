@@ -121,9 +121,10 @@ void TurtleBase::Image::TextureArray::load_texture(const std::string &path)
 }
 
 TurtleBase::ScaleVertices::ScaleVertices(float start, float speed, float final)
-    : _start_scale{start}, _zoom_speed(speed), _final_scale(final + speed)
+    : _start_scale{start}, _scale(start), _zoom_speed(speed), _final_scale(final + speed)
 {
   std::cout << "Initializing Zoom." << std::endl;
+  set_uniform_value(_scale);
   getSettings();
 }
 
@@ -131,31 +132,29 @@ void TurtleBase::ScaleVertices::run(bool is_on)
 {
   if (is_on)
   {
-    float scale = get_value();
-
-    if (scale > _final_scale)
+    if (_scale > _final_scale)
     {
-      scale -= _zoom_speed;
+      _scale -= _zoom_speed;
     }
     else
     {
-      scale = _final_scale;
+      _scale = _final_scale;
     }
 
-    set_value(scale);
+    set_uniform_value(_scale);
   }
 }
 
 void TurtleBase::ScaleVertices::reset_start_scale()
 {
-  // std::cout << _scale << _start_scale << std::endl;
-  set_value(_start_scale);
+  _scale = _start_scale;
+  set_uniform_value(_start_scale);
 }
 
 void TurtleBase::ScaleVertices::getSettings()
 {
   std::cout << "Zoom _scale_location: " << _shader_location
-            << ",  _scale: " << get_value()
+            << ",  _scale: " << get_uniform_value()
             << ", _zoom_speed: " << _zoom_speed
             << ", _final_scale:" << _final_scale << std::endl
             << std::endl;
