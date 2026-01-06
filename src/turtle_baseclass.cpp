@@ -120,8 +120,8 @@ void TurtleBase::Image::TextureArray::load_texture(const std::string &path)
   return;
 }
 
-TurtleBase::ScaleVertices::ScaleVertices(float start, float speed, float final)
-    : _start_scale{start}, _scale(start), _zoom_speed(speed), _final_scale(final + speed)
+TurtleBase::ScaleVertices::ScaleVertices(float start, float speed, float final, float ease)
+    : Uniform(0, start), _start_scale{start}, _scale(start), _zoom_speed(speed), _final_scale(final + speed), _ease_factor(ease)
 {
   std::cout << "Initializing Zoom." << std::endl;
   set_uniform_value(_scale);
@@ -134,7 +134,7 @@ void TurtleBase::ScaleVertices::run(bool is_on)
   {
     if (_scale > _final_scale)
     {
-      _scale -= _zoom_speed;
+      _scale -= _zoom_speed * (_scale - _final_scale) * _ease_factor; // Adjust the factor as needed
     }
     else
     {

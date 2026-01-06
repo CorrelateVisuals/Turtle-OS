@@ -30,13 +30,14 @@ public:
   class ScaleVertices : public Uniform
   {
   public:
-    ScaleVertices(float start, float speed, float final);
+    ScaleVertices(float start, float speed, float final, float ease);
     ~ScaleVertices() = default;
 
     float _start_scale;
     float _scale;
     float _zoom_speed;
     float _final_scale;
+    float _ease_factor;
 
     void run(bool is_on = true);
     void reset_start_scale();
