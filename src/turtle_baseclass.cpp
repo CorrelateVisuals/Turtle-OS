@@ -65,7 +65,7 @@ void TurtleBase::Image::TextureArray::print_config()
 TurtleBase::Image::TextureArray::TextureArray(const std::string &folder)
     : Shape(0, 1.0f, {0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f},
             "TextureArray Default"),
-      _current_image(0), _images(), _image_index(0)
+      _current_image(0), _image_index(0), _images()
 {
   _image_finder.set_root(folder);
   _image_finder.find_all_images(_images);
@@ -86,7 +86,7 @@ void TurtleBase::Image::TextureArray::select_texture(int index)
   _image_index = (index + filled_count) % filled_count;
   // std::cout << filled_count << "   " << _image_index << '\n';
 
-  std::cout << "Switching to texture: " << _images[_image_index] << "'\n'At index: " << index << " with image index: " << _image_index << "\n";
+  std::cout << "Switching to texture: " << _images[_image_index] << "'\n'At index: " << index << " with image index: " << _image_index << "\n\n";
   load_texture(_images[_image_index]);
 
   return;

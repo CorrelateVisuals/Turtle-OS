@@ -107,15 +107,15 @@ public:
       TextureArray(const std::string &folder);
       ~TextureArray() = default;
 
+      ImageFinder _image_finder;
       GLuint _current_image;
-      std::array<std::string, TEXTURE_ARRAY_SIZE> _images;
       int _image_index;
 
       void select_texture(int index);
 
     private:
-      ImageFinder _image_finder;
-      
+      std::array<std::string, TEXTURE_ARRAY_SIZE> _images;
+
       void load_texture(const std::string &path);
       void print_config();
     };
