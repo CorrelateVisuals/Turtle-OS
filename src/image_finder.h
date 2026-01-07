@@ -13,7 +13,7 @@ public:
 
 
   template <size_t SIZE>
-   size_t get_filled_count(const std::array<std::string, SIZE> &array);
+   size_t get_filled_array_count(const std::array<std::string, SIZE> &array);
 
   // Set root directory to scan (default: "data")
   void set_root(const std::string &root_path);
