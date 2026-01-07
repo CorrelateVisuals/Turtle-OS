@@ -84,14 +84,10 @@ void TurtleBase::Image::TextureArray::select_texture(int index)
     return;
   }
 
-  _image_index = (index + _images.size()) % _images.size();
-
-  // ImageFinder imgfindr;
-  // size_t filled_count = imgfindr.get_filled_count(_images);
-
-  // std::cout << _image_index << "" << (index + _images.size()) % _images.size() << '\n';
-  // std::cout << _image_index << "" << (index + filled_count) % filled_count << '\n';
-  // std::cout << _image_index << "" << (index + _images.size()) % filled_count << '\n';
+  ImageFinder imgfindr;
+  size_t filled_count = imgfindr.get_filled_count(_images);
+  _image_index = (index + filled_count) % filled_count;
+  // std::cout << filled_count << "   " << _image_index << '\n';
 
   std::cout << "Switching to texture: " << _images[_image_index] << " at index: " << index << " and image index: " << _image_index << "\n";
   load_texture(_images[_image_index]);
