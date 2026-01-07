@@ -5,8 +5,7 @@
 #include <iostream>
 
 #include "backend_GLSL.h"
-// #include "turtle_baseclass.h"
-#include "image_finder.h"
+#include "turtle_baseclass.h"
 
 TurtleBase::TurtleBase(int argc, char *argv[])
 {
@@ -68,10 +67,9 @@ TurtleBase::Image::TextureArray::TextureArray(const std::string &folder)
             "TextureArray Default"),
       _current_image(0), _images(), _image_index(0)
 {
-  ImageFinder finder;
-  finder.set_root(folder);
-  finder.find_all_images(_images);
-  finder.randomize_order(_images);
+  _image_finder.set_root(folder);
+  _image_finder.find_all_images(_images);
+  _image_finder.randomize_order(_images);
   select_texture(_image_index);
 
   print_config();
@@ -84,12 +82,11 @@ void TurtleBase::Image::TextureArray::select_texture(int index)
     return;
   }
 
-  ImageFinder imgfindr;
-  size_t filled_count = imgfindr.get_filled_count(_images);
+  size_t filled_count = _image_finder.get_filled_array_count(_images);
   _image_index = (index + filled_count) % filled_count;
   // std::cout << filled_count << "   " << _image_index << '\n';
 
-  std::cout << "Switching to texture: " << _images[_image_index] << " at index: " << index << " and image index: " << _image_index << "\n";
+  std::cout << "Switching to texture: " << _images[_image_index] << "'\n'At index: " << index << " with image index: " << _image_index << "\n";
   load_texture(_images[_image_index]);
 
   return;

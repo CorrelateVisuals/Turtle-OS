@@ -72,7 +72,7 @@ void ImageFinder::find_all_images(std::array<std::string, TEXTURE_ARRAY_SIZE> &t
 }
 
 template <size_t SIZE>
-size_t ImageFinder::get_filled_count(const std::array<std::string, SIZE> &array)
+size_t ImageFinder::get_filled_array_count(const std::array<std::string, SIZE> &array)
 {
   size_t count = 0;
   for (const auto &item : array)
@@ -87,7 +87,7 @@ size_t ImageFinder::get_filled_count(const std::array<std::string, SIZE> &array)
 
 void ImageFinder::randomize_order(std::array<std::string, TEXTURE_ARRAY_SIZE> &array)
 {
-  size_t filled_count = get_filled_count(array);
+  size_t filled_count = get_filled_array_count(array);
   if (filled_count > TEXTURE_ARRAY_SIZE)
   {
     std::cout << "Filled count exceeds array size!" << std::endl;
