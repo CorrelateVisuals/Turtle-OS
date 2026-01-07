@@ -111,11 +111,11 @@ public:
       std::array<std::string, TEXTURE_ARRAY_SIZE> _images;
       int _image_index;
 
-      ImageFinder _image_finder;
-
       void select_texture(int index);
 
     private:
+      ImageFinder _image_finder;
+      
       void load_texture(const std::string &path);
       void print_config();
     };
