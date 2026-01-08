@@ -6,16 +6,14 @@
 
 #include "image_finder.h"
 
-class TurtleBase
-{
+class TurtleBase {
 public:
   TurtleBase(int argc, char *argv[]);
   ~TurtleBase() = default;
 
-  class Uniform
-  {
+  class Uniform {
   public:
-    Uniform(GLint l = 0, float v = 0.0f) : _shader_location(l), _value(v) {};
+    Uniform(GLint l = 0, float v = 0.0f) : _shader_location(l), _value(v){};
     ~Uniform() = default;
 
     float get_uniform_value() { return _value; };
@@ -27,8 +25,7 @@ public:
     float _value;
   };
 
-  class ScaleVertices : public Uniform
-  {
+  class ScaleVertices : public Uniform {
   public:
     ScaleVertices(float start, float speed, float final, float ease);
     ~ScaleVertices() = default;
@@ -46,11 +43,9 @@ public:
     void getSettings();
   };
 
-  class Geometry
-  {
+  class Geometry {
   public:
-    class Vertex
-    {
+    class Vertex {
     public:
       Vertex(std::array<float, 3> pos = {0.0f, 0.0f, 0.0f},
              std::array<float, 3> rot = {0.0f, 0.0f, 0.0f},
@@ -69,8 +64,7 @@ public:
       void print_config();
     };
 
-    class Shape : public Vertex
-    {
+    class Shape : public Vertex {
     public:
       Shape(int shape = 0, float scale = 1.0f,
             std::array<float, 3> pos = {0.0f, 0.0f, 0.0f},
@@ -82,10 +76,10 @@ public:
       int get_shape() { return _shape; };
 
       std::array<float, 16> _vertices = {
-          -0.5f, 0.5f, 0.0f, 1.0f,  // Top-left
+          -0.5f, 0.5f,  0.0f, 1.0f, // Top-left
           -0.5f, -0.5f, 0.0f, 0.0f, // Bottom-left
-          0.5f, -0.5f, 1.0f, 0.0f,  // Bottom-right
-          0.5f, 0.5f, 1.0f, 1.0f    // Top-right
+          0.5f,  -0.5f, 1.0f, 0.0f, // Bottom-right
+          0.5f,  0.5f,  1.0f, 1.0f  // Top-right
       };
 
       std::array<unsigned int, 6> _indices = {0, 1, 2, 2, 3, 0};
@@ -98,22 +92,20 @@ public:
     };
   };
 
-  class Image
-  {
+  class Image {
   public:
-    class TextureArray : public Geometry::Shape
-    {
+    class TextureArray : public Geometry::Shape {
     public:
       TextureArray(const std::string &folder);
       ~TextureArray() = default;
 
-      ImageFinder _image_finder;
       GLuint _current_image;
       int _image_index;
 
       void select_texture(int index);
 
     private:
+      ImageFinder _image_finder;
       std::array<std::string, TEXTURE_ARRAY_SIZE> _images;
 
       void load_texture(const std::string &path);
