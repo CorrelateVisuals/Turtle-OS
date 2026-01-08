@@ -73,7 +73,8 @@ void TurtleBase::Image::TextureArray::select_texture(int index) {
 
   size_t filled_count = _image_finder.get_filled_array_count(_images);
   _image_index = (index + filled_count) % filled_count;
-  _current_image = _image_index; // make sure Gluint and index are the same number
+  _current_image =
+      _image_index; // make sure Gluint and index are the same number
 
   std::cout << "Switching to texture: " << _images[_image_index]
             << "\nAt index: " << index << " with image index: " << _image_index
