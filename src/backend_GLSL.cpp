@@ -30,7 +30,7 @@ void GLSL::render_loop(GLFWwindow *win, TurtleBase::Image::TextureArray &texture
     return;
 }
 
-void GLSL::texture_to_gpu(GLuint &textures, unsigned char *pixels, const int width, const int height)
+void GLSL::texture_to_gpu(GLuint &textutexture_to_gpures, unsigned char *pixels, const int width, const int height)
 {
     glGenTextures(1, &textures);
 
