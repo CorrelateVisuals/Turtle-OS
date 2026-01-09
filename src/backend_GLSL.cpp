@@ -7,7 +7,8 @@ void GLSL::render_loop(GLFWwindow *win, TurtleBase::Image::TextureArray &texture
    glClear(GL_COLOR_BUFFER_BIT);
 
    // Update viewport each frame (important on Pinebook!)
-   int w, h;
+   int w{0};
+   int h{0};
    glfwGetFramebufferSize(win, &w, &h);
    glViewport(0, 0, w, h);
 
@@ -26,7 +27,6 @@ void GLSL::render_loop(GLFWwindow *win, TurtleBase::Image::TextureArray &texture
                          textures._vertices.data() + 2);
 
    glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, textures._indices.data());
-   return;
 }
 
 void GLSL::texture_to_gpu(GLuint &tex, unsigned char *pixels, const int width,
@@ -40,6 +40,4 @@ void GLSL::texture_to_gpu(GLuint &tex, unsigned char *pixels, const int width,
                 pixels);
 
    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-
-   return;
 }

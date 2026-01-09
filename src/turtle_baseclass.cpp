@@ -16,7 +16,6 @@ TurtleBase::TurtleBase(int argc, char *argv[])
          return;
       }
    }
-   return;
 }
 
 TurtleBase::Geometry::Vertex::Vertex(std::array<float, 3> pos, std::array<float, 3> rot,
@@ -70,7 +69,6 @@ TurtleBase::Image::TextureArray::TextureArray(const std::string &folder)
    _image_finder.find_all_images(_images);
    _image_finder.randomize_order(_images);
    select_texture(_image_index);
-
    print_config();
 }
 
@@ -88,8 +86,6 @@ void TurtleBase::Image::TextureArray::select_texture(int index)
              << " with image index: " << _image_index
              << " and current image: " << _current_image << "\n\n";
    load_texture(_images[_image_index]);
-
-   return;
 }
 
 void TurtleBase::Image::TextureArray::load_texture(const std::string &path)
@@ -107,8 +103,6 @@ void TurtleBase::Image::TextureArray::load_texture(const std::string &path)
    GLSL::texture_to_gpu(_current_image, pixels, width, height);
 
    stbi_image_free(pixels);
-
-   return;
 }
 
 TurtleBase::ScaleVertices::ScaleVertices(float start, float speed, float final, float ease)

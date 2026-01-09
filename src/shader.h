@@ -1,6 +1,7 @@
 #pragma once
 
 #include <GLES2/gl2.h>
+
 #include <string>
 
 [[nodiscard]] std::string load_shader_file(const std::string &path);
