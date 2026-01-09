@@ -2,14 +2,14 @@
 
 ## Overview
 
-### Install the required packages (PoP!-OS):
+### Install the required packages (PoP!-OS)
 
 ```bash
 sudo apt install libglfw3-dev
 sudo apt install libgles2-mesa-dev libegl1-mesa-dev mesa-common-dev
 ```
 
-### Install the required packages Pinebook-pro (Manjaro):
+### Install the required packages Pinebook-pro (Manjaro)
 
 ```bash
 sudo pacman -S --needed --noconfirm gcc g++ make pkgconf glfw-wayland libglvnd mesa
@@ -19,9 +19,7 @@ Note: Use glfw-wayland for Wayland sessions. Do not mix with glfw-x11.
 
 ## Build & Run
 
-Go to the project root directory.
-
-1. Compile the project:
+Go to the project root directory. Compile the project:
 
 ```bash
 make -j
@@ -30,10 +28,10 @@ make -j
 Compile and clean previous build:
 
 ```bash
-make clean && make
+make clean && make -j
 ```
 
-1. Run the application:
+Run the application:
 
 ```bash
 ./bin/Turtle-OS
