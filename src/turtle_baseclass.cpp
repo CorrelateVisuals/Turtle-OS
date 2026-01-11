@@ -30,10 +30,12 @@ TurtleBase::Geometry::Vertex::Vertex(std::array<float, 3> pos, std::array<float,
 void TurtleBase::Geometry::Vertex::print_config()
 {
    std::cout << _name << " created at position and rotation: " << std::endl
-             << "    " << "x: " << _position[0] << " y: " << _position[1]
-             << " z: " << _position[2] << std::endl
-             << "    " << "x: " << _rotation[0] << " y: " << _rotation[1]
-             << " z: " << _rotation[2] << std::endl
+             << "    "
+             << "x: " << _position[0] << " y: " << _position[1] << " z: " << _position[2]
+             << std::endl
+             << "    "
+             << "x: " << _rotation[0] << " y: " << _rotation[1] << " z: " << _rotation[2]
+             << std::endl
              << std::endl;
 }
 
@@ -145,3 +147,20 @@ void TurtleBase::ScaleVertices::getSettings()
              << ", _final_scale:" << _final_scale << std::endl
              << std::endl;
 }
+
+void TurtleBase::Image::Texture::load_texture(const std::string &path)
+{
+   stbi_set_flip_vertically_on_load(true);
+
+   int width, height, channels;
+   unsigned char *pixels = stbi_load(path.c_str(), &width, &height, &channels, 4);
+
+   if (!pixels) {
+      fprintf(stderr, "Failed to load image: %s\n", path.c_str());
+      return;
+   }
+
+   GLSL::texture_to_gpu(_image_identifier, pixels, width, height);
+
+   stbi_image_free(pixels);
+};

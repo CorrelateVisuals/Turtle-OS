@@ -103,13 +103,30 @@ public:
    class Image
    {
    public:
-      class TextureArray : public Geometry::Shape
+      class Texture : public Geometry::Shape
+      {
+      public:
+         Texture(GLuint index, const std::string &path)
+            : _current_image(index) //_image_identifier(index)
+         {
+            load_texture(path);
+         };
+         ~Texture() = default;
+
+         GLuint _current_image; //_image_identifier;
+
+         void load_texture(const std::string &path);
+
+      private:
+      };
+
+      class TextureArray : public Image::Texture
       {
       public:
          TextureArray(const std::string &folder);
          ~TextureArray() = default;
 
-         GLuint _current_image;
+//         GLuint _current_image;
          int _image_index;
 
          void select_texture(int index);
@@ -118,7 +135,7 @@ public:
          ImageFinder _image_finder;
          std::array<std::string, TEXTURE_ARRAY_SIZE> _images;
 
-         void load_texture(const std::string &path);
+         //void load_texture(const std::string &path);
          void print_config();
       };
    };
