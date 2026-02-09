@@ -30,10 +30,12 @@ TurtleBase::Geometry::Vertex::Vertex(std::array<float, 3> pos, std::array<float,
 void TurtleBase::Geometry::Vertex::print_config()
 {
    std::cout << _name << " created at position and rotation: " << std::endl
-             << "    " << "x: " << _position[0] << " y: " << _position[1]
-             << " z: " << _position[2] << std::endl
-             << "    " << "x: " << _rotation[0] << " y: " << _rotation[1]
-             << " z: " << _rotation[2] << std::endl
+             << "    "
+             << "x: " << _position[0] << " y: " << _position[1] << " z: " << _position[2]
+             << std::endl
+             << "    "
+             << "x: " << _rotation[0] << " y: " << _rotation[1] << " z: " << _rotation[2]
+             << std::endl
              << std::endl;
 }
 
@@ -58,6 +60,12 @@ void TurtleBase::Image::TextureArray::print_config()
              << _current_image << std::endl
              << std::endl;
 }
+
+TurtleBase::Image::Texture::Texture(const std::string &path)
+   : _path(path)
+{
+   load_texture(path);
+};
 
 TurtleBase::Image::TextureArray::TextureArray(const std::string &folder)
    : Shape(0, 1.0f, {0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f}, "TextureArray Default")
@@ -86,6 +94,23 @@ void TurtleBase::Image::TextureArray::select_texture(int index)
              << " with image index: " << _image_index
              << " and current image: " << _current_image << "\n\n";
    load_texture(_images[_image_index]);
+}
+
+void TurtleBase::Image::Texture::load_texture(const std::string &path)
+{
+   stbi_set_flip_vertically_on_load(true);
+
+   int width, height, channels;
+   unsigned char *pixels = stbi_load(path.c_str(), &width, &height, &channels, 4);
+
+   if (!pixels) {
+      fprintf(stderr, "Failed to load image: %s\n", path.c_str());
+      return;
+   }
+
+   GLSL::texture_to_gpu(_image, pixels, width, height);
+
+   stbi_image_free(pixels);
 }
 
 void TurtleBase::Image::TextureArray::load_texture(const std::string &path)

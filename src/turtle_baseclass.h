@@ -103,6 +103,19 @@ public:
    class Image
    {
    public:
+      class Texture : public Geometry::Shape
+      {
+      public:
+         Texture(const std::string &path);
+         ~Texture() = default;
+
+         GLuint _image;
+
+      private:
+         std::string _path;
+         void load_texture(const std::string &path);
+      };
+
       class TextureArray : public Geometry::Shape
       {
       public:
