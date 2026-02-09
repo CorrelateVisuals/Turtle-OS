@@ -111,12 +111,14 @@ public:
 
          GLuint _image;
 
+      protected:
+         void load_texture(const std::string &path);
+
       private:
          std::string _path;
-         void load_texture(const std::string &path);
       };
 
-      class TextureArray : public Geometry::Shape
+      class TextureArray : public Texture
       {
       public:
          TextureArray(const std::string &folder);
@@ -131,7 +133,7 @@ public:
          ImageFinder _image_finder;
          std::array<std::string, TEXTURE_ARRAY_SIZE> _images;
 
-         void load_texture(const std::string &path);
+         // void load_texture(const std::string &path);
          void print_config();
       };
    };
