@@ -10,8 +10,8 @@ private:
    class MainCanvas : public Image::TextureArray
    {
    public:
-      MainCanvas()
-         : TextureArray("data")
+      MainCanvas(std::string folder = "data")
+         : TextureArray(folder)
          , _zoom(15.0f, 0.1f, 2.0f, 0.2f){};
       ScaleVertices _zoom;
    };
