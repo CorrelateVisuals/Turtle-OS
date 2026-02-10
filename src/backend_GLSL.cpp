@@ -1,5 +1,6 @@
 #include "backend_GLSL.h"
 
+
 void GLSL::render_loop(GLFWwindow *win, TurtleBase::Image::TextureArray &textures,
                        TurtleBase::Uniform &uniform)
 {
@@ -12,21 +13,31 @@ void GLSL::render_loop(GLFWwindow *win, TurtleBase::Image::TextureArray &texture
    glfwGetFramebufferSize(win, &w, &h);
    glViewport(0, 0, w, h);
 
+   // Render main canvas
    glBindTexture(GL_TEXTURE_2D, textures._image);
-
-   // Send uniform
    glUniform1f(uniform._shader_location, uniform.get_uniform_value());
-
-   // Pass vertex positions to the shader
    glEnableVertexAttribArray(0); // pos
    glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(float) * 4,
                          textures._vertices.data());
-
    glEnableVertexAttribArray(1); // uv
    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(float) * 4,
                          textures._vertices.data() + 2);
-
    glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, textures._indices.data());
+}
+
+void GLSL::render_loop(GLFWwindow *win, TurtleBase::Image::Texture &texture,
+                       TurtleBase::Uniform &uniform)
+{
+   // Render a single texture (front canvas)
+   glBindTexture(GL_TEXTURE_2D, texture._image);
+   glUniform1f(uniform._shader_location, uniform.get_uniform_value());
+   glEnableVertexAttribArray(0); // pos
+   glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(float) * 4,
+                         texture._vertices.data());
+   glEnableVertexAttribArray(1); // uv
+   glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(float) * 4,
+                         texture._vertices.data() + 2);
+   glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, texture._indices.data());
 }
 
 void GLSL::texture_to_gpu(GLuint &texture, unsigned char *pixels, const int width,

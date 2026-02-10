@@ -5,13 +5,14 @@
 #include <GLES2/gl2.h>
 #include <GLFW/glfw3.h>
 
+
 class GLSL
 {
 public:
-   void static render_loop(GLFWwindow *win, TurtleBase::Image::TextureArray &textures,
+   static void render_loop(GLFWwindow *win, TurtleBase::Image::TextureArray &textures,
                            TurtleBase::Uniform &uniform);
-   void static texture_to_gpu(GLuint &textures, unsigned char *pixels, const int width,
+   static void render_loop(GLFWwindow *win, TurtleBase::Image::Texture &texture,
+                           TurtleBase::Uniform &uniform);
+   static void texture_to_gpu(GLuint &textures, unsigned char *pixels, const int width,
                               const int height);
-
-private:
 };

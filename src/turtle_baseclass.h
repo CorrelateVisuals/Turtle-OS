@@ -2,7 +2,6 @@
 
 #include "image_finder.h"
 
-
 #include <GLES2/gl2.h>
 
 #include <array>
@@ -12,11 +11,7 @@
 class TurtleBase
 {
 public:
-   enum class DebugLevel {
-      OFF = 0,
-      BASIC = 1,
-      DETAILED = 2
-   };
+   enum class DebugLevel { OFF = 0, BASIC = 1, DETAILED = 2 };
 
    static DebugLevel DEBUG_LEVEL;
 
@@ -103,8 +98,10 @@ public:
 
          std::array<unsigned int, 6> _indices = {0, 1, 2, 2, 3, 0};
 
-      private:
+      protected:
          float _scale;
+
+      private:
          int _shape;
 
          void print_config();
