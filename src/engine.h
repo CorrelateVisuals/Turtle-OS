@@ -21,13 +21,14 @@ private:
    public:
       FrontCanvas(const std::string& path)
          : Texture(path) {
-         _scale = 0.4f;  // Smaller than main
-         _position = {-0.3f, 0.3f, 0.1f};  // Top-left, slightly forward
-         float w = _scale;
-         float h = _scale;
-         float x0 = _position[0];
-         float y0 = _position[1];
-         float z  = _position[2];
+         // About 1/8th of the screen: sqrt(1/8) ≈ 0.35
+         float w = 0.35f;
+         float h = 0.35f;
+         float x0 = -1.0f + 0.02f; // left edge, small inset
+         float y0 = 1.0f - 0.02f;  // top edge, small inset
+         float z  = 0.1f;
+         _scale = w;
+         _position = {x0, y0, z};
          _vertices = {
             x0,      y0,      z, 0.0f, 1.0f, // Top-left (u=0,v=1)
             x0,      y0-h,    z, 0.0f, 0.0f, // Bottom-left (u=0,v=0)
