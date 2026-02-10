@@ -7,12 +7,16 @@
 #include <iostream>
 #include <string>
 
+TurtleBase::DebugLevel TurtleBase::DEBUG_LEVEL = TurtleBase::DebugLevel::BASIC;
+
 TurtleBase::TurtleBase(int argc, char *argv[])
 {
    for (int i = 1; i < argc; ++i) {
       std::string argument = argv[i];
       if (argument == "turtle") {
-         std::cout << "TurtleBase found!\n" << std::endl;
+         if (DEBUG_LEVEL != DebugLevel::OFF) {
+            std::cout << "TurtleBase found!\n" << std::endl;
+         }
          return;
       }
    }
@@ -29,6 +33,9 @@ TurtleBase::Geometry::Vertex::Vertex(std::array<float, 3> pos, std::array<float,
 
 void TurtleBase::Geometry::Vertex::print_config()
 {
+   if (DEBUG_LEVEL != DebugLevel::BASIC && DEBUG_LEVEL != DebugLevel::DETAILED) {
+      return;
+   }
    std::cout << _name << " created at position and rotation: " << std::endl
              << "    "
              << "x: " << _position[0] << " y: " << _position[1] << " z: " << _position[2]
@@ -50,12 +57,18 @@ TurtleBase::Geometry::Shape::Shape(int shape, float scale, std::array<float, 3> 
 
 void TurtleBase::Geometry::Shape::print_config()
 {
+   if (DEBUG_LEVEL != DebugLevel::BASIC && DEBUG_LEVEL != DebugLevel::DETAILED) {
+      return;
+   }
    std::cout << "Shape number type: " << _shape << " size of " << _scale << std::endl
              << std::endl;
 }
 
 void TurtleBase::Image::TextureArray::print_config()
 {
+   if (DEBUG_LEVEL != DebugLevel::BASIC && DEBUG_LEVEL != DebugLevel::DETAILED) {
+      return;
+   }
    std::cout << "TextureArray size: " << _images.size() << " , index " << _image_index
              << _current_image << std::endl
              << std::endl;
@@ -76,7 +89,9 @@ TurtleBase::Image::Texture::Texture(const std::string &path)
    if (!path.empty()) {
       load_texture(path);
    }
-   std::cout << "Texture created with path: " << (path.empty() ? "(empty)" : path) << "\n";
+   if (DEBUG_LEVEL == DebugLevel::DETAILED) {
+      std::cout << "Texture created with path: " << (path.empty() ? "(empty)" : path) << "\n";
+   }
 };
 
 
@@ -116,11 +131,13 @@ void TurtleBase::Image::TextureArray::select_texture(int index)
 
    size_t filled_count = _image_finder.get_filled_array_count(_images);
    _image_index = (index + filled_count) % filled_count;
-   _current_image = _image_index; // make sure Gluint and index are the same number
+   _current_image = _image_index;
 
-   std::cout << "Switching to texture: " << _images[_image_index] << "\nAt index: " << index
-             << " with image index: " << _image_index
-             << " and current image: " << _current_image << "\n\n";
+   if (DEBUG_LEVEL == DebugLevel::DETAILED) {
+      std::cout << "Switching to texture: " << _images[_image_index] << "\nAt index: " << index
+                << " with image index: " << _image_index
+                << " and current image: " << _current_image << "\n\n";
+   }
    load_texture(_images[_image_index]);
 }
 
@@ -130,8 +147,12 @@ void TurtleBase::Image::Texture::load_texture(const std::string &path)
 
    int width, height, channels;
    unsigned char *pixels = stbi_load(path.c_str(), &width, &height, &channels, 4);
-   std::cout << path << " loaded with width: " << width << " height: " << height
-             << " channels: " << channels << std::endl;
+   
+   if (DEBUG_LEVEL == DebugLevel::DETAILED) {
+      std::cout << path << " loaded with width: " << width << " height: " << height
+                << " channels: " << channels << std::endl;
+   }
+   
    if (!pixels) {
       fprintf(stderr, "Failed to load image: %s\n", path.c_str());
       return;
@@ -150,7 +171,9 @@ TurtleBase::ScaleVertices::ScaleVertices(float start, float speed, float final, 
    , _final_scale(final + speed)
    , _ease_factor(ease)
 {
-   std::cout << "Initializing Zoom." << std::endl;
+   if (DEBUG_LEVEL == DebugLevel::BASIC) {
+      std::cout << "Initializing Zoom." << std::endl;
+   }
    set_uniform_value(_scale);
    getSettings();
 }
@@ -177,8 +200,10 @@ void TurtleBase::ScaleVertices::reset_start_scale()
 
 void TurtleBase::ScaleVertices::getSettings()
 {
-   std::cout << "Zoom _scale_location: " << _shader_location
-             << ",  _scale: " << get_uniform_value() << ", _zoom_speed: " << _zoom_speed
-             << ", _final_scale:" << _final_scale << std::endl
-             << std::endl;
+   if (DEBUG_LEVEL == DebugLevel::BASIC) {
+      std::cout << "Zoom _scale_location: " << _shader_location
+                << ",  _scale: " << get_uniform_value() << ", _zoom_speed: " << _zoom_speed
+                << ", _final_scale:" << _final_scale << std::endl
+                << std::endl;
+   }
 }

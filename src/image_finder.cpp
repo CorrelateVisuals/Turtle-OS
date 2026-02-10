@@ -1,5 +1,6 @@
 
 #include "image_finder.h"
+#include "turtle_baseclass.h"
 
 #include <algorithm>
 #include <array>
@@ -13,12 +14,16 @@ namespace fs = std::filesystem;
 ImageFinder::ImageFinder()
    : root("data") // default starting folder
 {
-   std::cout << "Initializing ImageFinder: " << std::endl;
+   if (TurtleBase::DEBUG_LEVEL == TurtleBase::DebugLevel::BASIC) {
+      std::cout << "Initializing ImageFinder: " << std::endl;
+   }
 }
 
 void ImageFinder::set_root(const std::string &root_path)
 {
-   std::cout << "Setting root path: " << root_path << std::endl;
+   if (TurtleBase::DEBUG_LEVEL == TurtleBase::DebugLevel::BASIC) {
+      std::cout << "Setting root path: " << root_path << std::endl;
+   }
    root = root_path;
 }
 
@@ -49,9 +54,11 @@ void ImageFinder::find_all_images(std::array<std::string, TEXTURE_ARRAY_SIZE> &t
             if (Image.is_regular_file() && is_image_file(Image.path())) {
                if (index < TEXTURE_ARRAY_SIZE) {
                   texture_array[index++] = Image.path().string();
-                  std::cout << index << '\n'
-                            << Image.path().string() << std::endl
-                            << std::endl;
+                  if (TurtleBase::DEBUG_LEVEL == TurtleBase::DebugLevel::DETAILED) {
+                     std::cout << index << '\n'
+                               << Image.path().string() << std::endl
+                               << std::endl;
+                  }
                } else {
                   std::cout << "Texture array is full. Some images may not be added."
                             << std::endl;
@@ -62,7 +69,9 @@ void ImageFinder::find_all_images(std::array<std::string, TEXTURE_ARRAY_SIZE> &t
       }
    }
 
-   std::cout << "Number of images found and added: " << index << std::endl;
+   if (TurtleBase::DEBUG_LEVEL == TurtleBase::DebugLevel::BASIC) {
+      std::cout << "Number of images found and added: " << index << std::endl;
+   }
 }
 
 template <size_t SIZE>
