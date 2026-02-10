@@ -14,32 +14,32 @@ void GLSL::render_loop(GLFWwindow *win, const TurtleBase::Image::TextureArray &t
    glViewport(0, 0, w, h);
 
    // Render main canvas
-   glBindTexture(GL_TEXTURE_2D, textures._image);
-   glUniform1f(uniform._shader_location, uniform.get_uniform_value());
+   glBindTexture(GL_TEXTURE_2D, textures.get_image());
+   glUniform1f(uniform.get_shader_location(), uniform.get_uniform_value());
    glEnableVertexAttribArray(0); // pos
    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 5,
-                         textures._vertices.data());
+                         textures.get_vertices().data());
    glEnableVertexAttribArray(1); // uv
    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(float) * 5,
-                         textures._vertices.data() + 3);
-   glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, textures._indices.data());
+                         textures.get_vertices().data() + 3);
+   glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, textures.get_indices().data());
 }
 
 void GLSL::render_loop(GLFWwindow *win, const TurtleBase::Image::Texture &texture)
 {
    // Render a single texture (front canvas)
-   glBindTexture(GL_TEXTURE_2D, texture._image);
+   glBindTexture(GL_TEXTURE_2D, texture.get_image());
    TurtleBase::Uniform *active = TurtleBase::Uniform::get_active();
    if (active) {
-      glUniform1f(active->_shader_location, active->get_uniform_value());
+      glUniform1f(active->get_shader_location(), active->get_uniform_value());
    }
    glEnableVertexAttribArray(0); // pos
    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 5,
-                         texture._vertices.data());
+                         texture.get_vertices().data());
    glEnableVertexAttribArray(1); // uv
    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(float) * 5,
-                         texture._vertices.data() + 3);
-   glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, texture._indices.data());
+                         texture.get_vertices().data() + 3);
+   glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, texture.get_indices().data());
 }
 
 void GLSL::texture_to_gpu(GLuint &texture, unsigned char *pixels, const int width,

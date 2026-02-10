@@ -66,7 +66,7 @@ GLuint shader_create_program(const std::string &vertex_src, const std::string &f
    return prog;
 }
 
-void create_shaders(GLint &scale_location)
+void create_shaders(TurtleBase::ScaleVertices &zoom)
 {
    // Load shader sources from files
    const std::string vert_src = load_shader_file("src/shaders/vertex.glsl");
@@ -80,5 +80,5 @@ void create_shaders(GLint &scale_location)
 
    glUseProgram(shaderProgram);
 
-   scale_location = glGetUniformLocation(shaderProgram, "scale");
+   zoom.set_shader_location(glGetUniformLocation(shaderProgram, "scale"));
 }

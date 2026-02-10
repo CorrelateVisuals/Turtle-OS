@@ -14,8 +14,8 @@ Engine::Engine(int argc, char *argv[])
 {
    DEBUG_LEVEL = DebugLevel::DETAILED;
    _win.set_key_callback(key_call_back);
-   create_shaders(_main._zoom._shader_location);
-   _front_uniform._shader_location = _main._zoom._shader_location;
+   create_shaders(_main._zoom);
+   _front_uniform.set_shader_location(_main._zoom.get_shader_location());
    glfwSetWindowUserPointer(_win.get_handle(), this);
 }
 
@@ -31,14 +31,14 @@ void Engine::key_call_back(GLFWwindow *window, int key, int, int action, int)
       return;
 
    if (key == GLFW_KEY_RIGHT) {
-      engine->_main.select_texture(engine->_main._image_index + 1);
+      engine->_main.select_texture(engine->_main.get_image_index() + 1);
       engine->_main._zoom.reset_start_scale();
    } else if (key == GLFW_KEY_LEFT) {
-      engine->_main.select_texture(engine->_main._image_index - 1);
+      engine->_main.select_texture(engine->_main.get_image_index() - 1);
       engine->_main._zoom.reset_start_scale();
    }
 
-   if (key == GLFW_KEY_ESCAPE) {
+   if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS) {
       glfwSetWindowShouldClose(window, true);
    }
 }
