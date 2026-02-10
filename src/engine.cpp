@@ -48,7 +48,7 @@ void Engine::run()
 {
    while (!_win.should_close()) {
       GLSL::render_loop(_win.get_handle(), _main, _main._zoom);
-      GLSL::render_loop(_win.get_handle(), _front, _main._zoom); // render front canvas on top
+      GLSL::render_loop(_win.get_handle(), _front, _front_uniform); // render front canvas, no zoom
       _main._zoom.run();
 
       // Swap buffers and poll events

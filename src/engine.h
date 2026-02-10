@@ -21,14 +21,20 @@ private:
    public:
       FrontCanvas(const std::string& path)
          : Texture(path) {
-         _scale = 0.3f;           // smaller than main canvas
-         _vertices = {            // Z = 0.1f positions it in front
-            -0.5f, 0.5f,  0.0f, 1.0f,  // Top-left
-            -0.5f, -0.5f, 0.0f, 0.0f,  // Bottom-left
-            0.5f,  -0.5f, 1.0f, 0.0f,  // Bottom-right
-            0.5f,  0.5f,  1.0f, 1.0f   // Top-right
+         _scale = 0.4f;  // Smaller than main
+         _position = {-0.3f, 0.3f, 0.1f};  // Top-left, slightly forward
+         float w = _scale;
+         float h = _scale;
+         float x0 = _position[0];
+         float y0 = _position[1];
+         float z  = _position[2];
+         _vertices = {
+            x0,      y0,      z, 0.0f, 1.0f, // Top-left (u=0,v=1)
+            x0,      y0-h,    z, 0.0f, 0.0f, // Bottom-left (u=0,v=0)
+            x0+w,    y0-h,    z, 1.0f, 0.0f, // Bottom-right (u=1,v=0)
+            x0+w,    y0,      z, 1.0f, 1.0f  // Top-right (u=1,v=1)
          };
-      };
+      }
    };
 
 public:
@@ -37,11 +43,13 @@ public:
 
    void run();
 
+
 private:
    GLSL _backend;
    Window _win;
    MainCanvas _main;
    FrontCanvas _front;
+   TurtleBase::Uniform _front_uniform{0, 1.0f}; // static scale, no zoom
 
    static void key_call_back(GLFWwindow *window, int key, int seconds, int action, int mods);
 };

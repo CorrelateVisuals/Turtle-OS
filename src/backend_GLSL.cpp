@@ -17,11 +17,11 @@ void GLSL::render_loop(GLFWwindow *win, TurtleBase::Image::TextureArray &texture
    glBindTexture(GL_TEXTURE_2D, textures._image);
    glUniform1f(uniform._shader_location, uniform.get_uniform_value());
    glEnableVertexAttribArray(0); // pos
-   glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(float) * 4,
+   glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 5,
                          textures._vertices.data());
    glEnableVertexAttribArray(1); // uv
-   glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(float) * 4,
-                         textures._vertices.data() + 2);
+   glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(float) * 5,
+                         textures._vertices.data() + 3);
    glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, textures._indices.data());
 }
 
@@ -32,11 +32,11 @@ void GLSL::render_loop(GLFWwindow *win, TurtleBase::Image::Texture &texture,
    glBindTexture(GL_TEXTURE_2D, texture._image);
    glUniform1f(uniform._shader_location, uniform.get_uniform_value());
    glEnableVertexAttribArray(0); // pos
-   glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(float) * 4,
+   glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 5,
                          texture._vertices.data());
    glEnableVertexAttribArray(1); // uv
-   glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(float) * 4,
-                         texture._vertices.data() + 2);
+   glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(float) * 5,
+                         texture._vertices.data() + 3);
    glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, texture._indices.data());
 }
 

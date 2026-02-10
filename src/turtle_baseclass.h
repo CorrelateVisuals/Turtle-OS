@@ -69,15 +69,18 @@ public:
          std::array<float, 3> get_rotation() { return _rotation; };
          std::string get_name() { return _name; };
 
-      private:
+      //protected:
          std::array<float, 3> _position;
+
+      private:
+         //std::array<float, 3> _position;
          std::array<float, 3> _rotation;
          std::string _name;
 
          void print_config();
       };
 
-      class Shape : public Vertex
+      class Shape : protected Vertex
       {
       public:
          Shape(int shape = 0, float scale = 1.0f,
@@ -89,11 +92,11 @@ public:
          float get_scale() { return _scale; };
          int get_shape() { return _shape; };
 
-         std::array<float, 16> _vertices = {
-            -0.5f, 0.5f,  0.0f, 1.0f, // Top-left
-            -0.5f, -0.5f, 0.0f, 0.0f, // Bottom-left
-            0.5f,  -0.5f, 1.0f, 0.0f, // Bottom-right
-            0.5f,  0.5f,  1.0f, 1.0f  // Top-right
+         std::array<float, 20> _vertices = {
+            -0.5f, 0.5f,  0.0f, 0.0f, 1.0f, // Top-left (x, y, z, u, v)
+            -0.5f, -0.5f, 0.0f, 0.0f, 0.0f, // Bottom-left
+            0.5f,  -0.5f, 0.0f, 1.0f, 0.0f, // Bottom-right
+            0.5f,  0.5f,  0.0f, 1.0f, 1.0f  // Top-right
          };
 
          std::array<unsigned int, 6> _indices = {0, 1, 2, 2, 3, 0};
