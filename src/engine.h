@@ -19,7 +19,7 @@ private:
    class FrontCanvas : public Image::Texture
    {
    public:
-      FrontCanvas(const std::string& path)
+      FrontCanvas(const std::string& path = "data/biology/animals/mammals/camel/images/camel-1279353277.jpg")
          : Texture(path) {
          // About 1/8th of the screen: sqrt(1/8) ≈ 0.35
          float w = 0.35f;

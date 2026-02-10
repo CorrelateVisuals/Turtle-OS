@@ -11,9 +11,8 @@
 Engine::Engine(int argc, char *argv[])
    : TurtleBase(argc, argv)
    , _win("Turtle-OS")
-   , _front(_main.get_path())
 {
-   DEBUG_LEVEL = DebugLevel::BASIC;
+   DEBUG_LEVEL = DebugLevel::DETAILED;
    _win.set_key_callback(key_call_back);
    create_shaders(_main._zoom._shader_location);
    _front_uniform._shader_location = _main._zoom._shader_location;
