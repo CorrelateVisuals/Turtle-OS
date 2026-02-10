@@ -11,7 +11,7 @@
 Engine::Engine(int argc, char *argv[])
    : TurtleBase(argc, argv)
    , _win("Turtle-OS")
-   , _front(_main.get_path_at(0))
+   , _front(_main.get_path())
 {
    DEBUG_LEVEL = DebugLevel::BASIC;
    _win.set_key_callback(key_call_back);

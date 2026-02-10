@@ -125,6 +125,8 @@ public:
          Texture() : Texture("") {}
          ~Texture() = default;
 
+         std::string get_path() const { return _path; }
+
          GLuint _image;
 
       protected:
