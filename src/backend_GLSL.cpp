@@ -25,12 +25,14 @@ void GLSL::render_loop(GLFWwindow *win, TurtleBase::Image::TextureArray &texture
    glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, textures._indices.data());
 }
 
-void GLSL::render_loop(GLFWwindow *win, TurtleBase::Image::Texture &texture,
-                       TurtleBase::Uniform &uniform)
+void GLSL::render_loop(GLFWwindow *win, TurtleBase::Image::Texture &texture)
 {
    // Render a single texture (front canvas)
    glBindTexture(GL_TEXTURE_2D, texture._image);
-   glUniform1f(uniform._shader_location, uniform.get_uniform_value());
+   TurtleBase::Uniform *active = TurtleBase::Uniform::get_active();
+   if (active) {
+      glUniform1f(active->_shader_location, active->get_uniform_value());
+   }
    glEnableVertexAttribArray(0); // pos
    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 5,
                          texture._vertices.data());

@@ -9,6 +9,16 @@
 
 TurtleBase::DebugLevel TurtleBase::DEBUG_LEVEL = TurtleBase::DebugLevel::BASIC;
 
+TurtleBase::Uniform* TurtleBase::Uniform::_active_uniform = nullptr;
+
+TurtleBase::Uniform* TurtleBase::Uniform::get_active() {
+   return _active_uniform;
+}
+
+void TurtleBase::Uniform::set_active(TurtleBase::Uniform* u) {
+   _active_uniform = u;
+}
+
 TurtleBase::TurtleBase(int argc, char *argv[])
 {
    for (int i = 1; i < argc; ++i) {

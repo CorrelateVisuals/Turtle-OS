@@ -11,12 +11,12 @@
 Engine::Engine(int argc, char *argv[])
    : TurtleBase(argc, argv)
    , _win("Turtle-OS")
-   , _front("data/biology/animals/birds/coot/images/thumb-1920-616079-3317427887.jpg")
+   , _front(_main.get_path_at(0))
 {
-   DEBUG_LEVEL = DebugLevel::DETAILED;
-   
+   DEBUG_LEVEL = DebugLevel::BASIC;
    _win.set_key_callback(key_call_back);
    create_shaders(_main._zoom._shader_location);
+   _front_uniform._shader_location = _main._zoom._shader_location;
    glfwSetWindowUserPointer(_win.get_handle(), this);
 }
 
@@ -48,8 +48,10 @@ void Engine::run()
 {
    while (!_win.should_close()) {
       GLSL::render_loop(_win.get_handle(), _main, _main._zoom);
-      GLSL::render_loop(_win.get_handle(), _front, _front_uniform); // render front canvas, no zoom
       _main._zoom.run();
+
+      TurtleBase::Uniform::set_active(&_front_uniform);
+      GLSL::render_loop(_win.get_handle(), _front);
 
       // Swap buffers and poll events
       _win.swap_buffers();

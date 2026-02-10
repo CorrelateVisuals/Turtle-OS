@@ -29,10 +29,14 @@ public:
       float get_uniform_value() { return _value; };
       void set_uniform_value(float v) { _value = v; };
 
+      static Uniform* get_active();
+      static void set_active(Uniform* u);
+
       GLint _shader_location;
 
    private:
       float _value;
+      static Uniform* _active_uniform;
    };
 
    class ScaleVertices : public Uniform
@@ -118,6 +122,7 @@ public:
       {
       public:
          Texture(const std::string &path);
+         Texture() : Texture("") {}
          ~Texture() = default;
 
          GLuint _image;
@@ -138,6 +143,7 @@ public:
          int _image_index;
 
          void select_texture(int index);
+         std::string get_path_at(int index) const { return _images[index]; }
 
       private:
          ImageFinder _image_finder;
