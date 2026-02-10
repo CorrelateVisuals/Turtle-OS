@@ -70,7 +70,7 @@ void TurtleBase::Image::TextureArray::print_config()
       return;
    }
    std::cout << "TextureArray size: " << _images.size() << " , index " << _image_index
-             << _current_image << std::endl
+             << std::endl
              << std::endl;
 }
 
@@ -96,8 +96,7 @@ TurtleBase::Image::Texture::Texture(const std::string &path)
 
 
 TurtleBase::Image::TextureArray::TextureArray(const std::string &folder)
-   : Texture(get_first_image_path(folder)), _current_image(0)
-   , _image_index(0)
+   : Texture(get_first_image_path(folder)), _image_index(0)
    , _images()
 {
    _image_finder.set_root(folder);
@@ -131,12 +130,10 @@ void TurtleBase::Image::TextureArray::select_texture(int index)
 
    size_t filled_count = _image_finder.get_filled_array_count(_images);
    _image_index = (index + filled_count) % filled_count;
-   _current_image = _image_index;
 
    if (DEBUG_LEVEL == DebugLevel::DETAILED) {
       std::cout << "Switching to texture: " << _images[_image_index] << "\nAt index: " << index
-                << " with image index: " << _image_index
-                << " and current image: " << _current_image << "\n\n";
+                << " with image index: " << _image_index << "\n\n";
    }
    load_texture(_images[_image_index]);
 }

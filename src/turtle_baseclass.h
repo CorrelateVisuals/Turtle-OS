@@ -135,7 +135,6 @@ public:
          TextureArray(const std::string &folder);
          ~TextureArray() = default;
 
-         GLuint _current_image;
          int _image_index;
 
          void select_texture(int index);
