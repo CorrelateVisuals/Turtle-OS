@@ -12,7 +12,7 @@ void GLSL::render_loop(GLFWwindow *win, TurtleBase::Image::TextureArray &texture
    glfwGetFramebufferSize(win, &w, &h);
    glViewport(0, 0, w, h);
 
-   glBindTexture(GL_TEXTURE_2D, textures._current_image);
+   glBindTexture(GL_TEXTURE_2D, textures._image);
 
    // Send uniform
    glUniform1f(uniform._shader_location, uniform.get_uniform_value());

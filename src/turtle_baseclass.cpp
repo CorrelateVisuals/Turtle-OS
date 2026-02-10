@@ -70,15 +70,18 @@ void TurtleBase::Image::TextureArray::print_config()
 
 TurtleBase::Image::Texture::Texture(const std::string &path)
    : Shape(0, 1.0f, {0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f}, "TextureArray Default")
+   , _image(0)
    , _path(path)
 {
-   load_texture(path);
-   std::cout << "None default Texture created with no path\n";
+   if (!path.empty()) {
+      load_texture(path);
+   }
+   std::cout << "Texture created with path: " << (path.empty() ? "(empty)" : path) << "\n";
 };
 
 
 TurtleBase::Image::TextureArray::TextureArray(const std::string &folder)
-   : Texture("data/biology/animals/mammals/cat/images/cat.jpg"), _current_image(0)
+   : Texture(get_first_image_path(folder)), _current_image(0)
    , _image_index(0)
    , _images()
 {
@@ -88,6 +91,21 @@ TurtleBase::Image::TextureArray::TextureArray(const std::string &folder)
 
    select_texture(_image_index);
    print_config();
+}
+
+std::string TurtleBase::Image::TextureArray::get_first_image_path(const std::string &folder)
+{
+   std::array<std::string, TEXTURE_ARRAY_SIZE> temp_images;
+   ImageFinder temp_finder;
+   
+   temp_finder.set_root(folder);
+   temp_finder.find_all_images(temp_images);
+   
+   size_t filled_count = temp_finder.get_filled_array_count(temp_images);
+   if (filled_count > 0) {
+      return temp_images[0];
+   }
+   return "";
 }
 
 void TurtleBase::Image::TextureArray::select_texture(int index)
