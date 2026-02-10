@@ -1,8 +1,8 @@
 #include "backend_GLSL.h"
 
 
-void GLSL::render_loop(GLFWwindow *win, TurtleBase::Image::TextureArray &textures,
-                       TurtleBase::Uniform &uniform)
+void GLSL::render_loop(GLFWwindow *win, const TurtleBase::Image::TextureArray &textures,
+                       const TurtleBase::Uniform &uniform)
 {
    glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
    glClear(GL_COLOR_BUFFER_BIT);
@@ -25,7 +25,7 @@ void GLSL::render_loop(GLFWwindow *win, TurtleBase::Image::TextureArray &texture
    glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, textures._indices.data());
 }
 
-void GLSL::render_loop(GLFWwindow *win, TurtleBase::Image::Texture &texture)
+void GLSL::render_loop(GLFWwindow *win, const TurtleBase::Image::Texture &texture)
 {
    // Render a single texture (front canvas)
    glBindTexture(GL_TEXTURE_2D, texture._image);

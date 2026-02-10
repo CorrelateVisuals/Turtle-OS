@@ -84,13 +84,6 @@ void TurtleBase::Image::TextureArray::print_config()
              << std::endl;
 }
 
-// TurtleBase::Image::Texture::Texture()
-//    : Shape(0, 1.0f, {0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f}, "TextureArray Default")
-//    , _path("") 
-// {
-//    std::cout << "Default Texture created with no path\n";
-// }
-
 TurtleBase::Image::Texture::Texture(const std::string &path)
    : Shape(0, 1.0f, {0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f}, "TextureArray Default")
    , _image(0)

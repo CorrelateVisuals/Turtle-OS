@@ -18,7 +18,7 @@ public:
    void set_root(const std::string &root_path);
 
    // Return first image found (early exit)
-   std::string find_first_image();
+   std::string find_first_image() const;
 
    // Perform recursive scan and return all image paths
    void find_all_images(std::array<std::string, TEXTURE_ARRAY_SIZE> &texture_array);

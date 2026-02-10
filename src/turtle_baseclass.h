@@ -26,7 +26,7 @@ public:
          , _value(v){};
       ~Uniform() = default;
 
-      float get_uniform_value() { return _value; };
+      float get_uniform_value() const { return _value; };
       void set_uniform_value(float v) { _value = v; };
 
       static Uniform* get_active();
@@ -69,17 +69,16 @@ public:
                 std::string name = "Vertex Default");
          virtual ~Vertex() = default;
 
-         std::array<float, 3> get_position() { return _position; };
-         std::array<float, 3> get_rotation() { return _rotation; };
-         std::string get_name() { return _name; };
+         std::array<float, 3> get_position() const { return _position; };
+         std::array<float, 3> get_rotation() const { return _rotation; };
+         std::string get_name() const { return _name; };
 
       //protected:
          std::array<float, 3> _position;
 
       private:
-         //std::array<float, 3> _position;
-         std::array<float, 3> _rotation;
-         std::string _name;
+         const std::array<float, 3> _rotation;
+         const std::string _name;
 
          void print_config();
       };
@@ -93,8 +92,8 @@ public:
                std::string name = "Shape Default");
          ~Shape() = default;
 
-         float get_scale() { return _scale; };
-         int get_shape() { return _shape; };
+         float get_scale() const { return _scale; };
+         int get_shape() const { return _shape; };
 
          std::array<float, 20> _vertices = {
             -0.5f, 0.5f,  0.0f, 0.0f, 1.0f, // Top-left (x, y, z, u, v)
@@ -125,7 +124,7 @@ public:
          Texture() : Texture("") {}
          ~Texture() = default;
 
-         std::string get_path() const { return _path; }
+         //std::string get_path() const { return _path; }
 
          GLuint _image;
 
@@ -145,7 +144,7 @@ public:
          int _image_index;
 
          void select_texture(int index);
-         std::string get_path_at(int index) const { return _images[index]; }
+         //std::string get_path_at(int index) const { return _images[index]; }
 
       private:
          ImageFinder _image_finder;

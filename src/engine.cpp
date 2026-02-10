@@ -38,7 +38,7 @@ void Engine::key_call_back(GLFWwindow *window, int key, int, int action, int)
       engine->_main._zoom.reset_start_scale();
    }
 
-   if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS) {
+   if (key == GLFW_KEY_ESCAPE) {
       glfwSetWindowShouldClose(window, true);
    }
 }

@@ -27,7 +27,7 @@ void ImageFinder::set_root(const std::string &root_path)
    root = root_path;
 }
 
-std::string ImageFinder::find_first_image()
+std::string ImageFinder::find_first_image() const
 {
    for (const auto &entry : fs::recursive_directory_iterator(root)) {
       if (entry.is_directory() ) {

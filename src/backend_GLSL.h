@@ -9,9 +9,9 @@
 class GLSL
 {
 public:
-   static void render_loop(GLFWwindow *win, TurtleBase::Image::TextureArray &textures,
-                           TurtleBase::Uniform &uniform);
-   static void render_loop(GLFWwindow *win, TurtleBase::Image::Texture &texture);
+   static void render_loop(GLFWwindow *win, const TurtleBase::Image::TextureArray &textures,
+                           const TurtleBase::Uniform &uniform);
+   static void render_loop(GLFWwindow *win, const TurtleBase::Image::Texture &texture);
    static void texture_to_gpu(GLuint &textures, unsigned char *pixels, const int width,
                               const int height);
 };
