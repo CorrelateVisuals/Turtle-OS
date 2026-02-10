@@ -2,9 +2,12 @@
 
 #include "image_finder.h"
 
+
 #include <GLES2/gl2.h>
 
 #include <array>
+#include <iostream>
+#include <string>
 
 class TurtleBase
 {
@@ -107,6 +110,7 @@ public:
       {
       public:
          Texture(const std::string &path);
+         Texture();
          ~Texture() = default;
 
          GLuint _image;

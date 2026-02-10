@@ -61,21 +61,31 @@ void TurtleBase::Image::TextureArray::print_config()
              << std::endl;
 }
 
+// TurtleBase::Image::Texture::Texture()
+//    : Shape(0, 1.0f, {0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f}, "TextureArray Default")
+//    , _path("") 
+// {
+//    std::cout << "Default Texture created with no path\n";
+// }
+
 TurtleBase::Image::Texture::Texture(const std::string &path)
-   : _path(path)
+   : Shape(0, 1.0f, {0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f}, "TextureArray Default")
+   , _path(path)
 {
    load_texture(path);
+   std::cout << "None default Texture created with no path\n";
 };
 
+
 TurtleBase::Image::TextureArray::TextureArray(const std::string &folder)
-   : Shape(0, 1.0f, {0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f}, "TextureArray Default")
-   , _current_image(0)
+   : Texture("data/biology/animals/mammals/cat/images/cat.jpg"), _current_image(0)
    , _image_index(0)
    , _images()
 {
    _image_finder.set_root(folder);
    _image_finder.find_all_images(_images);
    _image_finder.randomize_order(_images);
+
    select_texture(_image_index);
    print_config();
 }
@@ -102,7 +112,8 @@ void TurtleBase::Image::Texture::load_texture(const std::string &path)
 
    int width, height, channels;
    unsigned char *pixels = stbi_load(path.c_str(), &width, &height, &channels, 4);
-
+   std::cout << path << " loaded with width: " << width << " height: " << height
+             << " channels: " << channels << std::endl;
    if (!pixels) {
       fprintf(stderr, "Failed to load image: %s\n", path.c_str());
       return;
