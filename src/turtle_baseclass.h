@@ -125,7 +125,7 @@ public:
       protected:
          void load_texture(const std::string &path);
 
-      private:
+      protected:
          std::string _path;
       };
 
@@ -143,7 +143,6 @@ public:
          ImageFinder _image_finder;
          std::array<std::string, TEXTURE_ARRAY_SIZE> _images;
 
-         static std::string get_first_image_path(const std::string &folder);
          void print_config();
       };
    };

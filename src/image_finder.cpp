@@ -27,6 +27,21 @@ void ImageFinder::set_root(const std::string &root_path)
    root = root_path;
 }
 
+std::string ImageFinder::find_first_image()
+{
+   for (const auto &entry : fs::recursive_directory_iterator(root)) {
+      if (entry.is_directory() ) {
+         // Scan only inside the images/ folder
+         for (const auto &Image : fs::directory_iterator(entry.path())) {
+            if (Image.is_regular_file() && is_image_file(Image.path())) {
+               return Image.path().string(); // Return immediately on first found
+            }
+         }
+      }
+   }
+   return ""; // No image found
+}
+
 bool ImageFinder::is_image_file(const fs::path &p) const
 {
    static const std::vector<std::string> extensions = {".jpg", ".jpeg", ".png",

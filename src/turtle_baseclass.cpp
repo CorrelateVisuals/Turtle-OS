@@ -96,30 +96,23 @@ TurtleBase::Image::Texture::Texture(const std::string &path)
 
 
 TurtleBase::Image::TextureArray::TextureArray(const std::string &folder)
-   : Texture(get_first_image_path(folder)), _image_index(0)
-   , _images()
+   : Texture(""), _image_index(0), _images()
 {
    _image_finder.set_root(folder);
+
+   // Load first image immediately (early return)
+   std::string first_image = _image_finder.find_first_image();
+   if (!first_image.empty()) {
+      load_texture(first_image);
+      _path = first_image;
+      _images[0] = first_image;
+   }
+
+   // Then scan all remaining images
    _image_finder.find_all_images(_images);
    _image_finder.randomize_order(_images);
 
-   select_texture(_image_index);
    print_config();
-}
-
-std::string TurtleBase::Image::TextureArray::get_first_image_path(const std::string &folder)
-{
-   std::array<std::string, TEXTURE_ARRAY_SIZE> temp_images;
-   ImageFinder temp_finder;
-   
-   temp_finder.set_root(folder);
-   temp_finder.find_all_images(temp_images);
-   
-   size_t filled_count = temp_finder.get_filled_array_count(temp_images);
-   if (filled_count > 0) {
-      return temp_images[0];
-   }
-   return "";
 }
 
 void TurtleBase::Image::TextureArray::select_texture(int index)
