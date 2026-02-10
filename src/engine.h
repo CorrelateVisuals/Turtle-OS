@@ -21,20 +21,8 @@ private:
    public:
       FrontCanvas(const std::string& path = "data/biology/animals/mammals/camel/images/camel-1279353277.jpg")
          : Texture(path) {
-         // About 1/8th of the screen: sqrt(1/8) ≈ 0.35
-         float w = 0.35f;
-         float h = 0.35f;
-         float x0 = -1.0f + 0.02f; // left edge, small inset
-         float y0 = 1.0f - 0.02f;  // top edge, small inset
-         float z  = 0.1f;
-         _scale = w;
-         _position = {x0, y0, z};
-         _vertices = {
-            x0,      y0,      z, 0.0f, 1.0f, // Top-left (u=0,v=1)
-            x0,      y0-h,    z, 0.0f, 0.0f, // Bottom-left (u=0,v=0)
-            x0+w,    y0-h,    z, 1.0f, 0.0f, // Bottom-right (u=1,v=0)
-            x0+w,    y0,      z, 1.0f, 1.0f  // Top-right (u=1,v=1)
-         };
+         // Upper left corner, fill out without borders
+         set_quad(-1.0f, 1.0f, 0.5f, 0.5f, 0.1f);
       }
    };
 

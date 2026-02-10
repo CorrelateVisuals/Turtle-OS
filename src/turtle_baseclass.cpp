@@ -74,6 +74,18 @@ void TurtleBase::Geometry::Shape::print_config()
              << std::endl;
 }
 
+void TurtleBase::Geometry::Shape::set_quad(float x, float y, float w, float h, float z)
+{
+   _position = {x, y, z};
+   _scale = w;
+   _vertices = {
+      x,     y,     z, 0.0f, 1.0f, // Top-left
+      x,     y - h, z, 0.0f, 0.0f, // Bottom-left
+      x + w, y - h, z, 1.0f, 0.0f, // Bottom-right
+      x + w, y,     z, 1.0f, 1.0f  // Top-right
+   };
+}
+
 void TurtleBase::Image::TextureArray::print_config()
 {
    if (DEBUG_LEVEL != DebugLevel::BASIC && DEBUG_LEVEL != DebugLevel::DETAILED) {
@@ -99,7 +111,7 @@ TurtleBase::Image::Texture::Texture(const std::string &path)
 
 
 TurtleBase::Image::TextureArray::TextureArray(const std::string &folder)
-   : Texture(""), _image_index(0), _images()
+   : Texture(""), _images(), _image_index(0)
 {
    _image_finder.set_root(folder);
 

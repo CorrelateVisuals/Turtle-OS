@@ -102,6 +102,8 @@ public:
          const std::array<float, 20>& get_vertices() const { return _vertices; };
          const std::array<unsigned int, 6>& get_indices() const { return _indices; };
 
+         void set_quad(float x, float y, float w, float h, float z = 0.0f);
+
       protected:
          std::array<float, 20> _vertices = {
             -0.5f, 0.5f,  0.0f, 0.0f, 1.0f, // Top-left (x, y, z, u, v)
