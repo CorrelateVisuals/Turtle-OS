@@ -142,23 +142,6 @@ void TurtleBase::Image::Texture::load_texture(const std::string &path)
    stbi_image_free(pixels);
 }
 
-// void TurtleBase::Image::TextureArray::load_texture(const std::string &path)
-// {
-//    stbi_set_flip_vertically_on_load(true);
-
-//    int width, height, channels;
-//    unsigned char *pixels = stbi_load(path.c_str(), &width, &height, &channels, 4);
-
-//    if (!pixels) {
-//       fprintf(stderr, "Failed to load image: %s\n", path.c_str());
-//       return;
-//    }
-
-//    GLSL::texture_to_gpu(_current_image, pixels, width, height);
-
-//    stbi_image_free(pixels);
-// }
-
 TurtleBase::ScaleVertices::ScaleVertices(float start, float speed, float final, float ease)
    : Uniform(0, start)
    , _start_scale{start}

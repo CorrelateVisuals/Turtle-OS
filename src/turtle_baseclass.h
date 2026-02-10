@@ -110,7 +110,6 @@ public:
       {
       public:
          Texture(const std::string &path);
-         //Texture();
          ~Texture() = default;
 
          GLuint _image;
@@ -138,7 +137,6 @@ public:
          std::array<std::string, TEXTURE_ARRAY_SIZE> _images;
 
          static std::string get_first_image_path(const std::string &folder);
-         // void load_texture(const std::string &path);
          void print_config();
       };
    };
