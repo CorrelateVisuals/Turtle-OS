@@ -1,4 +1,5 @@
 #include "window.h"
+#include "engine.h"
 
 #include <iostream>
 
@@ -36,7 +37,7 @@ Window::Window(std::string_view title)
    glfwMakeContextCurrent(_handle);
 
    // ---- CAPTURE INPUT ----
-   glfwSetInputMode(_handle, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+   glfwSetInputMode(_handle, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
 
    if (glfwRawMouseMotionSupported()) {
       glfwSetInputMode(_handle, GLFW_RAW_MOUSE_MOTION, GLFW_TRUE);
@@ -74,4 +75,30 @@ GLFWwindow *Window::get_handle() const
 void Window::set_key_callback(GLFWkeyfun callback)
 {
    glfwSetKeyCallback(_handle, callback);
+}
+
+void Window::set_mouse_button_callback(GLFWmousebuttonfun callback)
+{
+   glfwSetMouseButtonCallback(_handle, callback);
+}
+
+void Window::set_cursor_pos_callback(GLFWcursorposfun callback)
+{
+   glfwSetCursorPosCallback(_handle, callback);
+}
+
+void Window::mouse_button_call_back(GLFWwindow *window, int button, int action, int mods)
+{
+   Engine *engine = static_cast<Engine *>(glfwGetWindowUserPointer(window));
+   if (engine) {
+      engine->handle_mouse_button(button, action, mods);
+   }
+}
+
+void Window::cursor_pos_call_back(GLFWwindow *window, double xpos, double ypos)
+{
+   Engine *engine = static_cast<Engine *>(glfwGetWindowUserPointer(window));
+   if (engine) {
+      engine->handle_cursor_pos(xpos, ypos);
+   }
 }
