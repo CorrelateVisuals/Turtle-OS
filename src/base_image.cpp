@@ -15,6 +15,8 @@ Image::Texture::Texture(const std::string &path,
    , _image(0)
    , _path(path)
 {
+   _color = {1.0f, 1.0f, 1.0f, 1.0f};
+   _is_color = false;
    if (!location_key.empty()) {
       uniform().set_location_key(location_key);
    }
@@ -81,6 +83,8 @@ void Image::TextureArray::select_texture(int index)
 void Image::Texture::load_texture(const std::string &path)
 {
    _is_color = false;
+   _path = path;
+   _color = {1.0f, 1.0f, 1.0f, 1.0f};
 
    stbi_set_flip_vertically_on_load(true);
 
@@ -134,4 +138,29 @@ void Image::Texture::upload_color_texture(const vec4 &color)
        color_to_byte(color.a)};
 
    GLSL::texture_to_gpu(_image, pixels, 1, 1);
+}
+
+bool Image::Texture::is_color() const
+{
+   return _is_color;
+}
+
+vec4 Image::Texture::get_color() const
+{
+   return _color;
+}
+
+void Image::Texture::set_solid_color(const vec4 &color)
+{
+   upload_color_texture(color);
+}
+
+void Image::Texture::set_texture_path(const std::string &path)
+{
+   load_texture(path);
+}
+
+void Image::Texture::set_color_value(const vec4 &color)
+{
+   _color = color;
 }

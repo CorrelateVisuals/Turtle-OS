@@ -8,6 +8,7 @@
 #include <filesystem>
 #include <iostream>
 #include <string>
+#include <utility>
 
 DebugLevel DEBUG_LEVEL = DebugLevel::BASIC;
 
@@ -34,6 +35,11 @@ constexpr float overlay_z(int index)
 {
    return (index <= 1) ? 0.1f : 0.05f;
 }
+
+constexpr float overlay_grid_width = 1.32f;
+constexpr float overlay_grid_height = overlay_grid_width * 6.0f / 19.0f;
+constexpr float overlay_cell_width = overlay_grid_width * 0.5f;
+constexpr float overlay_cell_height = overlay_grid_height * 0.5f;
 }
 
 Engine::Engine(int argc, char *argv[])
@@ -60,11 +66,22 @@ Engine::Engine(int argc, char *argv[])
    create_shaders(_main._zoom);
    glfwSetWindowUserPointer(_win.get_handle(), this);
 
-   // Initialize canvas positions
-   _win.set_canvas_start_x(0, -1.0f); _win.set_canvas_start_y(0, 1.0f); _win.set_canvas_start_w(0, 0.5f); _win.set_canvas_start_h(0, 0.5f);
-   _win.set_canvas_start_x(1, 0.0f); _win.set_canvas_start_y(1, 1.0f); _win.set_canvas_start_w(1, 0.5f); _win.set_canvas_start_h(1, 0.5f);
-   _win.set_canvas_start_x(2, -1.0f); _win.set_canvas_start_y(2, 0.5f); _win.set_canvas_start_w(2, 0.5f); _win.set_canvas_start_h(2, 0.5f);
-   _win.set_canvas_start_x(3, 0.0f); _win.set_canvas_start_y(3, 0.5f); _win.set_canvas_start_w(3, 0.5f); _win.set_canvas_start_h(3, 0.5f);
+   // Initialize canvas positions with a centered grid of 19:6 aspect ratio
+   const float grid_left = -overlay_grid_width * 0.5f;
+   const float grid_top = overlay_grid_height * 0.5f;
+   const float grid_right = grid_left + overlay_cell_width;
+   const float grid_center_row = grid_top - overlay_cell_height;
+
+   _win.set_canvas_start_x(0, grid_left); _win.set_canvas_start_y(0, grid_top); _win.set_canvas_start_w(0, overlay_cell_width); _win.set_canvas_start_h(0, overlay_cell_height);
+   _win.set_canvas_start_x(1, grid_right); _win.set_canvas_start_y(1, grid_top); _win.set_canvas_start_w(1, overlay_cell_width); _win.set_canvas_start_h(1, overlay_cell_height);
+   _win.set_canvas_start_x(2, grid_left); _win.set_canvas_start_y(2, grid_center_row); _win.set_canvas_start_w(2, overlay_cell_width); _win.set_canvas_start_h(2, overlay_cell_height);
+   _win.set_canvas_start_x(3, grid_right); _win.set_canvas_start_y(3, grid_center_row); _win.set_canvas_start_w(3, overlay_cell_width); _win.set_canvas_start_h(3, overlay_cell_height);
+
+   update_overlay_quad(0, grid_left, grid_top, overlay_cell_width, overlay_cell_height);
+   update_overlay_quad(1, grid_right, grid_top, overlay_cell_width, overlay_cell_height);
+   update_overlay_quad(2, grid_left, grid_center_row, overlay_cell_width, overlay_cell_height);
+   update_overlay_quad(3, grid_right, grid_center_row, overlay_cell_width, overlay_cell_height);
+   sync_canvas4_to_overlay(_last_touched_overlay);
 }
 
 void Engine::handle_key(int key, int scancode, int action, int mods)
@@ -138,6 +155,7 @@ void Engine::handle_mouse_button(int button, int action, int mods)
             }
             _win.set_drag_start_x(nx);
             _win.set_drag_start_y(ny);
+            sync_canvas4_to_overlay(idx);
             break;
          }
       }
@@ -169,38 +187,50 @@ void Engine::handle_cursor_pos(double xpos, double ypos)
          float cw = _win.get_canvas_start_w(i);
          float ch = _win.get_canvas_start_h(i);
 
-         if (_win.get_resize_corner() == 0) { // TL: opposite BR fixed
-            float fx = cx + cw; // BR x
-            float fy = cy - ch; // BR y
-            cx = nx;
-            cy = ny;
-            cw = fx - nx;
-            ch = ny - fy;
-         } else if (_win.get_resize_corner() == 1) { // TR: opposite BL fixed
-            float fx = cx; // BL x
-            float fy = cy - ch; // BL y
-            cy = ny;
-            cw = nx - fx;
-            ch = ny - fy;
-         } else if (_win.get_resize_corner() == 2) { // BL: opposite TR fixed
-            float fx = cx + cw; // TR x
-            float fy = cy; // TR y
-            cx = nx;
-            cw = fx - nx;
-            ch = fy - ny;
-         } else if (_win.get_resize_corner() == 3) { // BR: opposite TL fixed
-            float fx = cx; // TL x
-            float fy = cy; // TL y
-            cw = nx - fx;
-            ch = fy - ny;
+         float left = std::min(cx, cx + cw);
+         float right = std::max(cx, cx + cw);
+         float top = std::max(cy, cy - ch);
+         float bottom = std::min(cy, cy - ch);
+
+         switch (_win.get_resize_corner()) {
+         case 0: // TL
+            left = nx;
+            top = ny;
+            break;
+         case 1: // TR
+            right = nx;
+            top = ny;
+            break;
+         case 2: // BL
+            left = nx;
+            bottom = ny;
+            break;
+         case 3: // BR
+            right = nx;
+            bottom = ny;
+            break;
+         default:
+            break;
          }
 
-         _win.set_canvas_start_x(i, cx);
-         _win.set_canvas_start_y(i, cy);
-         _win.set_canvas_start_w(i, cw);
-         _win.set_canvas_start_h(i, ch);
+         if (right < left) {
+            std::swap(right, left);
+         }
+         if (top < bottom) {
+            std::swap(top, bottom);
+         }
 
-         update_overlay_quad(i, cx, cy, cw, ch);
+         float new_cw = right - left;
+         float new_ch = top - bottom;
+         float new_cx = left;
+         float new_cy = top;
+
+         _win.set_canvas_start_x(i, new_cx);
+         _win.set_canvas_start_y(i, new_cy);
+         _win.set_canvas_start_w(i, new_cw);
+         _win.set_canvas_start_h(i, new_ch);
+
+         update_overlay_quad(i, new_cx, new_cy, new_cw, new_ch);
       } else if (_win.get_dragging()) {
          // Drag
          int i = _win.get_drag_canvas();
@@ -221,22 +251,38 @@ void Engine::handle_cursor_pos(double xpos, double ypos)
 
 void Engine::update_overlay_quad(int index, float cx, float cy, float cw, float ch)
 {
-   float z = overlay_z(index);
+   OverlayCanvas &canvas = overlay_by_index(index);
+   canvas.set_quad(cx, cy, cw, ch, overlay_z(index));
+}
+
+Engine::OverlayCanvas &Engine::overlay_by_index(int index)
+{
    switch (index) {
    case 0:
-      _canvas1.set_quad(cx, cy, cw, ch, z);
-      break;
+      return _canvas1;
    case 1:
-      _canvas2.set_quad(cx, cy, cw, ch, z);
-      break;
+      return _canvas2;
    case 2:
-      _canvas3.set_quad(cx, cy, cw, ch, z);
-      break;
-   case 3:
-      _canvas4.set_quad(cx, cy, cw, ch, z);
-      break;
+      return _canvas3;
    default:
-      break;
+      return _canvas4;
+   }
+}
+
+void Engine::sync_canvas4_to_overlay(int source_index)
+{
+   if (source_index < 0 || source_index > 3) {
+      return;
+   }
+   const OverlayCanvas &source = overlay_by_index(source_index);
+   _last_touched_overlay = source_index;
+   if (source.is_color()) {
+      _canvas4.set_solid_color(source.get_color());
+   } else {
+      if (!source.get_path().empty()) {
+         _canvas4.set_texture_path(source.get_path());
+      }
+      _canvas4.set_color_value(source.get_color());
    }
 }
 

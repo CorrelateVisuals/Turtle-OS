@@ -46,6 +46,13 @@ public:
       std::string get_path() const { return _path; }
       GLuint get_image() const { return _image; }
 
+      bool is_color() const;
+      vec4 get_color() const;
+
+      void set_solid_color(const vec4 &color);
+      void set_texture_path(const std::string &path);
+      void set_color_value(const vec4 &color);
+
    protected:
       void load_texture(const std::string &path);
       void upload_color_texture(const vec4 &color);

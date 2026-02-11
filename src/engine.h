@@ -83,6 +83,8 @@ public:
 
 private:
    void update_overlay_quad(int index, float cx, float cy, float cw, float ch);
+   void sync_canvas4_to_overlay(int source_index);
+   OverlayCanvas &overlay_by_index(int index);
 
    GLSL _backend;
    Window _win;
@@ -91,4 +93,5 @@ private:
    Canvas2 _canvas2;
    Canvas3 _canvas3;
    Canvas4 _canvas4;
+   int _last_touched_overlay = 3;
 };
