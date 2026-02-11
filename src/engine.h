@@ -18,36 +18,57 @@ private:
       ScaleVertices _zoom;
    };
 
-   class FrontCanvas : public Image::Texture
+   class OverlayCanvas : public Image::Texture
    {
-   public:
-      FrontCanvas(const std::string &path = "data/biology/animals/mammals/camel/images/camel-1279353277.jpg")
+   protected:
+      OverlayCanvas(const std::string &path, float x, float y, float w, float h, float z)
          : Texture(path)
       {
-         // Upper left corner, fill out without borders
-         set_quad(-1.0f, 1.0f, 0.5f, 0.5f, 0.1f);
+         set_quad(x, y, w, h, z);
+      }
+
+      OverlayCanvas(const vec4 &color, float x, float y, float w, float h, float z)
+         : Texture(color)
+      {
+         set_quad(x, y, w, h, z);
       }
    };
 
-   class FrontCanvas2 : public Image::Texture
+   class Canvas1 : public OverlayCanvas
    {
    public:
-      FrontCanvas2(const std::string &path = "data/biology/animals/mammals/cat/images/cat.jpg")
-         : Texture(path)
+      Canvas1()
+         : OverlayCanvas("data/biology/animals/mammals/camel/images/camel-1279353277.jpg",
+                         -1.0f, 1.0f, 0.5f, 0.5f, 0.1f)
       {
-         // Upper right corner, fill out without borders
-         set_quad(0.0f, 1.0f, 0.5f, 0.5f, 0.1f);
       }
    };
 
-   class LowerCanvas : public Image::Texture
+   class Canvas2 : public OverlayCanvas
    {
    public:
-      LowerCanvas(const std::string &path = "data/biology/animals/mammals/camel/images/camel-1279353277.jpg")
-         : Texture(path)
+      Canvas2()
+         : OverlayCanvas("data/biology/animals/mammals/cat/images/cat.jpg",
+                         0.0f, 1.0f, 0.5f, 0.5f, 0.1f)
       {
-         // Extend from remaining front-canvas edge to bottom screen
-         set_quad(-1.0f, 0.5f, 0.5f, 1.5f, 0.05f);
+      }
+   };
+
+   class Canvas3 : public OverlayCanvas
+   {
+   public:
+      Canvas3()
+         : OverlayCanvas(vec4{0.2f, 0.6f, 0.8f, 1.0f}, -1.0f, 0.5f, 0.5f, 0.5f, 0.05f)
+      {
+      }
+   };
+
+   class Canvas4 : public OverlayCanvas
+   {
+   public:
+      Canvas4()
+         : OverlayCanvas(vec4{0.9f, 0.4f, 0.2f, 1.0f}, 0.0f, 0.5f, 0.5f, 0.5f, 0.05f)
+      {
       }
    };
 
@@ -61,10 +82,13 @@ public:
    void handle_key(int key, int scancode, int action, int mods);
 
 private:
+   void update_overlay_quad(int index, float cx, float cy, float cw, float ch);
+
    GLSL _backend;
    Window _win;
    MainCanvas _main;
-   FrontCanvas _front;
-   FrontCanvas2 _front2;
-   LowerCanvas _lower;
+   Canvas1 _canvas1;
+   Canvas2 _canvas2;
+   Canvas3 _canvas3;
+   Canvas4 _canvas4;
 };

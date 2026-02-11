@@ -4,18 +4,45 @@
 #include "backend_GLSL.h"
 #include "shader.h"
 
+#include <algorithm>
 #include <filesystem>
 #include <iostream>
 #include <string>
 
 DebugLevel DEBUG_LEVEL = DebugLevel::BASIC;
 
+namespace
+{
+struct CanvasBounds
+{
+   float left;
+   float right;
+   float bottom;
+   float top;
+};
+
+CanvasBounds get_canvas_bounds(float cx, float cy, float cw, float ch)
+{
+   float left = std::min(cx, cx + cw);
+   float right = std::max(cx, cx + cw);
+   float bottom = std::min(cy - ch, cy);
+   float top = std::max(cy - ch, cy);
+   return {left, right, bottom, top};
+}
+
+constexpr float overlay_z(int index)
+{
+   return (index <= 1) ? 0.1f : 0.05f;
+}
+}
+
 Engine::Engine(int argc, char *argv[])
    : _win("Turtle-OS")
    , _main()
-   , _front()
-   , _front2()
-   , _lower()
+   , _canvas1()
+   , _canvas2()
+   , _canvas3()
+   , _canvas4()
 {
    DEBUG_LEVEL = DebugLevel::DETAILED;
    for (int i = 1; i < argc; ++i) {
@@ -35,8 +62,9 @@ Engine::Engine(int argc, char *argv[])
 
    // Initialize canvas positions
    _win.set_canvas_start_x(0, -1.0f); _win.set_canvas_start_y(0, 1.0f); _win.set_canvas_start_w(0, 0.5f); _win.set_canvas_start_h(0, 0.5f);
-   _win.set_canvas_start_x(1, -1.0f); _win.set_canvas_start_y(1, 0.5f); _win.set_canvas_start_w(1, 0.5f); _win.set_canvas_start_h(1, 1.5f);
-   _win.set_canvas_start_x(2, 0.0f); _win.set_canvas_start_y(2, 1.0f); _win.set_canvas_start_w(2, 0.5f); _win.set_canvas_start_h(2, 0.5f);
+   _win.set_canvas_start_x(1, 0.0f); _win.set_canvas_start_y(1, 1.0f); _win.set_canvas_start_w(1, 0.5f); _win.set_canvas_start_h(1, 0.5f);
+   _win.set_canvas_start_x(2, -1.0f); _win.set_canvas_start_y(2, 0.5f); _win.set_canvas_start_w(2, 0.5f); _win.set_canvas_start_h(2, 0.5f);
+   _win.set_canvas_start_x(3, 0.0f); _win.set_canvas_start_y(3, 0.5f); _win.set_canvas_start_w(3, 0.5f); _win.set_canvas_start_h(3, 0.5f);
 }
 
 void Engine::handle_key(int key, int scancode, int action, int mods)
@@ -71,34 +99,36 @@ void Engine::handle_mouse_button(int button, int action, int mods)
    float ny = 1.0f - (float)ypos / height * 2.0f;
 
    if (action == GLFW_PRESS) {
-      // Check which canvas and if corner, starting from foreground
-      int order[] = {2, 0, 1}; // front2, front, lower
+      int order[] = {1, 0, 3, 2};
       for (int idx : order) {
          float cx = _win.get_canvas_start_x(idx);
          float cy = _win.get_canvas_start_y(idx);
          float cw = _win.get_canvas_start_w(idx);
          float ch = _win.get_canvas_start_h(idx);
 
-         // Check if inside canvas
-         if (nx >= cx && nx <= cx + cw && ny >= cy - ch && ny <= cy) {
-            float margin = 0.05f; // corner size
-            if (nx >= cx - margin && nx <= cx + margin &&
-                ny >= cy - margin && ny <= cy + margin) {
+         auto bounds = get_canvas_bounds(cx, cy, cw, ch);
+
+         if (nx >= bounds.left && nx <= bounds.right && ny >= bounds.bottom &&
+             ny <= bounds.top) {
+            float margin = 0.05f;
+            bool near_left = nx >= bounds.left - margin && nx <= bounds.left + margin;
+            bool near_right = nx >= bounds.right - margin && nx <= bounds.right + margin;
+            bool near_top = ny >= bounds.top - margin && ny <= bounds.top + margin;
+            bool near_bottom = ny >= bounds.bottom - margin && ny <= bounds.bottom + margin;
+
+            if (near_left && near_top) {
                _win.set_resizing(true);
                _win.set_resize_corner(0); // TL
                _win.set_drag_canvas(idx);
-            } else if (nx >= cx + cw - margin && nx <= cx + cw + margin &&
-                       ny >= cy - margin && ny <= cy + margin) {
+            } else if (near_right && near_top) {
                _win.set_resizing(true);
                _win.set_resize_corner(1); // TR
                _win.set_drag_canvas(idx);
-            } else if (nx >= cx - margin && nx <= cx + margin &&
-                       ny >= cy - ch - margin && ny <= cy - ch + margin) {
+            } else if (near_left && near_bottom) {
                _win.set_resizing(true);
                _win.set_resize_corner(2); // BL
                _win.set_drag_canvas(idx);
-            } else if (nx >= cx + cw - margin && nx <= cx + cw + margin &&
-                       ny >= cy - ch - margin && ny <= cy - ch + margin) {
+            } else if (near_right && near_bottom) {
                _win.set_resizing(true);
                _win.set_resize_corner(3); // BR
                _win.set_drag_canvas(idx);
@@ -170,14 +200,7 @@ void Engine::handle_cursor_pos(double xpos, double ypos)
          _win.set_canvas_start_w(i, cw);
          _win.set_canvas_start_h(i, ch);
 
-         // Update the quad
-         if (i == 0) {
-            _front.set_quad(cx, cy, cw, ch, 0.1f);
-         } else if (i == 1) {
-            _lower.set_quad(cx, cy, cw, ch, 0.05f);
-         } else if (i == 2) {
-            _front2.set_quad(cx, cy, cw, ch, 0.1f);
-         }
+         update_overlay_quad(i, cx, cy, cw, ch);
       } else if (_win.get_dragging()) {
          // Drag
          int i = _win.get_drag_canvas();
@@ -187,17 +210,33 @@ void Engine::handle_cursor_pos(double xpos, double ypos)
          _win.set_canvas_start_x(i, cx);
          _win.set_canvas_start_y(i, cy);
 
-         if (i == 0) {
-            _front.set_quad(cx, cy, _win.get_canvas_start_w(0), _win.get_canvas_start_h(0), 0.1f);
-         } else if (i == 1) {
-            _lower.set_quad(cx, cy, _win.get_canvas_start_w(1), _win.get_canvas_start_h(1), 0.05f);
-         } else if (i == 2) {
-            _front2.set_quad(cx, cy, _win.get_canvas_start_w(2), _win.get_canvas_start_h(2), 0.1f);
-         }
+         update_overlay_quad(i, cx, cy, _win.get_canvas_start_w(i),
+                             _win.get_canvas_start_h(i));
 
          _win.set_drag_start_x(nx);
          _win.set_drag_start_y(ny);
       }
+   }
+}
+
+void Engine::update_overlay_quad(int index, float cx, float cy, float cw, float ch)
+{
+   float z = overlay_z(index);
+   switch (index) {
+   case 0:
+      _canvas1.set_quad(cx, cy, cw, ch, z);
+      break;
+   case 1:
+      _canvas2.set_quad(cx, cy, cw, ch, z);
+      break;
+   case 2:
+      _canvas3.set_quad(cx, cy, cw, ch, z);
+      break;
+   case 3:
+      _canvas4.set_quad(cx, cy, cw, ch, z);
+      break;
+   default:
+      break;
    }
 }
 
@@ -207,9 +246,10 @@ void Engine::run()
       GLSL::render_loop(_win.get_handle(), _main, _main._zoom);
       _main._zoom.run();
 
-      GLSL::render_loop(_win.get_handle(), _lower, &_lower.uniform());
-      GLSL::render_loop(_win.get_handle(), _front, &_front.uniform());
-      GLSL::render_loop(_win.get_handle(), _front2, &_front2.uniform());
+      GLSL::render_loop(_win.get_handle(), _canvas3, &_canvas3.uniform());
+      GLSL::render_loop(_win.get_handle(), _canvas4, &_canvas4.uniform());
+      GLSL::render_loop(_win.get_handle(), _canvas1, &_canvas1.uniform());
+      GLSL::render_loop(_win.get_handle(), _canvas2, &_canvas2.uniform());
 
       // Swap buffers and poll events
       _win.swap_buffers();

@@ -50,9 +50,9 @@ private:
 
    // Mouse handling
    bool _dragging = false;
-   int _drag_canvas = -1; // 0: front, 1: lower, 2: front2
+   int _drag_canvas = -1; // 0-3: overlay canvases
    bool _resizing = false;
    int _resize_corner = -1; // 0: TL, 1: TR, 2: BL, 3: BR
    double _drag_start_x = 0.0, _drag_start_y = 0.0;
-   float _canvas_start_x[3] = {0.0f}, _canvas_start_y[3] = {0.0f}, _canvas_start_w[3] = {0.0f}, _canvas_start_h[3] = {0.0f};
+   float _canvas_start_x[4] = {0.0f}, _canvas_start_y[4] = {0.0f}, _canvas_start_w[4] = {0.0f}, _canvas_start_h[4] = {0.0f};
 };

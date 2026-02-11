@@ -5,6 +5,7 @@
 #include "base_image.h"
 #include "debug.h"
 
+#include <algorithm>
 #include <iostream>
 
 Image::Texture::Texture(const std::string &path,
@@ -24,6 +25,19 @@ Image::Texture::Texture(const std::string &path,
    }
    if (DEBUG_LEVEL == DebugLevel::DETAILED) {
       std::cout << "Texture created with path: " << (path.empty() ? "(empty)" : path) << "\n";
+   }
+};
+
+Image::Texture::Texture(const vec4 &color,
+                        const std::string &location_key,
+                        float uniform_value)
+   : Texture("", location_key, uniform_value)
+{
+   upload_color_texture(color);
+   _color = color;
+   if (DEBUG_LEVEL == DebugLevel::DETAILED) {
+      std::cout << "Texture created with solid color: " << color.r << ", " << color.g
+                << ", " << color.b << ", " << color.a << "\n";
    }
 };
 
@@ -66,6 +80,8 @@ void Image::TextureArray::select_texture(int index)
 
 void Image::Texture::load_texture(const std::string &path)
 {
+   _is_color = false;
+
    stbi_set_flip_vertically_on_load(true);
 
    int width, height, channels;
@@ -94,4 +110,28 @@ void Image::TextureArray::print_config()
    std::cout << "TextureArray size: " << _images.size() << " , index " << _image_index
              << std::endl
              << std::endl;
+}
+
+namespace
+{
+unsigned char color_to_byte(float value)
+{
+   const float clamped = std::clamp(value, 0.0f, 1.0f);
+   return static_cast<unsigned char>(clamped * 255.0f);
+}
+}
+
+void Image::Texture::upload_color_texture(const vec4 &color)
+{
+   _is_color = true;
+   _color = color;
+   _path = "(solid color)";
+
+   unsigned char pixels[4] = {
+       color_to_byte(color.r),
+       color_to_byte(color.g),
+       color_to_byte(color.b),
+       color_to_byte(color.a)};
+
+   GLSL::texture_to_gpu(_image, pixels, 1, 1);
 }

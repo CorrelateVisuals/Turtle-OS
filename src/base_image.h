@@ -8,6 +8,23 @@
 #include <array>
 #include <string>
 
+struct vec4
+{
+   float r{0.0f};
+   float g{0.0f};
+   float b{0.0f};
+   float a{1.0f};
+
+   vec4() = default;
+   vec4(float r_, float g_, float b_, float a_ = 1.0f)
+      : r(r_)
+      , g(g_)
+      , b(b_)
+      , a(a_)
+   {
+   }
+};
+
 class Image
 {
 public:
@@ -17,6 +34,8 @@ public:
       using Geometry::Shape::uniform;
 
       Texture(const std::string &path, const std::string &location_key = "scale",
+               float uniform_value = 1.0f);
+      Texture(const vec4 &color, const std::string &location_key = "scale",
                float uniform_value = 1.0f);
       Texture()
          : Texture("", "scale", 1.0f)
@@ -29,12 +48,15 @@ public:
 
    protected:
       void load_texture(const std::string &path);
+      void upload_color_texture(const vec4 &color);
 
    private:
       GLuint _image;
+      bool _is_color{false};
 
    protected:
       std::string _path;
+      vec4 _color;
    };
 
    class TextureArray : public Texture
