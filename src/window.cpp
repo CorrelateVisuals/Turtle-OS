@@ -87,6 +87,14 @@ void Window::set_cursor_pos_callback(GLFWcursorposfun callback)
    glfwSetCursorPosCallback(_handle, callback);
 }
 
+void Window::key_call_back(GLFWwindow *window, int key, int scancode, int action, int mods)
+{
+   Engine *engine = static_cast<Engine *>(glfwGetWindowUserPointer(window));
+   if (engine) {
+      engine->handle_key(key, scancode, action, mods);
+   }
+}
+
 void Window::mouse_button_call_back(GLFWwindow *window, int button, int action, int mods)
 {
    Engine *engine = static_cast<Engine *>(glfwGetWindowUserPointer(window));
