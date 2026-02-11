@@ -71,12 +71,13 @@ void Engine::handle_mouse_button(int button, int action, int mods)
    float ny = 1.0f - (float)ypos / height * 2.0f;
 
    if (action == GLFW_PRESS) {
-      // Check which canvas and if corner
-      for (int i = 0; i < 3; ++i) {
-         float cx = _win.get_canvas_start_x(i);
-         float cy = _win.get_canvas_start_y(i);
-         float cw = _win.get_canvas_start_w(i);
-         float ch = _win.get_canvas_start_h(i);
+      // Check which canvas and if corner, starting from foreground
+      int order[] = {2, 0, 1}; // front2, front, lower
+      for (int idx : order) {
+         float cx = _win.get_canvas_start_x(idx);
+         float cy = _win.get_canvas_start_y(idx);
+         float cw = _win.get_canvas_start_w(idx);
+         float ch = _win.get_canvas_start_h(idx);
 
          // Check if inside canvas
          if (nx >= cx && nx <= cx + cw && ny >= cy - ch && ny <= cy) {
@@ -85,25 +86,25 @@ void Engine::handle_mouse_button(int button, int action, int mods)
                 ny >= cy - margin && ny <= cy + margin) {
                _win.set_resizing(true);
                _win.set_resize_corner(0); // TL
-               _win.set_drag_canvas(i);
+               _win.set_drag_canvas(idx);
             } else if (nx >= cx + cw - margin && nx <= cx + cw + margin &&
                        ny >= cy - margin && ny <= cy + margin) {
                _win.set_resizing(true);
                _win.set_resize_corner(1); // TR
-               _win.set_drag_canvas(i);
+               _win.set_drag_canvas(idx);
             } else if (nx >= cx - margin && nx <= cx + margin &&
                        ny >= cy - ch - margin && ny <= cy - ch + margin) {
                _win.set_resizing(true);
                _win.set_resize_corner(2); // BL
-               _win.set_drag_canvas(i);
+               _win.set_drag_canvas(idx);
             } else if (nx >= cx + cw - margin && nx <= cx + cw + margin &&
                        ny >= cy - ch - margin && ny <= cy - ch + margin) {
                _win.set_resizing(true);
                _win.set_resize_corner(3); // BR
-               _win.set_drag_canvas(i);
+               _win.set_drag_canvas(idx);
             } else {
                _win.set_dragging(true);
-               _win.set_drag_canvas(i);
+               _win.set_drag_canvas(idx);
             }
             _win.set_drag_start_x(nx);
             _win.set_drag_start_y(ny);

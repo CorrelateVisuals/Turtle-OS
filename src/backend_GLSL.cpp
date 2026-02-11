@@ -26,6 +26,8 @@ void GLSL::render_loop(GLFWwindow *win, const Image::Texture &texture,
 void GLSL::draw_shape(const Image::Texture &texture,
                       const Uniform *uniform)
 {
+   if (texture.get_image() == 0) return; // Skip if texture not loaded
+
    glBindTexture(GL_TEXTURE_2D, texture.get_image());
    if (uniform) {
       glUniform1f(uniform->get_shader_location(), uniform->get_uniform_value());
