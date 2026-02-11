@@ -30,7 +30,6 @@ public:
 
       std::string get_path() const { return _path; }
       GLuint get_image() const { return _image; }
-      bool is_grid() const { return _is_grid; }
 
    protected:
       void load_texture(const std::string &path);
@@ -38,10 +37,9 @@ public:
    private:
       GLuint _image;
       bool _is_solid = false;
-      Color _color = {0.0f, 0.0f, 1.0f};
+      Color _color = {0.0f, 0.0f, 0.0f, 1.0f};
 
    protected:
-      bool _is_grid = false;
       std::string _path;
    };
 

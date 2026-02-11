@@ -5,9 +5,6 @@
 #include <sstream>
 #include <stdexcept>
 
-GLuint program_grid;
-GLuint program_solid;
-
 std::string load_shader_file(const std::string &path)
 {
    std::ifstream file(path);
@@ -72,28 +69,17 @@ GLuint shader_create_program(const std::string &vertex_src, const std::string &f
 void create_shaders(ScaleVertices &zoom)
 {
    // Load shader sources from files
-   const std::string vert_src = load_shader_file("src/shaders/texture_vertex.glsl");
-   const std::string frag_grid_src = load_shader_file("src/shaders/texture_grid.glsl");
-   const std::string frag_solid_src = load_shader_file("src/shaders/texture_solid.glsl");
+   const std::string vert_src = load_shader_file("src/shaders/vertex.glsl");
+   const std::string frag_src = load_shader_file("src/shaders/fragment.glsl");
 
-   // Compile and link shader programs
-   program_grid = shader_create_program(vert_src, frag_grid_src);
-   if (!program_grid) {
-      throw std::runtime_error("Failed to create grid shader program");
+   // Compile and link shader program
+   const GLuint shaderProgram = shader_create_program(vert_src, frag_src);
+   if (!shaderProgram) {
+      throw std::runtime_error("Failed to create shader program");
    }
 
-   program_solid = shader_create_program(vert_src, frag_solid_src);
-   if (!program_solid) {
-      throw std::runtime_error("Failed to create solid shader program");
-   }
+   glUseProgram(shaderProgram);
 
-   // Set uniforms for grid program
-   glUseProgram(program_grid);
-   zoom.set_shader_location(glGetUniformLocation(program_grid, "scale"));
-
-   // Set uniforms for solid program
-   glUseProgram(program_solid);
-   zoom.set_shader_location(glGetUniformLocation(program_solid, "scale"));
-
+   zoom.set_shader_location(glGetUniformLocation(shaderProgram, "scale"));
    Uniform::register_location_value("scale", zoom.get_shader_location());
 }

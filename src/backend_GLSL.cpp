@@ -1,11 +1,9 @@
 #include "backend_GLSL.h"
-#include "shader.h"
 
 
 void GLSL::render_loop(GLFWwindow *win, const Image::TextureArray &textures,
                        const Uniform &uniform)
 {
-   glUseProgram(program_solid);
    glEnable(GL_BLEND);
    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
@@ -22,7 +20,6 @@ void GLSL::render_loop(GLFWwindow *win, const Image::Texture &texture,
                        const Uniform *uniform)
 {
    (void)win;
-   glUseProgram(texture.is_grid() ? program_grid : program_solid);
    draw_shape(texture, uniform);
 }
 
