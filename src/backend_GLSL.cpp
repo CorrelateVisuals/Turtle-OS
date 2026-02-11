@@ -1,8 +1,10 @@
 #include "backend_GLSL.h"
 
 
-void GLSL::render_loop(GLFWwindow *win, const TurtleBase::Image::TextureArray &textures,
-                       const TurtleBase::Uniform &uniform)
+GLSL::ShapeRenderer GLSL::_shape_renderer = {};
+
+void GLSL::render_loop(GLFWwindow *win, const turtle::TextureArray &textures,
+                       const turtle::Uniform &uniform)
 {
    glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
    glClear(GL_COLOR_BUFFER_BIT);
@@ -13,18 +15,17 @@ void GLSL::render_loop(GLFWwindow *win, const TurtleBase::Image::TextureArray &t
    glfwGetFramebufferSize(win, &w, &h);
    glViewport(0, 0, w, h);
 
-   draw_shape(textures, &uniform);
+   _shape_renderer.draw(textures, &uniform);
 }
 
-void GLSL::render_loop(GLFWwindow *win, const TurtleBase::Image::Texture &texture,
-                       const TurtleBase::Uniform *uniform)
+void GLSL::render_loop(GLFWwindow *win, const turtle::Texture &texture,
+                       const turtle::Uniform *uniform)
 {
    (void)win;
-   draw_shape(texture, uniform);
+   _shape_renderer.draw(texture, uniform);
 }
 
-void GLSL::draw_shape(const TurtleBase::Image::Texture &texture,
-                      const TurtleBase::Uniform *uniform)
+void GLSL::ShapeRenderer::draw(const turtle::Texture &texture, const turtle::Uniform *uniform) const
 {
    glBindTexture(GL_TEXTURE_2D, texture.get_image());
    if (uniform) {

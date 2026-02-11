@@ -1,41 +1,57 @@
 #pragma once
 
 #include "backend_GLSL.h"
+#include "render_stage.h"
+#include "texture.h"
 #include "turtle_baseclass.h"
+#include "uniform.h"
 #include "window.h"
 
 class Engine : TurtleBase
 {
 private:
-   class MainCanvas : public Image::TextureArray
+   class MainCanvasStage : public turtle::RenderStage
    {
    public:
-      MainCanvas(std::string folder = "data")
-         : TextureArray(folder)
-         , _zoom(15.0f, 0.1f, 2.0f, 0.2f){};
-      ScaleVertices _zoom;
+      explicit MainCanvasStage(std::string folder = "data");
+
+      void update() override;
+      void render(GLFWwindow *window) override;
+
+      void next_texture();
+      void previous_texture();
+      turtle::ScaleVertices &zoom();
+
+   private:
+      turtle::TextureArray _textures;
+      turtle::ScaleVertices _zoom;
    };
 
-   class FrontCanvas : public Image::Texture
+   class StaticCanvasStage : public turtle::RenderStage
    {
    public:
-      FrontCanvas(const std::string &path = "data/biology/animals/mammals/camel/images/camel-1279353277.jpg")
-         : Texture(path)
-      {
-         // Upper left corner, fill out without borders
-         set_quad(-1.0f, 1.0f, 0.5f, 0.5f, 0.1f);
-      }
+      StaticCanvasStage(const std::string &path, float x, float y, float width, float height,
+                        float depth);
+
+      void update() override;
+      void render(GLFWwindow *window) override;
+
+      turtle::Texture &texture();
+
+   protected:
+      turtle::Texture _texture;
    };
 
-   class LowerCanvas : public Image::Texture
+   class FrontCanvasStage : public StaticCanvasStage
    {
    public:
-      LowerCanvas(const std::string &path = "data/biology/animals/mammals/camel/images/camel-1279353277.jpg")
-         : Texture(path)
-      {
-         // Extend from remaining front-canvas edge to bottom screen
-         set_quad(-1.0f, 0.5f, 0.5f, 1.5f, 0.05f);
-      }
+      FrontCanvasStage();
+   };
+
+   class LowerCanvasStage : public StaticCanvasStage
+   {
+   public:
+      LowerCanvasStage();
    };
 
 public:
@@ -48,9 +64,10 @@ public:
 private:
    GLSL _backend;
    Window _win;
-   MainCanvas _main;
-   FrontCanvas _front;
-   LowerCanvas _lower;
+   MainCanvasStage _main_stage;
+   FrontCanvasStage _front_stage;
+   LowerCanvasStage _lower_stage;
+   turtle::StageManager _stage_manager;
 
    static void key_call_back(GLFWwindow *window, int key, int seconds, int action, int mods);
 };
