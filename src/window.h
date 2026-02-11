@@ -24,6 +24,7 @@ public:
    void swap_buffers();
    void poll_events();
    void set_key_callback(GLFWkeyfun callback);
+   void set_mouse_button_callback(GLFWmousebuttonfun callback);
 
    GLFWwindow *get_handle() const;
 

@@ -86,3 +86,8 @@ void Window::set_key_callback(GLFWkeyfun callback)
 {
    glfwSetKeyCallback(_handle, callback);
 }
+
+void Window::set_mouse_button_callback(GLFWmousebuttonfun callback)
+{
+   glfwSetMouseButtonCallback(_handle, callback);
+}

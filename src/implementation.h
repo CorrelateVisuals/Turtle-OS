@@ -30,6 +30,7 @@ public:
    void update();
    void render(GLFWwindow *window);
    DynamicImageStage *first_dynamic_stage() const;
+   SolidColorStage *first_color_stage() const;
 
 private:
    RenderStage &add_image(const Image &image);
@@ -50,6 +51,7 @@ private:
       StageManager _manager;
       std::vector<std::unique_ptr<RenderStage>> _stages;
       DynamicImageStage *_first_dynamic = nullptr;
+      std::vector<SolidColorStage *> _color_stages;
 };
 
 } // namespace turtle

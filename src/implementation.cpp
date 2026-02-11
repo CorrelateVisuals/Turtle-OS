@@ -69,7 +69,9 @@ StaticImageStage &Implementation::add_file(const Image::File &file)
 
 SolidColorStage &Implementation::add_color(const Image::Color &color)
 {
-   return emplace_stage<SolidColorStage>(color.rgba, color.preset);
+   SolidColorStage &stage = emplace_stage<SolidColorStage>(color.rgba, color.preset);
+   _color_stages.push_back(&stage);
+   return stage;
 }
 
 void Implementation::update()
@@ -85,6 +87,13 @@ void Implementation::render(GLFWwindow *window)
 DynamicImageStage *Implementation::first_dynamic_stage() const
 {
    return _first_dynamic;
+}
+
+SolidColorStage *Implementation::first_color_stage() const
+{
+   if (_color_stages.empty())
+      return nullptr;
+   return _color_stages.front();
 }
 
 } // namespace turtle

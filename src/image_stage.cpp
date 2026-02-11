@@ -89,9 +89,20 @@ void StaticImageStage::render(GLFWwindow *window)
 SolidColorStage::SolidColorStage(const std::array<float, 4> &color, const ImagePreset &preset)
    : StaticImageStage("", preset)
 {
+   set_color(color);
+}
+
+void SolidColorStage::set_color(const std::array<float, 4> &color)
+{
+   _color = color;
    unsigned char pixel[4] = {clamp_color(color[0]), clamp_color(color[1]),
                              clamp_color(color[2]), clamp_color(color[3])};
    upload_pixels(pixel, 1, 1);
+}
+
+const std::array<float, 4> &SolidColorStage::color() const
+{
+   return _color;
 }
 
 } // namespace turtle

@@ -55,6 +55,11 @@ class SolidColorStage : public StaticImageStage
 {
 public:
    SolidColorStage(const std::array<float, 4> &color, const ImagePreset &preset);
+   void set_color(const std::array<float, 4> &color);
+   const std::array<float, 4> &color() const;
+
+private:
+   std::array<float, 4> _color;
 };
 
 } // namespace turtle
