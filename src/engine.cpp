@@ -15,7 +15,7 @@ Engine::Engine(int argc, char *argv[])
    DEBUG_LEVEL = DebugLevel::DETAILED;
    _win.set_key_callback(key_call_back);
    create_shaders(_main._zoom);
-   _front_uniform.set_shader_location(_main._zoom.get_shader_location());
+   _front.uniform().set_shader_location(_main._zoom.get_shader_location());
    glfwSetWindowUserPointer(_win.get_handle(), this);
 }
 
@@ -49,8 +49,7 @@ void Engine::run()
       GLSL::render_loop(_win.get_handle(), _main, _main._zoom);
       _main._zoom.run();
 
-      TurtleBase::Uniform::set_active(&_front_uniform);
-      GLSL::render_loop(_win.get_handle(), _front);
+      GLSL::render_loop(_win.get_handle(), _front, &_front.uniform());
 
       // Swap buffers and poll events
       _win.swap_buffers();

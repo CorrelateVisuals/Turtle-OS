@@ -20,9 +20,11 @@ private:
    {
    public:
       FrontCanvas(const std::string& path = "data/biology/animals/mammals/camel/images/camel-1279353277.jpg")
-         : Texture(path) {
+         : Texture(path)
+      {
          // Upper left corner, fill out without borders
          set_quad(-1.0f, 1.0f, 0.5f, 0.5f, 0.1f);
+         uniform().set_uniform_value(1.0f);
       }
    };
 
@@ -38,7 +40,6 @@ private:
    Window _win;
    MainCanvas _main;
    FrontCanvas _front;
-   TurtleBase::Uniform _front_uniform{0, 1.0f}; // static scale, no zoom
 
    static void key_call_back(GLFWwindow *window, int key, int seconds, int action, int mods);
 };

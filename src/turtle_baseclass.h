@@ -32,13 +32,13 @@ public:
       GLint get_shader_location() const { return _shader_location; };
       void set_shader_location(GLint l) { _shader_location = l; };
 
-      static Uniform* get_active();
-      static void set_active(Uniform* u);
+      static Uniform *get_active();
+      static void set_active(Uniform *u);
 
    protected:
       GLint _shader_location;
       float _value;
-      static Uniform* _active_uniform;
+      static Uniform *_active_uniform;
    };
 
    class ScaleVertices : public Uniform
@@ -77,12 +77,18 @@ public:
          std::array<float, 3> get_rotation() const { return _rotation; };
          std::string get_name() const { return _name; };
 
-      //protected:
+         // protected:
          std::array<float, 3> _position;
+         TurtleBase::Uniform _uniform;
+
+         TurtleBase::Uniform &uniform() { return _uniform; }
+         const TurtleBase::Uniform &uniform() const { return _uniform; }
 
       private:
          const std::array<float, 3> _rotation;
          const std::string _name;
+
+         
 
          void print_config();
       };
@@ -90,6 +96,8 @@ public:
       class Shape : protected Vertex
       {
       public:
+         using Vertex::uniform;
+
          Shape(int shape = 0, float scale = 1.0f,
                std::array<float, 3> pos = {0.0f, 0.0f, 0.0f},
                std::array<float, 3> rot = {0.0f, 0.0f, 0.0f},
@@ -99,8 +107,8 @@ public:
          float get_scale() const { return _scale; };
          int get_shape() const { return _shape; };
 
-         const std::array<float, 20>& get_vertices() const { return _vertices; };
-         const std::array<unsigned int, 6>& get_indices() const { return _indices; };
+         const std::array<float, 20> &get_vertices() const { return _vertices; };
+         const std::array<unsigned int, 6> &get_indices() const { return _indices; };
 
          void set_quad(float x, float y, float w, float h, float z = 0.0f);
 
@@ -128,8 +136,13 @@ public:
       class Texture : public Geometry::Shape
       {
       public:
+         using Geometry::Shape::uniform;
+
          Texture(const std::string &path);
-         Texture() : Texture("") {}
+         Texture()
+            : Texture("")
+         {
+         }
          ~Texture() = default;
 
          std::string get_path() const { return _path; }

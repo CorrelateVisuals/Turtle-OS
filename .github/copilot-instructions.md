@@ -3,6 +3,10 @@
 ## Project Overview
 Turtle-OS is an OpenGL ES 2.0 graphics application for rendering and displaying image galleries with interactive zoom effects. It uses C++17, GLFW for windowing, and stb_image for texture loading.
 
+Turtle-OS is to become a modular, extensible codebase for learning graphics programming concepts. The architecture emphasizes clear separation of concerns, with a core Engine class managing the main loop and rendering, and a TurtleBase class hierarchy organizing shader uniforms, geometry data, and texture management.
+
+A Touchdesigner light if you may, based on Shaders chained together. In and outputs, effects and so on. The main goal is to create a flexible system for rendering images with GPU-accelerated effects, while maintaining clean code organization and extensibility for future features.
+
 ## Architecture
 
 ### Core Hierarchy

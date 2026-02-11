@@ -101,6 +101,8 @@ TurtleBase::Image::Texture::Texture(const std::string &path)
    , _image(0)
    , _path(path)
 {
+   uniform().set_uniform_value(0.0f);
+
    if (!path.empty()) {
       load_texture(path);
    }
