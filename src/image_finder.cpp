@@ -30,11 +30,10 @@ void ImageFinder::set_root(const std::string &root_path)
 std::string ImageFinder::find_first_image() const
 {
    for (const auto &entry : fs::recursive_directory_iterator(root)) {
-      if (entry.is_directory() ) {
-         // Scan only inside the images/ folder
+      if (entry.is_directory() && entry.path().filename() == "images") {
          for (const auto &Image : fs::directory_iterator(entry.path())) {
             if (Image.is_regular_file() && is_image_file(Image.path())) {
-               return Image.path().string(); // Return immediately on first found
+               return Image.path().string();
             }
          }
       }
@@ -54,7 +53,6 @@ bool ImageFinder::is_image_file(const fs::path &p) const
       if (strcasecmp(ext.c_str(), e.c_str()) == 0)
          return true;
    }
-   std::cout << "No images found" << std::endl;
    return false;
 }
 
@@ -86,18 +84,6 @@ void ImageFinder::find_all_images(BaseTextureArray &texture_array)
    if (DEBUG_LEVEL == DebugLevel::BASIC) {
       std::cout << "Number of images found and added: " << index << std::endl;
    }
-}
-
-template <size_t SIZE>
-size_t ImageFinder::get_filled_array_count(const std::array<std::string, SIZE> &array)
-{
-   size_t count = 0;
-   for (const auto &item : array) {
-      if (!item.empty()) { // non-empty string indicates a filled entry
-         ++count;
-      }
-   }
-   return count;
 }
 
 void ImageFinder::randomize_order(std::array<std::string, kTextureArraySize> &array)

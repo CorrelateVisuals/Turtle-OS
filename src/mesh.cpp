@@ -2,7 +2,7 @@
 
 #include <GLES2/gl2.h>
 
-Mesh::Mesh() : _vbo(0) {}
+Mesh::Mesh() : BaseMesh(), _vbo(0) {}
 
 Mesh::~Mesh() {
     if (_vbo != 0) {
@@ -11,16 +11,12 @@ Mesh::~Mesh() {
 }
 
 void Mesh::init() {
-    float vertices[] = {
-        -1.0f, -1.0f, 0.0f, 0.0f,
-        1.0f,  -1.0f, 1.0f, 0.0f,
-        -1.0f, 1.0f,  0.0f, 1.0f,
-        1.0f,  1.0f,  1.0f, 1.0f,
-    };
+    set_quad();
 
     glGenBuffers(1, &_vbo);
     glBindBuffer(GL_ARRAY_BUFFER, _vbo);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 4 * vertex_count(), data(),
+                 GL_STATIC_DRAW);
     glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
 
@@ -43,7 +39,7 @@ void Mesh::draw(const Shader &shader) const {
                               reinterpret_cast<void *>(2 * sizeof(float)));
     }
 
-    glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+    glDrawArrays(GL_TRIANGLE_STRIP, 0, vertex_count());
 
     if (pos_location >= 0) {
         glDisableVertexAttribArray(pos_location);

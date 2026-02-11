@@ -31,3 +31,15 @@ private:
 
    bool is_image_file(const std::filesystem::path &p) const;
 };
+
+template <size_t SIZE>
+size_t ImageFinder::get_filled_array_count(const std::array<std::string, SIZE> &array)
+{
+   size_t count = 0;
+   for (const auto &item : array) {
+      if (!item.empty()) {
+         ++count;
+      }
+   }
+   return count;
+}
