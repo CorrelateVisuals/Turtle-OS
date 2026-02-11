@@ -1,10 +1,12 @@
 #pragma once
 
+#include "debug.h"
 #include "backend_GLSL.h"
-#include "turtle_baseclass.h"
+#include "base_shader_access.h"
+#include "base_image.h"
 #include "window.h"
 
-class Engine : TurtleBase
+class Engine
 {
 private:
    class MainCanvas : public Image::TextureArray

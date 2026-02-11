@@ -8,14 +8,24 @@
 #include <iostream>
 #include <string>
 
+DebugLevel DEBUG_LEVEL = DebugLevel::BASIC;
+
 Engine::Engine(int argc, char *argv[])
-   : TurtleBase(argc, argv)
-   , _win("Turtle-OS")
+   : _win("Turtle-OS")
    , _main()
    , _front()
    , _lower()
 {
    DEBUG_LEVEL = DebugLevel::DETAILED;
+   for (int i = 1; i < argc; ++i) {
+      std::string argument = argv[i];
+      if (argument == "turtle") {
+         if (DEBUG_LEVEL != DebugLevel::OFF) {
+            std::cout << "TurtleBase found!\n" << std::endl;
+         }
+         break;
+      }
+   }
    _win.set_key_callback(key_call_back);
    create_shaders(_main._zoom);
    glfwSetWindowUserPointer(_win.get_handle(), this);

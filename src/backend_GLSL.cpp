@@ -1,10 +1,10 @@
 #include "backend_GLSL.h"
 
 
-void GLSL::render_loop(GLFWwindow *win, const TurtleBase::Image::TextureArray &textures,
-                       const TurtleBase::Uniform &uniform)
+void GLSL::render_loop(GLFWwindow *win, const Image::TextureArray &textures,
+                       const Uniform &uniform)
 {
-   glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
+   glClearColor(0.1f, 0.1f, 1.0f, 1.0f);
    glClear(GL_COLOR_BUFFER_BIT);
 
    // Update viewport each frame (important on Pinebook!)
@@ -16,15 +16,15 @@ void GLSL::render_loop(GLFWwindow *win, const TurtleBase::Image::TextureArray &t
    draw_shape(textures, &uniform);
 }
 
-void GLSL::render_loop(GLFWwindow *win, const TurtleBase::Image::Texture &texture,
-                       const TurtleBase::Uniform *uniform)
+void GLSL::render_loop(GLFWwindow *win, const Image::Texture &texture,
+                       const Uniform *uniform)
 {
    (void)win;
    draw_shape(texture, uniform);
 }
 
-void GLSL::draw_shape(const TurtleBase::Image::Texture &texture,
-                      const TurtleBase::Uniform *uniform)
+void GLSL::draw_shape(const Image::Texture &texture,
+                      const Uniform *uniform)
 {
    glBindTexture(GL_TEXTURE_2D, texture.get_image());
    if (uniform) {
