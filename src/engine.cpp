@@ -17,6 +17,7 @@ Engine::Engine(int argc, char *argv[])
    , _step1()
    , _step2()
    , _step3()
+   , _step4()
 {
    _win.set_key_callback(Window::key_call_back);
    _win.set_mouse_button_callback(Window::mouse_button_call_back);
@@ -28,6 +29,7 @@ Engine::Engine(int argc, char *argv[])
    _win.set_canvas_start_x(0, -0.6f); _win.set_canvas_start_y(0, 0.6f); _win.set_canvas_start_w(0, 0.4f); _win.set_canvas_start_h(0, 0.4f);
    _win.set_canvas_start_x(1, -0.6f); _win.set_canvas_start_y(1, -0.2f); _win.set_canvas_start_w(1, 0.4f); _win.set_canvas_start_h(1, 0.4f);
    _win.set_canvas_start_x(2, 0.2f); _win.set_canvas_start_y(2, 0.6f); _win.set_canvas_start_w(2, 0.4f); _win.set_canvas_start_h(2, 0.4f);
+   _win.set_canvas_start_x(3, 0.2f); _win.set_canvas_start_y(3, -0.2f); _win.set_canvas_start_w(3, 0.4f); _win.set_canvas_start_h(3, 0.4f);
 }
 
 
@@ -46,44 +48,61 @@ void Engine::handle_mouse_button(int button, int action, int mods)
 
    if (action == GLFW_PRESS) {
       // Check which canvas and if corner, starting from foreground
-      int order[] = {2, 0, 1}; // front2, front, lower
+      int order[] = {3, 2, 0, 1}; // step4, step2, step1, step3
+      bool found = false;
       for (int idx : order) {
          float cx = _win.get_canvas_start_x(idx);
          float cy = _win.get_canvas_start_y(idx);
          float cw = _win.get_canvas_start_w(idx);
          float ch = _win.get_canvas_start_h(idx);
 
-         // Check if inside canvas
-         if (nx >= cx && nx <= cx + cw && ny >= cy - ch && ny <= cy) {
-            float margin = 0.05f; // corner size
-            if (nx >= cx - margin && nx <= cx + margin &&
-                ny >= cy - margin && ny <= cy + margin) {
-               _win.set_resizing(true);
-               _win.set_resize_corner(0); // TL
-               _win.set_drag_canvas(idx);
-            } else if (nx >= cx + cw - margin && nx <= cx + cw + margin &&
-                       ny >= cy - margin && ny <= cy + margin) {
-               _win.set_resizing(true);
-               _win.set_resize_corner(1); // TR
-               _win.set_drag_canvas(idx);
-            } else if (nx >= cx - margin && nx <= cx + margin &&
-                       ny >= cy - ch - margin && ny <= cy - ch + margin) {
-               _win.set_resizing(true);
-               _win.set_resize_corner(2); // BL
-               _win.set_drag_canvas(idx);
-            } else if (nx >= cx + cw - margin && nx <= cx + cw + margin &&
-                       ny >= cy - ch - margin && ny <= cy - ch + margin) {
-               _win.set_resizing(true);
-               _win.set_resize_corner(3); // BR
-               _win.set_drag_canvas(idx);
-            } else {
+         float margin = 0.1f; // corner size
+         if (nx >= cx - margin && nx <= cx + margin &&
+             ny >= cy - margin && ny <= cy + margin) {
+            _win.set_resizing(true);
+            _win.set_resize_corner(0); // TL
+            _win.set_drag_canvas(idx);
+            found = true;
+         } else if (nx >= cx + cw - margin && nx <= cx + cw + margin &&
+                    ny >= cy - margin && ny <= cy + margin) {
+            _win.set_resizing(true);
+            _win.set_resize_corner(1); // TR
+            _win.set_drag_canvas(idx);
+            found = true;
+         } else if (nx >= cx - margin && nx <= cx + margin &&
+                    ny >= cy - ch - margin && ny <= cy - ch + margin) {
+            _win.set_resizing(true);
+            _win.set_resize_corner(2); // BL
+            _win.set_drag_canvas(idx);
+            found = true;
+         } else if (nx >= cx + cw - margin && nx <= cx + cw + margin &&
+                    ny >= cy - ch - margin && ny <= cy - ch + margin) {
+            _win.set_resizing(true);
+            _win.set_resize_corner(3); // BR
+            _win.set_drag_canvas(idx);
+            found = true;
+         }
+         if (found) break;
+      }
+      if (!found) {
+         for (int idx : order) {
+            float cx = _win.get_canvas_start_x(idx);
+            float cy = _win.get_canvas_start_y(idx);
+            float cw = _win.get_canvas_start_w(idx);
+            float ch = _win.get_canvas_start_h(idx);
+
+            // Check if inside canvas
+            if (nx >= cx && nx <= cx + cw && ny >= cy - ch && ny <= cy) {
                _win.set_dragging(true);
                _win.set_drag_canvas(idx);
+               found = true;
+               break;
             }
-            _win.set_drag_start_x(nx);
-            _win.set_drag_start_y(ny);
-            break;
          }
+      }
+      if (found) {
+         _win.set_drag_start_x(nx);
+         _win.set_drag_start_y(ny);
       }
    } else if (action == GLFW_RELEASE) {
       _win.set_dragging(false);
@@ -177,6 +196,8 @@ void Engine::handle_cursor_pos(double xpos, double ypos)
             _step3.set_quad(cx, cy, _win.get_canvas_start_w(1), _win.get_canvas_start_h(1), 0.05f);
          } else if (i == 2) {
             _step2.set_quad(cx, cy, _win.get_canvas_start_w(2), _win.get_canvas_start_h(2), 0.1f);
+         } else if (i == 3) {
+            _step4.set_quad(cx, cy, _win.get_canvas_start_w(3), _win.get_canvas_start_h(3), 0.1f);
          }
 
          _win.set_drag_start_x(nx);
@@ -195,6 +216,7 @@ void Engine::run()
       GLSL::render_loop(_win.get_handle(), _step3, &_step3.uniform());
       GLSL::render_loop(_win.get_handle(), _step1, &_step1.uniform());
       GLSL::render_loop(_win.get_handle(), _step2, &_step2.uniform());
+      GLSL::render_loop(_win.get_handle(), _step4, &_step4.uniform());
 
       // Swap buffers and poll events
       _win.swap_buffers();

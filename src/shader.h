@@ -6,6 +6,9 @@
 
 #include <string>
 
+extern GLuint program_grid;
+extern GLuint program_solid;
+
 // cppcheck-suppress syntaxError
 [[nodiscard]] std::string load_shader_file(const std::string &path);
 GLuint shader_compile(const std::string &source, GLenum type);

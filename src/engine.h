@@ -52,6 +52,17 @@ private:
       }
    };
 
+   class Step4 : public Image::Texture
+   {
+   public:
+      Step4() : Texture(Color{0.0f, 0.0f, 0.0f, 0.0f})
+      {
+         _is_grid = true;
+         // Bottom right
+         set_quad(0.2f, -0.2f, 0.4f, 0.4f, 0.1f);
+      }
+   };
+
 public:
    Engine(int argc, char *argv[]);
    ~Engine() = default;
@@ -64,9 +75,12 @@ public:
 private:
    GLSL _backend;
    Window _win;
+
    ScaleVertices _dummy;
+
    Background _background;
    Step1 _step1;
    Step2 _step2;
    Step3 _step3;
+   Step4 _step4;
 };

@@ -13,6 +13,7 @@ Image::Texture::Texture(const std::string &path,
    : Shape(0, 1.0f, {0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f}, "TextureArray Default")
    , _image(0)
    , _is_solid(false)
+   , _is_grid(false)
    , _path(path)
 {
    if (!location_key.empty()) {
@@ -32,6 +33,7 @@ Image::Texture::Texture(Color color)
    : Shape(0, 1.0f, {0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f}, "Solid Color Texture")
    , _image(0)
    , _is_solid(true)
+   , _is_grid(color[3] == 0.0f)
    , _color(color)
    , _path("")
 {
