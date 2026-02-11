@@ -22,11 +22,13 @@ void TurtleBase::Uniform::set_active(TurtleBase::Uniform* u) {
 
 bool TurtleBase::Uniform::apply_registered_location(const std::string &key)
 {
+   _location_source = nullptr;
+   _location_key = key;
    auto it = _location_registry.find(key);
    if (it == _location_registry.end()) {
       return false;
    }
-   set_shader_location(it->second);
+   _shader_location = it->second;
    return true;
 }
 
@@ -112,12 +114,17 @@ void TurtleBase::Image::TextureArray::print_config()
              << std::endl;
 }
 
-TurtleBase::Image::Texture::Texture(const std::string &path)
+TurtleBase::Image::Texture::Texture(const std::string &path,
+                                   const std::string &location_key,
+                                   float uniform_value)
    : Shape(0, 1.0f, {0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f}, "TextureArray Default")
    , _image(0)
    , _path(path)
 {
-   uniform().set_uniform_value(0.0f);
+   if (!location_key.empty()) {
+      uniform().set_location_key(location_key);
+   }
+   uniform().set_uniform_value(uniform_value);
 
    if (!path.empty()) {
       load_texture(path);
@@ -129,7 +136,9 @@ TurtleBase::Image::Texture::Texture(const std::string &path)
 
 
 TurtleBase::Image::TextureArray::TextureArray(const std::string &folder)
-   : Texture(""), _images(), _image_index(0)
+   : Texture("", "scale", 1.0f)
+   , _images()
+   , _image_index(0)
 {
    _image_finder.set_root(folder);
 

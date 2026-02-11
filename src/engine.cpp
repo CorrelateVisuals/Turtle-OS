@@ -13,11 +13,11 @@ Engine::Engine(int argc, char *argv[])
    , _win("Turtle-OS")
    , _main()
    , _front()
+   , _lower()
 {
    DEBUG_LEVEL = DebugLevel::DETAILED;
    _win.set_key_callback(key_call_back);
    create_shaders(_main._zoom);
-   _front.sync_uniform_location();
    glfwSetWindowUserPointer(_win.get_handle(), this);
 }
 
@@ -51,6 +51,7 @@ void Engine::run()
       GLSL::render_loop(_win.get_handle(), _main, _main._zoom);
       _main._zoom.run();
 
+      GLSL::render_loop(_win.get_handle(), _lower, &_lower.uniform());
       GLSL::render_loop(_win.get_handle(), _front, &_front.uniform());
 
       // Swap buffers and poll events

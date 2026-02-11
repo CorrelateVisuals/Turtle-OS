@@ -26,6 +26,7 @@ public:
          : _shader_location(l)
          , _value(v)
          , _location_source(nullptr)
+         , _location_key()
       {
       }
       ~Uniform() = default;
@@ -35,15 +36,34 @@ public:
 
       GLint get_shader_location() const
       {
-         return _location_source ? _location_source->get_shader_location() : _shader_location;
+         if (_location_source) {
+            return _location_source->get_shader_location();
+         }
+         if (_shader_location == -1 && !_location_key.empty()) {
+            auto it = _location_registry.find(_location_key);
+            if (it != _location_registry.end()) {
+               _shader_location = it->second;
+            }
+         }
+         return _shader_location;
       };
       void set_shader_location(GLint l)
       {
          _location_source = nullptr;
          _shader_location = l;
+         _location_key.clear();
       };
 
-      void bind_location_to(const Uniform &source) { _location_source = &source; }
+      void bind_location_to(const Uniform &source)
+      {
+         _location_source = &source;
+         _location_key.clear();
+      }
+      void set_location_key(const std::string &key)
+      {
+         _location_source = nullptr;
+         _location_key = key;
+      }
       bool has_shader_location() const { return get_shader_location() != -1; }
       bool apply_registered_location(const std::string &key);
       static void register_location_value(const std::string &key, GLint location);
@@ -52,9 +72,10 @@ public:
       static void set_active(Uniform *u);
 
    protected:
-      GLint _shader_location;
+      mutable GLint _shader_location;
       float _value;
       const Uniform *_location_source;
+      std::string _location_key;
       static Uniform *_active_uniform;
       static std::unordered_map<std::string, GLint> _location_registry;
    };
@@ -156,9 +177,10 @@ public:
       public:
          using Geometry::Shape::uniform;
 
-         Texture(const std::string &path);
+         Texture(const std::string &path, const std::string &location_key = "scale",
+                  float uniform_value = 1.0f);
          Texture()
-            : Texture("")
+            : Texture("", "scale", 1.0f)
          {
          }
          ~Texture() = default;
