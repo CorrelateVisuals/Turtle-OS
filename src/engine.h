@@ -19,12 +19,19 @@ private:
    class FrontCanvas : public Image::Texture
    {
    public:
-      FrontCanvas(const std::string& path = "data/biology/animals/mammals/camel/images/camel-1279353277.jpg")
+      FrontCanvas(const std::string &path = "data/biology/animals/mammals/camel/images/camel-1279353277.jpg")
          : Texture(path)
       {
          // Upper left corner, fill out without borders
          set_quad(-1.0f, 1.0f, 0.5f, 0.5f, 0.1f);
          uniform().set_uniform_value(1.0f);
+      }
+
+      void sync_uniform_location()
+      {
+         if (!uniform().has_shader_location()) {
+            uniform().apply_registered_location("scale");
+         }
       }
    };
 

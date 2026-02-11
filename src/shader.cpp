@@ -81,4 +81,5 @@ void create_shaders(TurtleBase::ScaleVertices &zoom)
    glUseProgram(shaderProgram);
 
    zoom.set_shader_location(glGetUniformLocation(shaderProgram, "scale"));
+   TurtleBase::Uniform::register_location_value("scale", zoom.get_shader_location());
 }

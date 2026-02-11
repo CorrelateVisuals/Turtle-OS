@@ -10,6 +10,7 @@
 TurtleBase::DebugLevel TurtleBase::DEBUG_LEVEL = TurtleBase::DebugLevel::BASIC;
 
 TurtleBase::Uniform* TurtleBase::Uniform::_active_uniform = nullptr;
+std::unordered_map<std::string, GLint> TurtleBase::Uniform::_location_registry{};
 
 TurtleBase::Uniform* TurtleBase::Uniform::get_active() {
    return _active_uniform;
@@ -17,6 +18,21 @@ TurtleBase::Uniform* TurtleBase::Uniform::get_active() {
 
 void TurtleBase::Uniform::set_active(TurtleBase::Uniform* u) {
    _active_uniform = u;
+}
+
+bool TurtleBase::Uniform::apply_registered_location(const std::string &key)
+{
+   auto it = _location_registry.find(key);
+   if (it == _location_registry.end()) {
+      return false;
+   }
+   set_shader_location(it->second);
+   return true;
+}
+
+void TurtleBase::Uniform::register_location_value(const std::string &key, GLint location)
+{
+   _location_registry[key] = location;
 }
 
 TurtleBase::TurtleBase(int argc, char *argv[])

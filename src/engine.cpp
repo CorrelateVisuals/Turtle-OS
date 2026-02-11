@@ -11,11 +11,13 @@
 Engine::Engine(int argc, char *argv[])
    : TurtleBase(argc, argv)
    , _win("Turtle-OS")
+   , _main()
+   , _front()
 {
    DEBUG_LEVEL = DebugLevel::DETAILED;
    _win.set_key_callback(key_call_back);
    create_shaders(_main._zoom);
-   _front.uniform().set_shader_location(_main._zoom.get_shader_location());
+   _front.sync_uniform_location();
    glfwSetWindowUserPointer(_win.get_handle(), this);
 }
 

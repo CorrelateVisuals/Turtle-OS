@@ -7,6 +7,7 @@
 #include <array>
 #include <iostream>
 #include <string>
+#include <unordered_map>
 
 class TurtleBase
 {
@@ -21,16 +22,31 @@ public:
    class Uniform
    {
    public:
-      Uniform(GLint l = 0, float v = 0.0f)
+      Uniform(GLint l = -1, float v = 0.0f)
          : _shader_location(l)
-         , _value(v){};
+         , _value(v)
+         , _location_source(nullptr)
+      {
+      }
       ~Uniform() = default;
 
       float get_uniform_value() const { return _value; };
       void set_uniform_value(float v) { _value = v; };
 
-      GLint get_shader_location() const { return _shader_location; };
-      void set_shader_location(GLint l) { _shader_location = l; };
+      GLint get_shader_location() const
+      {
+         return _location_source ? _location_source->get_shader_location() : _shader_location;
+      };
+      void set_shader_location(GLint l)
+      {
+         _location_source = nullptr;
+         _shader_location = l;
+      };
+
+      void bind_location_to(const Uniform &source) { _location_source = &source; }
+      bool has_shader_location() const { return get_shader_location() != -1; }
+      bool apply_registered_location(const std::string &key);
+      static void register_location_value(const std::string &key, GLint location);
 
       static Uniform *get_active();
       static void set_active(Uniform *u);
@@ -38,7 +54,9 @@ public:
    protected:
       GLint _shader_location;
       float _value;
+      const Uniform *_location_source;
       static Uniform *_active_uniform;
+      static std::unordered_map<std::string, GLint> _location_registry;
    };
 
    class ScaleVertices : public Uniform
