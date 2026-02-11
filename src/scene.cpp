@@ -32,9 +32,14 @@ const Image::Definition &Image::definition() const
    return _definition;
 }
 
-Scene::Scene(std::initializer_list<Image> init)
-   : images(init)
+Scene GalleryScene::compose(const std::string &folder, const std::string &top_left_path,
+                            const std::string &bottom_left_path,
+                            const std::array<float, 4> &color)
 {
+   return Scene{Image::folder(folder),
+                Image::file(bottom_left_path, ImagePreset::bottom_left_fill()),
+                Image::file(top_left_path, ImagePreset::top_left_quarter()),
+                Image::color(color, ImagePreset::half_size_center())};
 }
 
 } // namespace turtle

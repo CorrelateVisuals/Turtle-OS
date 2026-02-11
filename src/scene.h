@@ -3,7 +3,6 @@
 #include "image_stage.h"
 
 #include <array>
-#include <initializer_list>
 #include <string>
 #include <variant>
 #include <vector>
@@ -52,12 +51,14 @@ private:
    Definition _definition{};
 };
 
-struct Scene
-{
-   Scene() = default;
-   Scene(std::initializer_list<Image> init);
+using Scene = std::vector<Image>;
 
-   std::vector<Image> images;
+struct GalleryScene
+{
+   static Scene compose(const std::string &folder,
+                        const std::string &top_left_path,
+                        const std::string &bottom_left_path,
+                        const std::array<float, 4> &color);
 };
 
 } // namespace turtle

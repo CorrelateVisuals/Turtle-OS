@@ -19,12 +19,9 @@ constexpr char DEFAULT_IMAGE_PATH[] =
 Engine::Engine(int argc, char *argv[])
    : TurtleBase(argc, argv)
    , _win(Window::Config{"Turtle-OS", true, 1280, 720, true, true})
-   , _implementation(turtle::Scene{
-        turtle::Image::folder("data"),
-        turtle::Image::file(DEFAULT_IMAGE_PATH, turtle::ImagePreset::bottom_left_fill()),
-        turtle::Image::file(DEFAULT_IMAGE_PATH, turtle::ImagePreset::top_left_quarter()),
-        turtle::Image::color(std::array<float, 4>{0.9f, 0.1f, 0.1f, 1.0f},
-                             turtle::ImagePreset::half_size_center())})
+   , _implementation(turtle::GalleryScene::compose(
+        "data", DEFAULT_IMAGE_PATH, DEFAULT_IMAGE_PATH,
+        std::array<float, 4>{0.9f, 0.1f, 0.1f, 1.0f}))
 {
    DEBUG_LEVEL = DebugLevel::DETAILED;
    _win.set_key_callback(key_call_back);

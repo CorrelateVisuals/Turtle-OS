@@ -9,7 +9,7 @@ namespace turtle
 
 Implementation::Implementation(const Scene &scene)
 {
-   for (const auto &image : scene.images) {
+   for (const auto &image : scene) {
       add_image(image);
    }
 }
