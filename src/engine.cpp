@@ -137,28 +137,36 @@ void Engine::handle_cursor_pos(double xpos, double ypos)
       float dy = ny - _drag_start_y;
 
       if (_resizing) {
-         // Resize based on corner, keeping opposite corner fixed
+         // Resize based on corner, keeping opposite corner fixed, corner follows mouse
          float &cx = _canvas_start_x[_drag_canvas];
          float &cy = _canvas_start_y[_drag_canvas];
          float &cw = _canvas_start_w[_drag_canvas];
          float &ch = _canvas_start_h[_drag_canvas];
 
-         if (_resize_corner == 0) { // TL: move left and top
-            cx += dx;
-            cw -= dx;
-            cy -= dy;
-            ch += dy;
-         } else if (_resize_corner == 1) { // TR: move right and top
-            cw += dx;
-            cy -= dy;
-            ch += dy;
-         } else if (_resize_corner == 2) { // BL: move left and bottom
-            cx += dx;
-            cw -= dx;
-            ch -= dy;
-         } else if (_resize_corner == 3) { // BR: move right and bottom
-            cw += dx;
-            ch -= dy;
+         if (_resize_corner == 0) { // TL: opposite BR fixed
+            float fx = cx + cw; // BR x
+            float fy = cy - ch; // BR y
+            cx = nx;
+            cy = ny;
+            cw = fx - nx;
+            ch = ny - fy;
+         } else if (_resize_corner == 1) { // TR: opposite BL fixed
+            float fx = cx; // BL x
+            float fy = cy - ch; // BL y
+            cy = ny;
+            cw = nx - fx;
+            ch = ny - fy;
+         } else if (_resize_corner == 2) { // BL: opposite TR fixed
+            float fx = cx + cw; // TR x
+            float fy = cy; // TR y
+            cx = nx;
+            cw = fx - nx;
+            ch = fy - ny;
+         } else if (_resize_corner == 3) { // BR: opposite TL fixed
+            float fx = cx; // TL x
+            float fy = cy; // TL y
+            cw = nx - fx;
+            ch = fy - ny;
          }
 
          // Update the quad

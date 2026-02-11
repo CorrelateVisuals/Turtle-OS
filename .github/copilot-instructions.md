@@ -3,7 +3,7 @@
 ## Project Overview
 Turtle-OS is an OpenGL ES 2.0 graphics application for rendering and displaying image galleries with interactive zoom effects. It uses C++17, GLFW for windowing, and stb_image for texture loading.
 
-Turtle-OS is to become a modular, extensible codebase for learning graphics programming concepts. The architecture emphasizes clear separation of concerns, with a core Engine class managing the main loop and rendering, and a TurtleBase class hierarchy organizing shader uniforms, geometry data, and texture management.
+Turtle-OS is to become a modular, extensible codebase for learning graphics programming concepts. The architecture emphasizes clear separation of concerns, with a core Engine class managing the main loop and rendering, and nested canvas classes organizing shader uniforms, geometry data, and texture management.
 
 A Touchdesigner light if you may, based on Shaders chained together. In and outputs, effects and so on. The main goal is to create a flexible system for rendering images with GPU-accelerated effects, while maintaining clean code organization and extensibility for future features.
 
@@ -11,12 +11,15 @@ A Touchdesigner light if you may, based on Shaders chained together. In and outp
 
 ### Core Hierarchy
 ```
-Engine (inherits TurtleBase)
-├── MainCanvas (nested class, inherits TextureArray)
+Engine (top-level class with nested canvases)
+├── MainCanvas (nested class, inherits Image::TextureArray)
+├── FrontCanvas (nested class, inherits Image::Texture)
+├── FrontCanvas2 (nested class, inherits Image::Texture)
+├── LowerCanvas (nested class, inherits Image::Texture)
 ├── GLSL (static shader/render backend)
 └── Window (GLFW wrapper)
 
-TurtleBase (base class with deeply nested hierarchy)
+Base Classes (standalone, not under TurtleBase)
 ├── Uniform (shader value wrapper)
 │   └── ScaleVertices (easing animations with timing)
 ├── Geometry
@@ -29,16 +32,18 @@ TurtleBase (base class with deeply nested hierarchy)
 
 ### Data Flow
 1. **Initialization** (`main.cpp` → `Engine::Engine()`)
-   - Creates Engine (inherits TurtleBase)
-   - Initializes MainCanvas with folder path (default: "data")
-   - ImageFinder recursively scans directory and populates texture array
+   - Creates Engine (top-level class)
+   - Initializes multiple canvases: MainCanvas (gallery), FrontCanvas/FrontCanvas2/LowerCanvas (overlays)
+   - ImageFinder recursively scans directory (default: "data") and populates TextureArray::_images array in MainCanvas
    - Shaders compiled and bound via `create_shaders()`
-   - Window key callback registered via `glfwSetWindowUserPointer()` + static handler
+   - Window key/mouse callbacks registered via `glfwSetWindowUserPointer()` + static handlers
 
 2. **Render Loop** (`Engine::run()`)
    - While `!Window::should_close()`:
-     * GLSL::render_loop() - GPU rendering with current texture & uniform
-     * ScaleVertices::run() - updates animation frame (easing calculations)
+     * Poll events (GLFW input)
+     * GLSL::render_loop() for MainCanvas (gallery with zoom)
+     * ScaleVertices::run() - updates zoom animation (easing calculations)
+     * GLSL::render_loop() for overlay canvases (FrontCanvas, etc.)
      * Window::swap_buffers() + Window::poll_events()
 
 3. **Image Discovery & Switching**
@@ -46,12 +51,13 @@ TurtleBase (base class with deeply nested hierarchy)
    - TextureArray::select_texture(index) switches current image + logs debug info
    - Arrow keys trigger texture switch via GLFW callback, reset zoom animation
    - Support for up to 1000 images via TEXTURE_ARRAY_SIZE constant
+   - Mouse handling: dragging/resizing canvases (added feature, not in original)
 
 ## Key Conventions
 
 ### Class Organization
-- **Nested classes**: TurtleBase uses deeply nested public classes (Uniform, Geometry, Image) to organize related functionality by domain. DO NOT flatten this hierarchy when extending.
-- **Inheritance pattern**: Child classes inherit vertex/shape data via public inheritance (e.g., Shape : Vertex, TextureArray : Texture : Geometry::Shape)
+- **Nested classes**: Engine uses nested canvas classes for UI layers. Base classes (Uniform, Geometry, Image) are standalone.
+- **Inheritance pattern**: Child classes inherit vertex/shape data via public/protected inheritance (e.g., Shape : Vertex, TextureArray : Texture : Geometry::Shape)
 - **Static backends**: GLSL class uses only static methods - all rendering is stateless
 - **Callback handling**: GLFW callbacks use `glfwSetWindowUserPointer()` to store Engine*, then cast in static handler (see `Engine::key_call_back()`)
 
@@ -97,7 +103,7 @@ make clean && make -j # Clean and recompile
 - Check `action == GLFW_PRESS` to filter key events before processing
 
 ### Adding New Uniforms
-1. Create class inheriting from `Uniform` in TurtleBase namespace (see ScaleVertices for example)
+1. Create class inheriting from `Uniform` in base_shader_access.h (see ScaleVertices for example)
 2. Constructor: `Uniform(shader_location, initial_value)`
 3. Initialize `_shader_location` from GLSL program after shader compilation
 4. Call `set_uniform_value()` before each render if value changes
@@ -127,3 +133,5 @@ make clean && make -j # Clean and recompile
 - **MainCanvas folder**: Defaults to "data/" - pass alternative path in Engine constructor if needed
 - **Exception handling**: main.cpp wraps engine.run() in try-catch, logs std::exception::what()
 - **Debug level**: Set DEBUG_LEVEL = DebugLevel::BASIC|DETAILED in Engine constructor to control output verbosity
+- **Multi-canvas rendering**: Added overlays (FrontCanvas, etc.) for UI layers; render in sequence after main gallery
+- **Mouse interactions**: Dragging/resizing canvases via mouse callbacks (extension beyond original gallery focus)
