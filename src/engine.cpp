@@ -12,50 +12,23 @@ DebugLevel DEBUG_LEVEL = DebugLevel::BASIC;
 
 Engine::Engine(int argc, char *argv[])
    : _win("Turtle-OS")
-   , _main()
-   , _front()
-   , _front2()
-   , _lower()
+   , _dummy(1.0f, 0.0f, 1.0f, 0.0f)
+   , _step1()
+   , _step2()
+   , _step3()
 {
-   DEBUG_LEVEL = DebugLevel::DETAILED;
-   for (int i = 1; i < argc; ++i) {
-      std::string argument = argv[i];
-      if (argument == "turtle") {
-         if (DEBUG_LEVEL != DebugLevel::OFF) {
-            std::cout << "TurtleBase found!\n" << std::endl;
-         }
-         break;
-      }
-   }
    _win.set_key_callback(Window::key_call_back);
    _win.set_mouse_button_callback(Window::mouse_button_call_back);
    _win.set_cursor_pos_callback(Window::cursor_pos_call_back);
-   create_shaders(_main._zoom);
+   create_shaders(_dummy);
    glfwSetWindowUserPointer(_win.get_handle(), this);
 
    // Initialize canvas positions
-   _win.set_canvas_start_x(0, -1.0f); _win.set_canvas_start_y(0, 1.0f); _win.set_canvas_start_w(0, 0.5f); _win.set_canvas_start_h(0, 0.5f);
-   _win.set_canvas_start_x(1, -1.0f); _win.set_canvas_start_y(1, 0.5f); _win.set_canvas_start_w(1, 0.5f); _win.set_canvas_start_h(1, 1.5f);
-   _win.set_canvas_start_x(2, 0.0f); _win.set_canvas_start_y(2, 1.0f); _win.set_canvas_start_w(2, 0.5f); _win.set_canvas_start_h(2, 0.5f);
+   _win.set_canvas_start_x(0, -0.6f); _win.set_canvas_start_y(0, 0.6f); _win.set_canvas_start_w(0, 0.4f); _win.set_canvas_start_h(0, 0.4f);
+   _win.set_canvas_start_x(1, -0.6f); _win.set_canvas_start_y(1, -0.2f); _win.set_canvas_start_w(1, 0.4f); _win.set_canvas_start_h(1, 0.4f);
+   _win.set_canvas_start_x(2, 0.2f); _win.set_canvas_start_y(2, 0.6f); _win.set_canvas_start_w(2, 0.4f); _win.set_canvas_start_h(2, 0.4f);
 }
 
-void Engine::handle_key(int key, int scancode, int action, int mods)
-{
-   if (action != GLFW_PRESS)
-      return;
-
-   if (key == GLFW_KEY_RIGHT) {
-      _main.select_texture(_main.get_image_index() + 1);
-      _main._zoom.reset_start_scale();
-   } else if (key == GLFW_KEY_LEFT) {
-      _main.select_texture(_main.get_image_index() - 1);
-      _main._zoom.reset_start_scale();
-   }
-
-   if (key == GLFW_KEY_ESCAPE) {
-      glfwSetWindowShouldClose(_win.get_handle(), true);
-   }
-}
 
 void Engine::handle_mouse_button(int button, int action, int mods)
 {
@@ -119,6 +92,16 @@ void Engine::handle_mouse_button(int button, int action, int mods)
    }
 }
 
+void Engine::handle_key(int key, int scancode, int action, int mods)
+{
+   if (action != GLFW_PRESS)
+      return;
+
+   if (key == GLFW_KEY_ESCAPE) {
+      glfwSetWindowShouldClose(_win.get_handle(), true);
+   }
+}
+
 void Engine::handle_cursor_pos(double xpos, double ypos)
 {
    int width, height;
@@ -172,11 +155,11 @@ void Engine::handle_cursor_pos(double xpos, double ypos)
 
          // Update the quad
          if (i == 0) {
-            _front.set_quad(cx, cy, cw, ch, 0.1f);
+            _step1.set_quad(cx, cy, cw, ch, 0.1f);
          } else if (i == 1) {
-            _lower.set_quad(cx, cy, cw, ch, 0.05f);
+            _step3.set_quad(cx, cy, cw, ch, 0.05f);
          } else if (i == 2) {
-            _front2.set_quad(cx, cy, cw, ch, 0.1f);
+            _step2.set_quad(cx, cy, cw, ch, 0.1f);
          }
       } else if (_win.get_dragging()) {
          // Drag
@@ -188,11 +171,11 @@ void Engine::handle_cursor_pos(double xpos, double ypos)
          _win.set_canvas_start_y(i, cy);
 
          if (i == 0) {
-            _front.set_quad(cx, cy, _win.get_canvas_start_w(0), _win.get_canvas_start_h(0), 0.1f);
+            _step1.set_quad(cx, cy, _win.get_canvas_start_w(0), _win.get_canvas_start_h(0), 0.1f);
          } else if (i == 1) {
-            _lower.set_quad(cx, cy, _win.get_canvas_start_w(1), _win.get_canvas_start_h(1), 0.05f);
+            _step3.set_quad(cx, cy, _win.get_canvas_start_w(1), _win.get_canvas_start_h(1), 0.05f);
          } else if (i == 2) {
-            _front2.set_quad(cx, cy, _win.get_canvas_start_w(2), _win.get_canvas_start_h(2), 0.1f);
+            _step2.set_quad(cx, cy, _win.get_canvas_start_w(2), _win.get_canvas_start_h(2), 0.1f);
          }
 
          _win.set_drag_start_x(nx);
@@ -204,12 +187,9 @@ void Engine::handle_cursor_pos(double xpos, double ypos)
 void Engine::run()
 {
    while (!_win.should_close()) {
-      GLSL::render_loop(_win.get_handle(), _main, _main._zoom);
-      _main._zoom.run();
-
-      GLSL::render_loop(_win.get_handle(), _lower, &_lower.uniform());
-      GLSL::render_loop(_win.get_handle(), _front, &_front.uniform());
-      GLSL::render_loop(_win.get_handle(), _front2, &_front2.uniform());
+      GLSL::render_loop(_win.get_handle(), _step3, &_step3.uniform());
+      GLSL::render_loop(_win.get_handle(), _step1, &_step1.uniform());
+      GLSL::render_loop(_win.get_handle(), _step2, &_step2.uniform());
 
       // Swap buffers and poll events
       _win.swap_buffers();

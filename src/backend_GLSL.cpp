@@ -4,8 +4,11 @@
 void GLSL::render_loop(GLFWwindow *win, const Image::TextureArray &textures,
                        const Uniform &uniform)
 {
-   glClearColor(0.1f, 0.1f, 1.0f, 1.0f);
+   glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
    glClear(GL_COLOR_BUFFER_BIT);
+
+   glEnable(GL_BLEND);
+   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
    // Update viewport each frame (important on Pinebook!)
    int w{0};

@@ -12,6 +12,7 @@ Image::Texture::Texture(const std::string &path,
                         float uniform_value)
    : Shape(0, 1.0f, {0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f}, "TextureArray Default")
    , _image(0)
+   , _is_solid(false)
    , _path(path)
 {
    if (!location_key.empty()) {
@@ -26,6 +27,25 @@ Image::Texture::Texture(const std::string &path,
       std::cout << "Texture created with path: " << (path.empty() ? "(empty)" : path) << "\n";
    }
 };
+
+Image::Texture::Texture(Color color)
+   : Shape(0, 1.0f, {0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f}, "Solid Color Texture")
+   , _image(0)
+   , _is_solid(true)
+   , _color(color)
+   , _path("")
+{
+   uniform().set_location_key("scale");
+   uniform().set_uniform_value(1.0f);
+   load_texture("");
+   if (DEBUG_LEVEL == DebugLevel::DETAILED) {
+      std::cout << "Solid color texture created: " << _color[0] << "," << _color[1] << "," << _color[2] << "," << _color[3] << "\n";
+   }
+};
+
+Image::Texture::Texture(float r, float g, float b, float a)
+   : Texture(Color{r, g, b, a})
+{};
 
 Image::TextureArray::TextureArray(const std::string &folder)
    : Texture("", "scale", 1.0f)
@@ -66,6 +86,18 @@ void Image::TextureArray::select_texture(int index)
 
 void Image::Texture::load_texture(const std::string &path)
 {
+   if (_is_solid) {
+      // Create a 1x1 solid color texture
+      unsigned char pixels[4] = {
+         static_cast<unsigned char>(_color[0] * 255),
+         static_cast<unsigned char>(_color[1] * 255),
+         static_cast<unsigned char>(_color[2] * 255),
+         static_cast<unsigned char>(_color[3] * 255)
+      };
+      GLSL::texture_to_gpu(_image, pixels, 1, 1);
+      return;
+   }
+
    stbi_set_flip_vertically_on_load(true);
 
    int width, height, channels;

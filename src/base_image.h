@@ -8,6 +8,8 @@
 #include <array>
 #include <string>
 
+using Color = std::array<float, 4>;
+
 class Image
 {
 public:
@@ -18,6 +20,8 @@ public:
 
       Texture(const std::string &path, const std::string &location_key = "scale",
                float uniform_value = 1.0f);
+      Texture(Color color);
+      Texture(float r, float g, float b, float a = 1.0f);
       Texture()
          : Texture("", "scale", 1.0f)
       {
@@ -32,6 +36,8 @@ public:
 
    private:
       GLuint _image;
+      bool _is_solid = false;
+      Color _color = {0.0f, 0.0f, 0.0f, 1.0f};
 
    protected:
       std::string _path;
