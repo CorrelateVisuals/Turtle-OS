@@ -1,22 +1,12 @@
 #pragma once
 
-#include "base_image.h"
-
 #include <GLES2/gl2.h>
 #include <GLFW/glfw3.h>
 
 
-class GLSL
-{
+class GLSL {
 public:
-   static void render_loop(GLFWwindow *win, const Image::TextureArray &textures,
-                           const Uniform &uniform);
-   static void render_loop(GLFWwindow *win, const Image::Texture &texture,
-                           const Uniform *uniform = nullptr);
-   static void texture_to_gpu(GLuint &textures, unsigned char *pixels, const int width,
-                              const int height);
-
-private:
-   static void draw_shape(const Image::Texture &texture,
-                          const Uniform *uniform);
+   static void render_loop(GLFWwindow *win);
+   static void texture_to_gpu(GLuint &texture, unsigned char *pixels, int width,
+                              int height);
 };

@@ -58,17 +58,16 @@ bool ImageFinder::is_image_file(const fs::path &p) const
    return false;
 }
 
-void ImageFinder::find_all_images(std::array<std::string, TEXTURE_ARRAY_SIZE> &texture_array)
+void ImageFinder::find_all_images(BaseTextureArray &texture_array)
 {
    size_t index = 0;
 
    for (const auto &entry : fs::recursive_directory_iterator(root)) {
       if (entry.is_directory() && entry.path().filename() == "images") {
-         // Scan only inside the images/ folder
          for (const auto &Image : fs::directory_iterator(entry.path())) {
             if (Image.is_regular_file() && is_image_file(Image.path())) {
-               if (index < TEXTURE_ARRAY_SIZE) {
-                  texture_array[index++] = Image.path().string();
+               if (index < kTextureArraySize) {
+                  texture_array.set_path(index++, Image.path().string());
                   if (DEBUG_LEVEL == DebugLevel::DETAILED) {
                      std::cout << index << '\n'
                                << Image.path().string() << std::endl
@@ -77,7 +76,7 @@ void ImageFinder::find_all_images(std::array<std::string, TEXTURE_ARRAY_SIZE> &t
                } else {
                   std::cout << "Texture array is full. Some images may not be added."
                             << std::endl;
-                  return; // Exit the function if the array is full
+                  return;
                }
             }
          }
@@ -101,10 +100,10 @@ size_t ImageFinder::get_filled_array_count(const std::array<std::string, SIZE> &
    return count;
 }
 
-void ImageFinder::randomize_order(std::array<std::string, TEXTURE_ARRAY_SIZE> &array)
+void ImageFinder::randomize_order(std::array<std::string, kTextureArraySize> &array)
 {
    size_t filled_count = get_filled_array_count(array);
-   if (filled_count > TEXTURE_ARRAY_SIZE) {
+   if (filled_count > kTextureArraySize) {
       std::cout << "Filled count exceeds array size!" << std::endl;
       return;
    }

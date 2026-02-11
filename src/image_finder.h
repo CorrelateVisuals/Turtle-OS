@@ -1,10 +1,11 @@
 #pragma once
 
+#include <array>
 #include <filesystem>
 #include <string>
 #include <vector>
 
-constexpr int TEXTURE_ARRAY_SIZE = 1000;
+#include "base_image.h"
 
 class ImageFinder
 {
@@ -21,9 +22,9 @@ public:
    std::string find_first_image() const;
 
    // Perform recursive scan and return all image paths
-   void find_all_images(std::array<std::string, TEXTURE_ARRAY_SIZE> &texture_array);
+   void find_all_images(BaseTextureArray &texture_array);
 
-   void randomize_order(std::array<std::string, TEXTURE_ARRAY_SIZE> &array);
+   void randomize_order(std::array<std::string, kTextureArraySize> &array);
 
 private:
    std::string root;

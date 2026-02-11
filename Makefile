@@ -12,10 +12,13 @@ OBJ = $(SRC:src/%.cpp=$(OBJDIR)/%.o)
 BIN = $(BINDIR)/Turtle-OS
 
 # Default rule
-all: $(OBJDIR) $(BIN)
+all: $(OBJDIR) $(BINDIR) $(BIN)
 
 # Create obj directory if it doesn't exist
 $(OBJDIR):
+	mkdir -p $@
+
+$(BINDIR):
 	mkdir -p $@
 
 # Link only recompiled objects
