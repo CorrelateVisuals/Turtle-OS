@@ -59,6 +59,11 @@ void Texture::load_texture(const std::string &path)
    stbi_image_free(pixels);
 }
 
+void Texture::upload_pixels(const unsigned char *pixels, int width, int height)
+{
+   GLSL::texture_to_gpu(_image, const_cast<unsigned char *>(pixels), width, height);
+}
+
 TextureArray::TextureArray(const std::string &folder)
    : Texture("", "scale", 1.0f)
    , _finder()

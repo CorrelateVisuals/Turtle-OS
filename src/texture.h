@@ -26,6 +26,7 @@ public:
 
 protected:
    void load_texture(const std::string &path);
+   void upload_pixels(const unsigned char *pixels, int width, int height);
 
 private:
    GLuint _image;

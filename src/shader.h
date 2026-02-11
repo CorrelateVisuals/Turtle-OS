@@ -1,6 +1,6 @@
 #pragma once
 
-#include "uniform.h"
+#include "scale_vertices.h"
 
 #include <GLES2/gl2.h>
 
