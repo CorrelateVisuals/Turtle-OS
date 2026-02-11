@@ -9,6 +9,16 @@
 class Engine
 {
 private:
+   class Background : public Image::Texture
+   {
+   public:
+      Background() : Texture(Color{0.0f, 0.0f, 0.0f, 0.0f})
+      {
+         // Full screen
+         set_quad(-1.0f, -1.0f, 2.0f, 2.0f, 0.0f);
+      }
+   };
+
    class Step1 : public Image::Texture
    {
    public:
@@ -55,6 +65,7 @@ private:
    GLSL _backend;
    Window _win;
    ScaleVertices _dummy;
+   Background _background;
    Step1 _step1;
    Step2 _step2;
    Step3 _step3;

@@ -13,6 +13,7 @@ DebugLevel DEBUG_LEVEL = DebugLevel::BASIC;
 Engine::Engine(int argc, char *argv[])
    : _win("Turtle-OS")
    , _dummy(1.0f, 0.0f, 1.0f, 0.0f)
+   , _background()
    , _step1()
    , _step2()
    , _step3()
@@ -187,6 +188,10 @@ void Engine::handle_cursor_pos(double xpos, double ypos)
 void Engine::run()
 {
    while (!_win.should_close()) {
+      glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+      glClear(GL_COLOR_BUFFER_BIT);
+
+      GLSL::render_loop(_win.get_handle(), _background, &_background.uniform());
       GLSL::render_loop(_win.get_handle(), _step3, &_step3.uniform());
       GLSL::render_loop(_win.get_handle(), _step1, &_step1.uniform());
       GLSL::render_loop(_win.get_handle(), _step2, &_step2.uniform());

@@ -36,6 +36,8 @@ Window::Window(std::string_view title)
 
    glfwMakeContextCurrent(_handle);
 
+   glfwShowWindow(_handle);
+
    // ---- CAPTURE INPUT ----
    glfwSetInputMode(_handle, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
 
