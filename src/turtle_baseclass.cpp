@@ -62,13 +62,16 @@ void TurtleBase::Image::TextureArray::print_config()
 }
 
 TurtleBase::Image::Texture::Texture(const std::string &path)
-   : _path(path)
+   : Shape(0, 1.0f, {0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f}, "Texture")
+   , _path(path)
 {
-   load_texture(path);
+   if (!path.empty()) {
+      load_texture(path);
+   }
 };
 
 TurtleBase::Image::TextureArray::TextureArray(const std::string &folder)
-   : Shape(0, 1.0f, {0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f}, "TextureArray Default")
+   : Texture("")
    , _current_image(0)
    , _image_index(0)
    , _images()
