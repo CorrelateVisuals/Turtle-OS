@@ -206,7 +206,7 @@ void TextRenderer::render_text(const std::string &text, float x, float y, float 
       glDrawArrays(GL_TRIANGLES, 0, 6);
 
       // Advance cursor for next glyph
-      current_x += (ch.advance >> 0) * scale;
+      current_x += ch.advance * scale;
    }
 
    glBindBuffer(GL_ARRAY_BUFFER, 0);
