@@ -47,7 +47,8 @@ inline Engine::Engine()
         "data/biology/animals/mammals/fox/images/fox-in-snow.jpg");
     //_canvases[2].set_color(0.18f, 0.2f, 0.22f, 1.0f);
 
-    _canvases[3].set_color(0.1f, 0.12f, 0.14f, 1.0f);
+    _canvases[3].set_texture_path(
+        "data/biology/animals/birds/blue_tit/images/Titmouse-bird-close-up_1920x1080-1838700548.jpg");
 
     _canvases[4].set_folder_path("data");
     //_canvases[4].set_color(0.2f, 0.2f, 0.2f, 1.0f);

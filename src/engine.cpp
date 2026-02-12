@@ -3,6 +3,11 @@
 #include <array>
 
 namespace {
+constexpr size_t kBackgroundIndex = 0;
+constexpr size_t kOutputIndex = 1;
+constexpr float kGridScale = 0.5f;
+constexpr size_t kInvalidCanvasIndex = static_cast<size_t>(-1);
+
 struct Viewport {
     int x;
     int y;
@@ -29,6 +34,15 @@ std::array<Viewport, 4> build_grid_viewports(int width, int height, float scale)
 bool point_in_viewport(double x, double y, const Viewport &viewport) {
     return x >= viewport.x && x <= viewport.x + viewport.width &&
            y >= viewport.y && y <= viewport.y + viewport.height;
+}
+
+Viewport offset_viewport(const Viewport &viewport, int dx, int dy) {
+    return {viewport.x + dx, viewport.y + dy, viewport.width, viewport.height};
+}
+
+bool viewports_overlap(const Viewport &a, const Viewport &b) {
+    return a.x < b.x + b.width && a.x + a.width > b.x &&
+           a.y < b.y + b.height && a.y + a.height > b.y;
 }
 } // namespace
 
@@ -84,25 +98,27 @@ void Engine::run() {
 
         _renderer.begin_frame();
 
-        _canvases[0].ensure_active_loaded();
-        _renderer.render(_canvases[0], 0, 0, width, height);
+        _canvases[kBackgroundIndex].ensure_active_loaded();
+        _renderer.render(_canvases[kBackgroundIndex], 0, 0, width, height);
 
-        const auto viewports = build_grid_viewports(width, height, 0.5f);
+        const auto base_viewports = build_grid_viewports(width, height, kGridScale);
+        auto viewport_for = [&](size_t canvas_index) {
+            const Viewport base = base_viewports[canvas_index - 1];
+            const CanvasOffset &offset = _canvas_offsets[canvas_index];
+            return offset_viewport(base, offset.x, offset.y);
+        };
 
         if (mouse_down) {
             if (!_dragging) {
                 for (int i = 0; i < 4; ++i) {
-                    Viewport viewport = viewports[static_cast<size_t>(i)];
-                    const CanvasOffset &offset = _canvas_offsets[static_cast<size_t>(i + 1)];
-                    viewport.x += offset.x;
-                    viewport.y += offset.y;
+                    Viewport viewport = viewport_for(static_cast<size_t>(i + 1));
                     if (point_in_viewport(mouse_x, mouse_y, viewport)) {
                         _dragging = true;
                         _drag_index = static_cast<size_t>(i + 1);
                         _drag_start_x = mouse_x;
                         _drag_start_y = mouse_y;
-                        _drag_start_offset_x = offset.x;
-                        _drag_start_offset_y = offset.y;
+                        _drag_start_offset_x = _canvas_offsets[_drag_index].x;
+                        _drag_start_offset_y = _canvas_offsets[_drag_index].y;
                         break;
                     }
                 }
@@ -117,15 +133,54 @@ void Engine::run() {
             _dragging = false;
         }
 
+        size_t blend_source_index = kInvalidCanvasIndex;
+        if (_canvases.size() > kOutputIndex) {
+            const Viewport output_viewport = viewport_for(kOutputIndex);
+            for (size_t i = 1; i < _canvases.size(); ++i) {
+                if (i == kOutputIndex) {
+                    continue;
+                }
+                const Viewport other = viewport_for(i);
+                if (viewports_overlap(output_viewport, other)) {
+                    blend_source_index = i;
+                    break;
+                }
+            }
+
+            _canvases[kOutputIndex].ensure_active_loaded();
+            const Viewport output_viewport_offset = output_viewport;
+            if (blend_source_index != kInvalidCanvasIndex) {
+                _canvases[blend_source_index].ensure_active_loaded();
+                _renderer.render_blend(_canvases[kOutputIndex],
+                                       _canvases[blend_source_index],
+                                       output_viewport_offset.x,
+                                       output_viewport_offset.y,
+                                       output_viewport_offset.width,
+                                       output_viewport_offset.height,
+                                       0.5f);
+            }
+        }
+
         for (int i = 0; i < 4; ++i) {
             Canvas &canvas = _canvases[static_cast<size_t>(i + 1)];
             canvas.ensure_active_loaded();
-            const CanvasOffset &offset = _canvas_offsets[static_cast<size_t>(i + 1)];
+            const Viewport viewport = viewport_for(static_cast<size_t>(i + 1));
+            if (static_cast<size_t>(i + 1) == kOutputIndex) {
+                if (blend_source_index == kInvalidCanvasIndex) {
+                    _renderer.render(canvas,
+                                     viewport.x,
+                                     viewport.y,
+                                     viewport.width,
+                                     viewport.height);
+                }
+                continue;
+            }
+
             _renderer.render(canvas,
-                             viewports[static_cast<size_t>(i)].x + offset.x,
-                             viewports[static_cast<size_t>(i)].y + offset.y,
-                             viewports[static_cast<size_t>(i)].width,
-                             viewports[static_cast<size_t>(i)].height);
+                             viewport.x,
+                             viewport.y,
+                             viewport.width,
+                             viewport.height);
         }
 
         _window.swap_buffers();
