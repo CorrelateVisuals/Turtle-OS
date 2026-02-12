@@ -4,10 +4,10 @@ BaseMesh::BaseMesh() : _data{0.0f}, _vertex_count(0) {}
 
 void BaseMesh::set_quad() {
 	_data = {
-		-1.0f, -1.0f, 0.0f, 0.0f,
-		1.0f,  -1.0f, 1.0f, 0.0f,
-		-1.0f, 1.0f,  0.0f, 1.0f,
-		1.0f,  1.0f,  1.0f, 1.0f,
+		-1.0f, -1.0f, 0.0f, 1.0f,
+		1.0f,  -1.0f, 1.0f, 1.0f,
+		-1.0f, 1.0f,  0.0f, 0.0f,
+		1.0f,  1.0f,  1.0f, 0.0f,
 	};
 	_vertex_count = 4;
 }

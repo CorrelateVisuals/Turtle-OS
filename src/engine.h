@@ -6,6 +6,7 @@
 #include "window.h"
 
 #include <array>
+#include <cstddef>
 
 class Engine {
 public:
@@ -13,9 +14,23 @@ public:
     void run();
 
 private:
+    struct CanvasOffset {
+        int x;
+        int y;
+    };
+
     Window _window;
     Renderer _renderer;
     std::array<Canvas, 5> _canvases;
+    std::array<CanvasOffset, 5> _canvas_offsets{};
+    bool _dragging = false;
+    std::size_t _drag_index = 0;
+    double _drag_start_x = 0.0;
+    double _drag_start_y = 0.0;
+    int _drag_start_offset_x = 0;
+    int _drag_start_offset_y = 0;
+    bool _left_was_down = false;
+    bool _right_was_down = false;
 };
 
 inline Engine::Engine()
