@@ -1,6 +1,7 @@
 #pragma once
 
 #include "backend_GLSL.h"
+#include "text_renderer.h"
 #include "turtle_baseclass.h"
 #include "window.h"
 
@@ -26,6 +27,7 @@ private:
    GLSL _backend;
    Window _win;
    MainCanvas _main;
+   TextRenderer _text_renderer;
 
    static void key_call_back(GLFWwindow *window, int key, int seconds, int action, int mods);
 };

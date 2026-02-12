@@ -15,6 +15,9 @@ Engine::Engine(int argc, char *argv[])
    _win.set_key_callback(key_call_back);
    create_shaders(_main._zoom._shader_location);
    glfwSetWindowUserPointer(_win.get_handle(), this);
+   
+   // Initialize text renderer
+   _text_renderer.init("data/font.ttf", 48);
 }
 
 void Engine::key_call_back(GLFWwindow *window, int key, int, int action, int)
@@ -46,6 +49,9 @@ void Engine::run()
    while (!_win.should_close()) {
       GLSL::render_loop(_win.get_handle(), _main, _main._zoom);
       _main._zoom.run();
+      
+      // Render text overlay
+      _text_renderer.render_text("Turtle-OS", -0.9f, 0.9f, 0.001f, 1.0f, 1.0f, 1.0f, 1.0f);
 
       // Swap buffers and poll events
       _win.swap_buffers();
