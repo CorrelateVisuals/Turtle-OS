@@ -9,6 +9,7 @@ public:
     ~Window();
 
     bool should_close() const;
+    void request_close();
     void swap_buffers();
     void poll_events();
 

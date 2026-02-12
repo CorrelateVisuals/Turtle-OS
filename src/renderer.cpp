@@ -11,14 +11,13 @@ void Renderer::init() {
     _mesh.init();
 }
 
-void Renderer::render(const Canvas &canvas) {
-    int width = 0;
-    int height = 0;
-    _window.get_framebuffer_size(width, height);
-
-    glViewport(0, 0, width, height);
+void Renderer::begin_frame() {
     glClearColor(0.08f, 0.1f, 0.12f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT);
+}
+
+void Renderer::render(const Canvas &canvas, int x, int y, int width, int height) {
+    glViewport(x, y, width, height);
 
     _shader.use();
     _shader.set_uniform1f("scale", 1.0f);

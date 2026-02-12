@@ -5,6 +5,8 @@
 #include "renderer.h"
 #include "window.h"
 
+#include <array>
+
 class Engine {
 public:
     Engine();
@@ -13,7 +15,7 @@ public:
 private:
     Window _window;
     Renderer _renderer;
-    Canvas _canvas;
+    std::array<Canvas, 5> _canvases;
 };
 
 #endif // TURTLE_OS_ENGINE_H

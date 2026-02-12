@@ -32,6 +32,10 @@ bool Window::should_close() const {
     return glfwWindowShouldClose(_handle) == GLFW_TRUE;
 }
 
+void Window::request_close() {
+    glfwSetWindowShouldClose(_handle, GLFW_TRUE);
+}
+
 void Window::swap_buffers() {
     glfwSwapBuffers(_handle);
 }

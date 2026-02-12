@@ -11,7 +11,8 @@ public:
     explicit Renderer(Window &window);
 
     void init();
-    void render(const Canvas &canvas);
+    void begin_frame();
+    void render(const Canvas &canvas, int x, int y, int width, int height);
 
 private:
     Window &_window;
