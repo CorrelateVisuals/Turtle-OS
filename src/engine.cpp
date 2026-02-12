@@ -1,5 +1,7 @@
 #include "engine.h"
 
+#include <GLES2/gl2.h>
+
 #include <array>
 
 namespace {
@@ -43,6 +45,33 @@ Viewport offset_viewport(const Viewport &viewport, int dx, int dy) {
 bool viewports_overlap(const Viewport &a, const Viewport &b) {
     return a.x < b.x + b.width && a.x + a.width > b.x &&
            a.y < b.y + b.height && a.y + a.height > b.y;
+}
+
+void ensure_output_texture(unsigned int &texture,
+                           int width,
+                           int height,
+                           int &stored_width,
+                           int &stored_height) {
+    const bool created = texture == 0;
+    if (created) {
+        glGenTextures(1, &texture);
+    }
+
+    if (!created && width == stored_width && height == stored_height) {
+        return;
+    }
+
+    stored_width = width;
+    stored_height = height;
+
+    glBindTexture(GL_TEXTURE_2D, texture);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA,
+                 GL_UNSIGNED_BYTE, nullptr);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+    glBindTexture(GL_TEXTURE_2D, 0);
 }
 } // namespace
 
@@ -147,17 +176,59 @@ void Engine::run() {
                 }
             }
 
-            _canvases[kOutputIndex].ensure_active_loaded();
-            const Viewport output_viewport_offset = output_viewport;
-            if (blend_source_index != kInvalidCanvasIndex) {
-                _canvases[blend_source_index].ensure_active_loaded();
-                _renderer.render_blend(_canvases[kOutputIndex],
-                                       _canvases[blend_source_index],
-                                       output_viewport_offset.x,
-                                       output_viewport_offset.y,
-                                       output_viewport_offset.width,
-                                       output_viewport_offset.height,
-                                       0.5f);
+            const bool output_size_valid = output_viewport.width > 0 &&
+                                           output_viewport.height > 0;
+            if (output_size_valid) {
+                const int previous_width = _output_texture_width;
+                const int previous_height = _output_texture_height;
+                ensure_output_texture(_output_texture_a,
+                                      output_viewport.width,
+                                      output_viewport.height,
+                                      _output_texture_width,
+                                      _output_texture_height);
+                ensure_output_texture(_output_texture_b,
+                                      output_viewport.width,
+                                      output_viewport.height,
+                                      _output_texture_width,
+                                      _output_texture_height);
+
+                if (previous_width != _output_texture_width ||
+                    previous_height != _output_texture_height) {
+                    _output_initialized = false;
+                }
+
+                if (!_output_initialized) {
+                    _canvases[kOutputIndex].ensure_active_loaded();
+                    const unsigned int seed_texture =
+                        _output_use_a ? _output_texture_a : _output_texture_b;
+                    _renderer.render_canvas_to_texture(_canvases[kOutputIndex],
+                                                       seed_texture,
+                                                       output_viewport.width,
+                                                       output_viewport.height);
+                    _output_initialized = true;
+                    _last_blend_source = kInvalidCanvasIndex;
+                }
+
+                if (blend_source_index != kInvalidCanvasIndex &&
+                    blend_source_index != _last_blend_source) {
+                    _canvases[blend_source_index].ensure_active_loaded();
+                    const unsigned int base_texture =
+                        _output_use_a ? _output_texture_a : _output_texture_b;
+                    const unsigned int target_texture =
+                        _output_use_a ? _output_texture_b : _output_texture_a;
+                    _renderer.render_blend_texture_canvas(base_texture,
+                                                         _canvases[blend_source_index],
+                                                         target_texture,
+                                                         output_viewport.width,
+                                                         output_viewport.height,
+                                                         0.5f);
+                    _output_use_a = !_output_use_a;
+                    _last_blend_source = blend_source_index;
+                }
+
+                if (blend_source_index == kInvalidCanvasIndex) {
+                    _last_blend_source = kInvalidCanvasIndex;
+                }
             }
         }
 
@@ -166,7 +237,15 @@ void Engine::run() {
             canvas.ensure_active_loaded();
             const Viewport viewport = viewport_for(static_cast<size_t>(i + 1));
             if (static_cast<size_t>(i + 1) == kOutputIndex) {
-                if (blend_source_index == kInvalidCanvasIndex) {
+                const unsigned int output_texture =
+                    _output_use_a ? _output_texture_a : _output_texture_b;
+                if (output_texture != 0) {
+                    _renderer.render_texture(output_texture,
+                                             viewport.x,
+                                             viewport.y,
+                                             viewport.width,
+                                             viewport.height);
+                } else {
                     _renderer.render(canvas,
                                      viewport.x,
                                      viewport.y,

@@ -23,6 +23,13 @@ private:
     Renderer _renderer;
     std::array<Canvas, 5> _canvases;
     std::array<CanvasOffset, 5> _canvas_offsets{};
+    unsigned int _output_texture_a = 0;
+    unsigned int _output_texture_b = 0;
+    int _output_texture_width = 0;
+    int _output_texture_height = 0;
+    bool _output_use_a = true;
+    bool _output_initialized = false;
+    std::size_t _last_blend_source = static_cast<std::size_t>(-1);
     bool _dragging = false;
     std::size_t _drag_index = 0;
     double _drag_start_x = 0.0;

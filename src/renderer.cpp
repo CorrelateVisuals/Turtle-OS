@@ -7,7 +7,14 @@ Renderer::Renderer(Window &window)
       _solid_texture_primary(0),
       _solid_color_primary{-1.0f, -1.0f, -1.0f, -1.0f},
       _solid_texture_secondary(0),
-      _solid_color_secondary{-1.0f, -1.0f, -1.0f, -1.0f} {}
+          _solid_color_secondary{-1.0f, -1.0f, -1.0f, -1.0f},
+          _framebuffer(0) {}
+
+Renderer::~Renderer() {
+    if (_framebuffer != 0) {
+        glDeleteFramebuffers(1, &_framebuffer);
+    }
+}
 
 void Renderer::init() {
     _shader.load_from_files("src/shaders/vertex.glsl", "src/shaders/fragment.glsl");
@@ -30,8 +37,7 @@ void Renderer::render(const Canvas &canvas, int x, int y, int width, int height)
 
     const unsigned int base_handle =
         bind_canvas_texture(canvas, 0, _solid_texture_primary, _solid_color_primary);
-    glActiveTexture(GL_TEXTURE1);
-    glBindTexture(GL_TEXTURE_2D, base_handle);
+    bind_texture_handle(base_handle, 1);
 
     _mesh.draw(_shader);
 
@@ -61,6 +67,66 @@ void Renderer::render_blend(const Canvas &base,
     glBindTexture(GL_TEXTURE_2D, 0);
 }
 
+void Renderer::render_texture(unsigned int texture, int x, int y, int width, int height) {
+    glViewport(x, y, width, height);
+
+    _shader.use();
+    _shader.set_uniform1f("scale", 1.0f);
+    _shader.set_uniform1f("mix_factor", 0.0f);
+    _shader.set_uniform1i("tex0", 0);
+    _shader.set_uniform1i("tex1", 1);
+
+    bind_texture_handle(texture, 0);
+    bind_texture_handle(texture, 1);
+
+    _mesh.draw(_shader);
+
+    glBindTexture(GL_TEXTURE_2D, 0);
+}
+
+void Renderer::render_canvas_to_texture(const Canvas &canvas,
+                                        unsigned int output_texture,
+                                        int width,
+                                        int height) {
+    begin_offscreen(output_texture, width, height);
+
+    _shader.use();
+    _shader.set_uniform1f("scale", 1.0f);
+    _shader.set_uniform1f("mix_factor", 0.0f);
+    _shader.set_uniform1i("tex0", 0);
+    _shader.set_uniform1i("tex1", 1);
+
+    const unsigned int handle =
+        bind_canvas_texture(canvas, 0, _solid_texture_primary, _solid_color_primary);
+    bind_texture_handle(handle, 1);
+
+    _mesh.draw(_shader);
+
+    end_offscreen();
+}
+
+void Renderer::render_blend_texture_canvas(unsigned int base_texture,
+                                           const Canvas &overlay,
+                                           unsigned int output_texture,
+                                           int width,
+                                           int height,
+                                           float mix_factor) {
+    begin_offscreen(output_texture, width, height);
+
+    _shader.use();
+    _shader.set_uniform1f("scale", 1.0f);
+    _shader.set_uniform1f("mix_factor", mix_factor);
+    _shader.set_uniform1i("tex0", 0);
+    _shader.set_uniform1i("tex1", 1);
+
+    bind_texture_handle(base_texture, 0);
+    bind_canvas_texture(overlay, 1, _solid_texture_secondary, _solid_color_secondary);
+
+    _mesh.draw(_shader);
+
+    end_offscreen();
+}
+
 unsigned int Renderer::bind_canvas_texture(const Canvas &canvas,
                                            int texture_unit,
                                            unsigned int &solid_texture,
@@ -81,6 +147,26 @@ unsigned int Renderer::bind_canvas_texture(const Canvas &canvas,
     ensure_solid_texture(canvas.color(), solid_texture, solid_color);
     glBindTexture(GL_TEXTURE_2D, solid_texture);
     return solid_texture;
+}
+
+void Renderer::bind_texture_handle(unsigned int texture, int texture_unit) {
+    glActiveTexture(static_cast<GLenum>(GL_TEXTURE0 + texture_unit));
+    glBindTexture(GL_TEXTURE_2D, texture);
+}
+
+void Renderer::begin_offscreen(unsigned int output_texture, int width, int height) {
+    if (_framebuffer == 0) {
+        glGenFramebuffers(1, &_framebuffer);
+    }
+
+    glBindFramebuffer(GL_FRAMEBUFFER, _framebuffer);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0,
+                           GL_TEXTURE_2D, output_texture, 0);
+    glViewport(0, 0, width, height);
+}
+
+void Renderer::end_offscreen() {
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
 void Renderer::ensure_solid_texture(const float *color,
